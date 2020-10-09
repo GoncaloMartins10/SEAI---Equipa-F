@@ -1,0 +1,370 @@
+\documentclass[a4paper,12pt,table,xcdraw]{article}
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[utf8]{inputenc} \usepackage{boldline}
+\usepackage{amsmath, amsfonts, amssymb, enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage[portuguese]{babel}
+\usepackage{indentfirst}
+\usepackage{ragged2e}
+\usepackage{lmodern,textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{pdfpages}
+\usepackage{graphicx,subcaption}
+%\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\renewcommand{\arraystretch}{1.5} 
+\usepackage{dirtytalk}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+%INICIO DO DOCUMENTO
+\begin{document}
+
+\begin{center}
+
+\textbf{\Large Mestrado Integrado de Engenharia Eletrotécnica e de Computadores}
+\vspace{1.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{Imagens/LogoFeup.jpg}
+\end{figure}
+\vspace{2cm}
+
+\textbf{\Huge Sistemas de Engenharia - Automação e Instrumentação}
+
+\bigskip
+\bigskip
+{\Huge Gestão Digital de Ativos de T\&D\\}
+\bigskip
+{\Large Manual de Qualidade\\}
+
+\vspace{4cm}
+{\Large Equipa F\\}
+\vspace{1cm}
+Ana Araújo \quad up201606854 \\
+Bernardo Araújo \quad up201606808\\
+Daniel Ribeiro \quad up201708982 \\
+Diogo Landau \quad up201603722 \\
+Elias Ferreira\quad up201502818 \\
+Gonçalo Martins \quad up201604140 \\
+Nuno Costa \quad up201605206 \\
+Pedro Castro \quad up201605469 \\
+Rúben Lopes \quad up201606821 \\
+Vicente Brito \quad up201605145
+\end{center}
+\thispagestyle{empty}
+
+\newpage
+\section*{Controlo de Versões}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{clc}
+\hlineB{2}
+\textbf{Versão} & \multicolumn{1}{c}{\textbf{Alterações}}                               & \textbf{Data} \\ \hlineB{2}
+0.0             & Criação do documento e definição dos tópicos a abordar                & 05/10/2020    \\ \hline
+0.1             & Actualização dos Objetivos do Manual de Qualidade                     & 06/10/2020    \\
+                & Actualização da Constituição da Equipa                                                \\ \hline
+0.2             & Actualização dos Templates                                            & 06/10/2020    \\ \hline
+0.3             & Actualização das Ferramentas de Trabalho                              & 07/10/2020    \\ \hline
+0.4             & Actualização da Avaliação Interna                                     & 08/10/2020     \\ 
+                & Actualização das Regras de Funcionamento                                              \\ 
+                & Actualização da Divisão de Cargos e Responsabilidades                                 \\ \hline
+\end{tabular}
+\caption{Controlo de versões do documento}
+\label{controlo_versoes}
+\end{table}
+\thispagestyle{empty}
+\newpage
+
+
+\renewcommand*\contentsname{Índice}
+\tableofcontents
+\thispagestyle{empty}
+
+
+\newpage
+
+\pagenumbering{arabic}
+\section{Objetivo do Manual de Qualidade}
+
+O presente documento foi criado no contexto da disciplina de Engenharia de Sistemas - Automação e Instrumentação e tem como principal objetivo informar acerca da organização e gestão de processos da equipa, definindo um conjunto de regras e metodologias a adotar  durante a realização do projeto intitulado por \say{Gestão Digital de Ativos de T\&D} e supervisionado pelo Prof. António Carrapatoso.  
+
+Assim sendo, este documento irá dar informações acerca da divisão dos diferentes cargos dentro da equipa e as suas respectivas responsabilidades. Para além disso irão ser definidas regras de funcionamento, ferramentas tecnológicas a utilizar e ainda diversos documentos de suporte. 
+
+Por fim, o manual de qualidade serve não só para a equipa se informar acerca dos métodos de trabalho a seguir, mas também para o supervisor e o cliente poderem verificar e avaliar se as metodologias estão a ser seguidas no desenvolvimento do projecto.
+
+
+\section{Constituição da Equipa}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccl}
+\hlineB{2}
+\multicolumn{1}{c}{\textbf{Nome}} & \textbf{Email}       & \textbf{Telemóvel} & \multicolumn{1}{c}{\textbf{Especialização}} \\ \hlineB{2}
+Ana Araújo                        & up201606854@fe.up.pt &  
+919067620        & Microeletrónica      \\ \hline
+Bernardo Araújo                   & up201606808@fe.up.pt & 931683303          & Robótica e Sistemas                         \\ \hline
+Daniel Ribeiro                    & up201708982@fe.up.pt & 910820266                   & Gestão Industrial                           \\ \hline
+Diogo Landau                      & up201603722@fe.up.pt & 933970705          & Robótica e Sistemas                         \\ \hline
+Elias Ferreira                    & up201502818@fe.up.pt & 919954812          & Robótica e Sistemas                         \\ \hline
+Gonçalo Martins                   & up201604140@fe.up.pt & 914163899          & Robótica e Sistemas                         \\ \hline
+Nuno Costa                        & up201605206@fe.up.pt & 919169414          & Robótica e Sistemas                         \\ \hline
+Pedro Castro                      & up201605469@fe.up.pt & 913263708          & Microeletrónica      \\ \hline
+Rúben Lopes                       & up201606821@fe.up.pt & 936224137              & Eletrónica e Sistemas                       \\ \hline
+Vicente Brito                     & up201605145@fe.up.pt & 916018460              & Gestão Industrial                           \\ \hline
+\end{tabular}
+\caption{Membros da equipa e respectivos contactos e especializações}
+\label{membros}
+\end{table}
+
+\newpage
+\section{Divisão de cargos e responsabilidades}
+
+\subsection{Descrição dos cargos}
+
+\subsubsection{Líder}
+\begin{itemize}
+    \item Desempenha um papel de representação da equipa, sendo que é ele que geralmente interage com o cliente e supervisor;
+    \item É o responsável máximo pela coordenação e bom funcionamento da equipa; 
+    \item Está responsável pela atribuição de tarefas a cada elemento ou grupo de elementos; 
+    \item Possui a palavra final em momentos de indecisão da equipa, evitando impasses excessivos que prejudiquem o desenvolvimento do projeto.
+\end{itemize}
+
+\subsubsection{Sublíder}
+\begin{itemize}
+    \item Suporta o líder nas suas funções e serve como o seu substituto quando este não está presente; 
+    \item Está responsável pela gestão das disponibilidades dos membros da equipa, podendo assim haver uma distribuição adequada e eficiente das tarefas pelos mesmos e, desta forma, ser possível otimizar a contribuição de cada elemento. 
+\end{itemize}
+
+\subsubsection{Secretário}
+\begin{itemize}
+    \item Escreve as atas das reuniões da equipa, de forma a que tudo o que seja discutido possa ser documentado e consultado mais tarde; 
+    \item Está responsável pela organização e manutenção dos diversos documentos de trabalho redigidos pela equipa; 
+    \item É a referência de informação para a equipa, sendo a pessoa à qual os membros geralmente se devem dirigir quando pretendem saber alguma informação da qual não têm conhecimento. 
+\end{itemize}
+
+\subsubsection{Moderador}
+\begin{itemize}
+    \item Está responsável pela coordenação e gestão das reuniões da equipa; 
+    \item Garante que todos os pontos de ordem das reuniões são devidamente discutidos; 
+    \item Dirige as reuniões de forma ordeira e garante que todos os membros da equipa participam na discussão e cumprem com as regras de funcionamento estabelecidas para as reuniões. 
+\end{itemize}
+
+\subsubsection{Facilitador}
+\begin{itemize}
+    \item Está responsável por manter a equipa focada nos seus objetivos, intervindo sempre que esta se está a desviar das suas prioridades;
+    \item Procura formas de manter a produtividade da equipa, tanto ao longo do desenvolvimento das tarefas do projeto, como durante as reuniões de equipa;
+    \item Garante que todos os membros estão a contribuir para o desenvolvimento do projeto e para o bom funcionamento da equipa. 
+\end{itemize}
+
+\subsubsection{Gestor de Tarefas}
+\begin{itemize}
+    \item Coordena, juntamente com o líder, a distribuição das tarefas pelos diferentes membros e acompanha o estado de execução de cada uma;
+    \item Gere a ferramenta Trello, utilizada para facilitar a organização das tarefas da equipa.
+\end{itemize}
+
+\subsubsection{Equipa técnica}
+
+Todos os membros da equipa poderão desempenhar funções relacionadas com o desenvolvimento do projeto propriamente dito. À medida que vão surgindo novas tarefas, estas serão distribuídas pelos membros. Conforme a exigência do trabalho a realizar, poderá justificar-se a criação de pequenas equipas temporárias de cerca de 2 ou 3 elementos para realizar tarefas específicas mais complexas.
+
+De qualquer forma, à medida que vai sendo desenvolvido o projeto, é esperado que os cargos acima descritos se mantenham. Consequentemente, os membros que não têm qualquer cargo estarão geralmente mais focados no desenvolvimento do projeto em si. No entanto, caso seja necessário, qualquer um deles estará disponível a auxiliar um dos colegas de equipa com as funções associadas ao seu cargo.
+
+% Aprovação de documentos, pode ser rotativo ou por múltiplas pessoas para documentos extensos
+
+\subsection{Atribuição dos cargos}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cc}
+    \hlineB{2}
+    \multicolumn{1}{c}{\textbf{Cargo}} & \textbf{Nome} \\
+    \hlineB{2}
+    Líder           &       Pedro Castro        \\  \hline
+    Sublíder        &       Bernardo Araújo     \\  \hline
+    Secretário      &       Ana Araújo          \\  \hline
+    Moderador       &       Daniel Ribeiro      \\  \hline
+    Facilitador     &       Gonçalo Martins     \\
+                    &       Vicente Brito       \\  \hline
+    Gestor de Tarefas   &   Diogo Landau        \\  \hline
+    
+    \end{tabular}
+    \caption{Equipa e as suas funções}
+    \label{tab:my_label}
+\end{table}
+
+\newpage
+\section{Regras de Funcionamento}
+
+As regras de funcionamento compilam um conjunto de normas e procedimentos que devem ser seguidos pelos diversos membros da equipa de forma a que o funcionamento da mesma seja o melhor. Todos os membros devem ser conhecedores e cumpridores destas regras.
+
+    \subsection{Reuniões}
+    
+    Para o bom funcionamento das reuniões algumas regras devem ser seguidas. 
+    % Colocar como uma lista de itens? -Pedro
+    É indispensável a pontualidade e assiduidade dos membros convocados – falhas neste ponto deverão ser tidas em conta aquando da avaliação interna.
+    
+    As reuniões poderão ocorrer sobre duas formas: presencial ou virtual.
+    
+    Nas reuniões virtuais, todos os membros da equipa devem estar presentes, salvo haja uma justificação válida para a sua ausência. 
+    
+    Nas reuniões presenciais, se não for possível a presença de todos os membros, quer devido a restrições impostas pela situação pandémica quer por incompatibilidade de horários, devem ser escolhidos os membros consoante a sua disponibilidade e cargo. Assim, é importante o Líder (ou o sub-Líder) estar sempre presente, bem como o secretário e um moderador. 
+    
+    As reuniões poderão ser de três naturezas distintas: de Equipa, com o Supervisor ou com o Cliente. Contudo, devem ser pautadas por uma mesma forma.
+    
+    Os documentos relacionados com as reuniões deverão sempre seguir os templates disponíveis no fim deste documento.
+
+
+    \subsection{Ordem de trabalhos}
+    
+    A ordem de trabalhos devem ser elaborada antes de cada reunião e enviada para os membros da equipa. De forma a cada um poder preparar a reunião bem como as suas intervenções.
+    
+    \subsection{Moderador}
+    
+    O moderador é responsável por conduzir a reunião, garantir que os vários tópicos presentes na ordem de trabalhos são tratados, o horário estipulado é cumprido, caso ocorra algum conflito deve tentar arranjar uma solução para o mesmo com o objetivo de que o restante da reunião decorra em normalidade.
+    
+    \subsection{Atas}
+    
+    Cada reunião deverá gerar uma ata, escrita pelo secretário e aprovada pela equipa. A ata deverá conter um resumo do que foi falado e decidido na reunião bem como qual o molde da reunião (virtual e/ou presencial, cliente/equipa/Supervisor) e as presenças. Os membros que não estiveram presentes na reunião deverão ler posteriormente a ata de forma a acompanhar o progresso do trabalho.
+    
+    \subsection{Planeamento}
+    
+    De forma a otimizar o trabalho da equipa é necessária uma gestão constante, garantindo que o trabalho proposto a cada membro é realizado, e na necessidade de auxílio na tarefa essa ajuda aconteça.
+    
+    \subsection{Atribuição de tarefas}
+    
+    A atribuição de tarefas é realizada de uma forma democrática e voluntária no decorrer das reuniões. 
+    
+    Dá-se primazia ao voluntariado. Caso ninguém se ofereça para assumir a tarefa, o líder atribuirá a mesma a um dos elementos do grupo.
+    
+    \subsection{Controlo de Produção}
+    
+    Em todas as ocasiões onde seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por todos os membros da equipa. Só após a revisão, discussão e correção é que o documento deve ser guardado/enviado como versão final do mesmo.
+    
+    \subsection{Gestão de conflitos}
+    
+    Para um bom funcionamento em equipa é necessário que os todos os membros da equipa se respeitem mutuamente. 
+    
+    É deveras importante que todos possam ter liberdade de expor as suas ideias, mesmo que contrárias às já expostas, sem nenhum constrangimento.
+    
+    No caso de ideias contrárias sejam apresentadas, cada membro deve ouvir o que os outros têm a dizer e em equipa chegar a um consenso. 
+    
+    Após a tomada de decisão da equipa, todos os elementos devem trabalhar segundo a orientação e decisão da equipa, visando o equilíbrio e o progresso do trabalho.
+    
+    Em casos extremos de conflito, caberá ao líder o papel de intervir na discussão e definir qual o caminho a tomar pela equipa.
+
+
+
+\newpage
+%\pagenumbering{arabic}
+
+\section{Ferramentas de Trabalho}
+Com o objetivo de organizarmos o grupo e o trabalho da melhor maneira, conseguindo manter todos ficheiros atualizados e uma comunicação eficiente entre o grupo, foram utilizadas diversas ferramentas de trabalho. % Enumeram-se as seguintes ferramentas de trabalho? -Pedro
+\subsection{Repositório}
+\textbf{GitHub}
+% Colocar na forma impessoal, fica mais formal (ex. utilizou-se) -Pedro
+
+Utilizamos o GitHub para o código correspondente ao desenvolvimento do software. Esta ferramenta permite-nos trabalhar em simultâneo no mesmo ficheiro, e juntar os diferentes trabalhos, quando necessário. É uma boa ferramenta para ter todo o código escrito pelo grupo armazenado. 
+
+\begin{center}
+    \url{https://github.com/GoncaloMartins10/SEAI---Equipa-F}
+\end{center}
+
+
+\textbf{Google Drive}
+
+Utilizamos a drive para o repositório de todos os documentos. 
+Com isto, procuramos manter todos os documentos atualizados e de fácil consulta para que toda a informação esteja acessível a qualquer elemento do grupo. 
+
+\subsection{Documentação}
+\textbf{Google Docs}
+
+Aliado ao Google Drive, a sua utilização será mais direcionada à escrita de rascunhos dos documentos oficiais. Tem a vantagem de ser uma plataforma de utilização em \textit{cloud} que permite a alteração do documento por diversos membros do grupo, com a opção de anexar notas em partes especificas.
+
+\textbf{Overleaf}
+
+O editor online LaTeX será utilizado para à escrita dos documentos oficiais, possui um modo de funcionamento semelhante ao Google Docs, no entanto é preferível pois a redação do documento fica de acordo com o seu template.
+
+
+\subsection{Avaliação Interna}
+
+\textbf{Microsoft Excel}
+
+Para calcular a ``nota'' interna de cada um dos elementos utilizamos uma folha de cálculo. Esta ferramenta permite-nos calcular de uma forma rápida o rendimento de todos os elementos, tendo em conta os parâmetros definidos pelo grupo. 
+
+\subsection{Comunicação}
+
+\textbf{Messenger}
+
+No Facebook a equipa tem um grupo, onde serão efetuados todos os anúncios do trabalho, como hora das reuniões, documentos em falta, etc. 
+
+\textbf{Discord}
+
+O Discord é utilizado para todas as chamadas e videochamadas do grupo, e para a discussão de qualquer aspeto relativos ao trabalho. 
+
+\subsection{Gestão}
+
+\textbf{Trello}
+
+O Trello funciona como a ``agenda'' do grupo. Nesta ferramenta, para além das datas das reuniões, colocamos as deadlines para cada tarefa. É uma ferramenta indispensável para organização do grupo. 
+
+
+\section{Avaliação da equipa}
+Todas as secções são avaliadas entre 0 a 20 valores, de maneira a refletir com mais precisão o empenho e o trabalho realizado por cada membro da equipa.
+
+\subsection{Assiduidade (15\%)}
+\begin{itemize}
+    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha Excel que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. Se um membro estiver presente, é lhe atribuído a nota máxima, caso contrário, será a nota mínima. No final do projecto, é feita a média a cada membro.
+\end{itemize}
+\subsection{Cumprimento dos Requisitos das Tarefas (30\%)}
+Por tarefa, serão sempre atribuídos membros executores, e membros avaliadores. 
+\begin{itemize}
+    \item \textbf{Executores} - Têm como função realizar a tarefa especificada, tendo como base os requisitos que devem ser cumpridos. 
+    \item \textbf{Avaliadores} - Responsáveis por avaliar o trabalho e informar pontos que devem ser modificados e/ou acrescentados. Após 2 dias do avaliador ter comunicado a informação ao(s) executor(es), o trabalho é reavaliado, e por cada ponto incumprido o(s) membro(s) é(são) penalizado(s) entre 0-2 valores ao critério do(s) avaliador(es).
+\end{itemize}
+\subsection{Prazos de entrega (30\%)}
+\begin{itemize}
+    \item Cada tarefa tem um prazo de entrega que deve ser cumprido por todos os \textbf{executores} da mesma. Caso um membro não cumpra com este prazo, por cada dia de atraso, é penalizado por um valor. No caso da realização da tarefa exceder 5 dias de atraso é lhe atribuído 0 valores se o trabalho não tiver sido realizado. No caso de estar apenas incompleto, será a nota de 15 valores. A classificação do trabalho como não realizado, incompleto ou realizado é uma tarefa do(s) \textbf{avaliador(es)}.
+\end{itemize}
+\subsection{Trabalho de equipa (20\%)}
+Este ponto tem como objetivo avaliar como o membro colabora e trabalha em equipa. No final do projeto cada membro é avaliado pelos restantes membros e por si (com o peso de cada avaliação igualmente distribuída por cada elemento), em três qualidades:
+\begin{enumerate} 
+\item Resolução passiva de conflitos
+\item Respeito pelos restantes membros da equipa
+\item Cooperação e Iniciativa
+\end{enumerate}
+Esta avaliação é realizada apenas no final do projeto.
+\subsection{Participação (5\%)}
+Semelhante à sub-secção anterior, esta qualidade é avaliada por todos os membros no final do projeto, sendo que o peso da avaliação é uniformemente distribuída por cada membro da equipa, pelas seguintes qualidades:
+\begin{enumerate}
+    \item Comunicação durante as reuniões
+    \item Procura ativa de soluções dos problemas apresentados em reunião
+\end{enumerate}
+
+\section{Templates}
+\subsection{Ata}
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/template ata.png}
+    \label{fig:my_label}
+\end{figure}
+\subsection{Convocatória da Reunião}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/template_convocatoria.png}
+    \label{fig:my_label}
+\end{figure}
+
+\end{document}
