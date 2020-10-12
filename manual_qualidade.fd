@@ -151,8 +151,8 @@ Vicente Brito                     & up201605145@fe.up.pt & 916018460            
 \subsubsection{Secretário}
 \begin{itemize}
     \item Escreve as atas das reuniões da equipa, de forma a que tudo o que seja discutido possa ser documentado e consultado mais tarde; 
-    \item Está responsável pela organização e manutenção dos diversos documentos de trabalho redigidos pela equipa; 
-    \item É a referência de informação para a equipa, sendo a pessoa à qual os membros geralmente se devem dirigir quando pretendem saber alguma informação da qual não têm conhecimento. 
+    \item Está responsável pela organização e manutenção dos diversos documentos de trabalho redigidos pela equipa. 
+    % *Remover* \item É a referência de informação para a equipa, sendo a pessoa à qual os membros geralmente se devem dirigir quando pretendem saber alguma informação da qual não têm conhecimento. 
 \end{itemize}
 
 \subsubsection{Moderador}
@@ -177,11 +177,14 @@ Vicente Brito                     & up201605145@fe.up.pt & 916018460            
 
 \subsubsection{Equipa técnica}
 
-Todos os membros da equipa poderão desempenhar funções relacionadas com o desenvolvimento do projeto propriamente dito. À medida que vão surgindo novas tarefas, estas serão distribuídas pelos membros. Conforme a exigência do trabalho a realizar, poderá justificar-se a criação de pequenas equipas temporárias de cerca de 2 ou 3 elementos para realizar tarefas específicas mais complexas.
+Todos os membros da equipa poderão desempenhar funções relacionadas com o desenvolvimento do projeto propriamente dito. À medida que vão surgindo novas tarefas, estas serão distribuídas pelos membros. Conforme a exigência do trabalho a realizar, poderá justificar-se a criação de pequenas equipas temporárias de cerca de dois ou três elementos para realizar tarefas específicas mais complexas.
 
 De qualquer forma, à medida que vai sendo desenvolvido o projeto, é esperado que os cargos acima descritos se mantenham. Consequentemente, os membros que não têm qualquer cargo estarão geralmente mais focados no desenvolvimento do projeto em si. No entanto, caso seja necessário, qualquer um deles estará disponível a auxiliar um dos colegas de equipa com as funções associadas ao seu cargo.
 
 % Aprovação de documentos, pode ser rotativo ou por múltiplas pessoas para documentos extensos
+
+Todos os documentos redigidos por membros da equipa necessitam de aprovação prévia para se tornarem oficiais. Toda a equipa técnica pode participar neste processo de aprovação, sendo uma responsabilidade rotativa entre os membros. Documentos mais extensos podem necessitar de revisão e aprovação de um número considerável de membros da equipa, enquanto que para documentos de menor dimensão, esta tarefa pode ser realizada por apenas um ou dois membros.
+
 
 \subsection{Atribuição dos cargos}
 
@@ -211,32 +214,36 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
 
     \subsection{Reuniões}
     
-    Para o bom funcionamento das reuniões algumas regras devem ser seguidas. 
-    % Colocar como uma lista de itens? -Pedro
-    É indispensável a pontualidade e assiduidade dos membros convocados – falhas neste ponto deverão ser tidas em conta aquando da avaliação interna.
-    
-    As reuniões poderão ocorrer sobre duas formas: presencial ou virtual.
-    
-    Nas reuniões virtuais, todos os membros da equipa devem estar presentes, salvo haja uma justificação válida para a sua ausência. 
-    
-    Nas reuniões presenciais, se não for possível a presença de todos os membros, quer devido a restrições impostas pela situação pandémica quer por incompatibilidade de horários, devem ser escolhidos os membros consoante a sua disponibilidade e cargo. Assim, é importante o Líder (ou o sub-Líder) estar sempre presente, bem como o secretário e um moderador. 
-    
-    As reuniões poderão ser de três naturezas distintas: de Equipa, com o Supervisor ou com o Cliente. Contudo, devem ser pautadas por uma mesma forma.
-    
-    Os documentos relacionados com as reuniões deverão sempre seguir os templates disponíveis no fim deste documento.
+    Para o bom funcionamento das reuniões as seguintes  regras devem ser seguidas:
 
+    \begin{itemize}
+    \item Pontualidade e assiduidade dos membros é indispensável – falhas neste ponto deverão ser tidas em conta aquando da avaliação interna.
+  
+    \item As reuniões poderão ocorrer em dois moldes: presencial ou virtual.
+    
+    \item Quanto à categoria das reuniões, estas poderão ser: de Equipa, com o Supervisor ou com o Cliente. Contudo, sempre seguindo as mesmas regras gerais de funcionamento.
+    
+    \item Semanalmente, a equipa terá uma reunião fixa presencial Sexta-Feira às 16h30 com duração de uma hora, na sala I005, no edifício I, na FEUP.
+    
+    \item Consoante a necessidade, outra reunião semanal (não periódica) poderá ser marcada numa data, hora e local a definir pela equipa.
+    
+    \item Para uma melhor organização dos vários membros, as reuniões deverão ser marcadas, sempre que possível, com dois dias de antecedência.
+    
+    \item A ausência de um membro deve ser devidamente justificada à equipa. 
+    
+    \item Devido às restrições impostas pela situação pandémica vivida no nosso país, reuniões presenciais em que a presença de todos os membros não seja possível, devem ser escolhidos os membros consoante a sua disponibilidade e cargo. Assim, é importante o Líder (ou o sub-Líder) estar sempre presente, bem como o secretário e um moderador.
+    
+    \item Os documentos necessários às reuniões deverão sempre seguir os templates disponíveis no fim deste documento.
 
+\end{itemize}
     \subsection{Ordem de trabalhos}
     
-    A ordem de trabalhos devem ser elaborada antes de cada reunião e enviada para os membros da equipa. De forma a cada um poder preparar a reunião bem como as suas intervenções.
+    A ordem de trabalhos deve ser elaborada antes de cada reunião e enviada para os membros da equipa. De forma a cada um poder preparar a reunião bem como as suas intervenções.
     
-    \subsection{Moderador}
-    
-    O moderador é responsável por conduzir a reunião, garantir que os vários tópicos presentes na ordem de trabalhos são tratados, o horário estipulado é cumprido, caso ocorra algum conflito deve tentar arranjar uma solução para o mesmo com o objetivo de que o restante da reunião decorra em normalidade.
     
     \subsection{Atas}
     
-    Cada reunião deverá gerar uma ata, escrita pelo secretário e aprovada pela equipa. A ata deverá conter um resumo do que foi falado e decidido na reunião bem como qual o molde da reunião (virtual e/ou presencial, cliente/equipa/Supervisor) e as presenças. Os membros que não estiveram presentes na reunião deverão ler posteriormente a ata de forma a acompanhar o progresso do trabalho.
+    Cada reunião deverá gerar uma ata, escrita pelo secretário e aprovada pela equipa. A ata deverá conter um resumo do que foi falado e decidido na reunião bem como qual o molde da reunião (virtual e/ou presencial, cliente/equipa/supervisor) e as presenças. Os membros que não estiveram presentes na reunião deverão ler posteriormente a ata de forma a acompanhar o progresso do trabalho.
     
     \subsection{Planeamento}
     
@@ -246,19 +253,23 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
     
     A atribuição de tarefas é realizada de uma forma democrática e voluntária no decorrer das reuniões. 
     
-    Dá-se primazia ao voluntariado. Caso ninguém se ofereça para assumir a tarefa, o líder atribuirá a mesma a um dos elementos do grupo.
+    Dá-se primazia ao voluntariado. Caso ninguém se ofereça para assumir a tarefa, o líder, o sublíder e o gestor de tarefas atribuirá a mesma a um dos elementos do grupo.
     
     \subsection{Controlo de Produção}
     
-    Em todas as ocasiões onde seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por todos os membros da equipa. Só após a revisão, discussão e correção é que o documento deve ser guardado/enviado como versão final do mesmo.
+    Em todas as ocasiões em que seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por todos os membros da equipa, de forma a todos estarem a par da situação. 
+    
+    A validação final de documentos será rotativa pelos membros da equipa. Caso alguma alteração seja feita num documento já publicado, a mesma deve registada no controlo de versões.
+    
+    % Validação rotativa pelos membros
     
     \subsection{Gestão de conflitos}
     
-    Para um bom funcionamento em equipa é necessário que os todos os membros da equipa se respeitem mutuamente. 
+    Para um bom funcionamento em equipa é necessário que todos os membros da equipa se respeitem mutuamente. 
     
     É deveras importante que todos possam ter liberdade de expor as suas ideias, mesmo que contrárias às já expostas, sem nenhum constrangimento.
     
-    No caso de ideias contrárias sejam apresentadas, cada membro deve ouvir o que os outros têm a dizer e em equipa chegar a um consenso. 
+    No caso de ideias contrárias serem apresentadas, cada membro deve ouvir o que os outros têm a dizer e em equipa chegar a um consenso. 
     
     Após a tomada de decisão da equipa, todos os elementos devem trabalhar segundo a orientação e decisão da equipa, visando o equilíbrio e o progresso do trabalho.
     
@@ -270,12 +281,13 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
 %\pagenumbering{arabic}
 
 \section{Ferramentas de Trabalho}
-Com o objetivo de organizarmos o grupo e o trabalho da melhor maneira, conseguindo manter todos ficheiros atualizados e uma comunicação eficiente entre o grupo, foram utilizadas diversas ferramentas de trabalho. % Enumeram-se as seguintes ferramentas de trabalho? -Pedro
+Com o objetivo de organizar o grupo e o trabalho da melhor maneira, conseguindo manter todos ficheiros atualizados e uma comunicação eficiente entre o grupo, enumeram-se as seguintes ferramentas de trabalho a utilizar durante o desenvolvimento do projeto:
 \subsection{Repositório}
 \textbf{GitHub}
-% Colocar na forma impessoal, fica mais formal (ex. utilizou-se) -Pedro
 
-Utilizamos o GitHub para o código correspondente ao desenvolvimento do software. Esta ferramenta permite-nos trabalhar em simultâneo no mesmo ficheiro, e juntar os diferentes trabalhos, quando necessário. É uma boa ferramenta para ter todo o código escrito pelo grupo armazenado. 
+Para partilha e gestão de software foi adotado o Github. Esta aplicação web permite gerir o acesso e a gestão de várias versões do código escrito pela equipa, tal como a análise e a junção de software progressivo do projeto.
+
+% O GitHub será utilizado para o código correspondente ao desenvolvimento do software. Esta ferramenta permite trabalhar em simultâneo no mesmo ficheiro, e juntar os diferentes trabalhos, quando necessário. Permite fazer também um controlo de versões, essencial para um projeto desta natureza. 
 
 \begin{center}
     \url{https://github.com/GoncaloMartins10/SEAI---Equipa-F}
@@ -284,48 +296,57 @@ Utilizamos o GitHub para o código correspondente ao desenvolvimento do software
 
 \textbf{Google Drive}
 
-Utilizamos a drive para o repositório de todos os documentos. 
-Com isto, procuramos manter todos os documentos atualizados e de fácil consulta para que toda a informação esteja acessível a qualquer elemento do grupo. 
+O Google Drive será utilizado para o repositório de todos os documentos oficiais que não código. 
+Com isto, procura-se manter todos os documentos atualizados e acessíveis, de forma a que toda a informação relevante possa ser facilmente consultada por qualquer elemento do grupo, pelo supervisor e pelo cliente.
+
+\begin{center}
+    \url{https://drive.google.com/drive/u/0/folders/0AHya0jWuGaN5Uk9PVA}
+\end{center}
 
 \subsection{Documentação}
 \textbf{Google Docs}
 
-Aliado ao Google Drive, a sua utilização será mais direcionada à escrita de rascunhos dos documentos oficiais. Tem a vantagem de ser uma plataforma de utilização em \textit{cloud} que permite a alteração do documento por diversos membros do grupo, com a opção de anexar notas em partes especificas.
+Aliado ao Google Drive, a sua utilização será mais direcionada à escrita de rascunhos dos documentos oficiais. Tem a vantagem de ser uma plataforma de utilização em \textit{cloud} que permite a alteração do documento por diversos membros do grupo.
 
 \textbf{Overleaf}
 
-O editor online LaTeX será utilizado para à escrita dos documentos oficiais, possui um modo de funcionamento semelhante ao Google Docs, no entanto é preferível pois a redação do documento fica de acordo com o seu template.
-
+O editor online LaTeX foi escolhido para a escrita dos documentos oficiais. Possui um modo de funcionamento semelhante ao Google Docs, no entanto é preferível, por permitir criar documentos com uma formatação mais uniforme e padronizada.
 
 \subsection{Avaliação Interna}
 
-\textbf{Microsoft Excel}
+\textbf{Folha de cálculo}
 
-Para calcular a ``nota'' interna de cada um dos elementos utilizamos uma folha de cálculo. Esta ferramenta permite-nos calcular de uma forma rápida o rendimento de todos os elementos, tendo em conta os parâmetros definidos pelo grupo. 
+Para o cálculo da avaliação interna de cada um dos elementos, utilizar-se-á uma folha de cálculo. Este programa permitirá calcular de uma forma rápida e automatizada o rendimento de todos os elementos, tendo em conta os parâmetros definidos pelo grupo no ponto 6 deste Manual de Qualidade. 
 
 \subsection{Comunicação}
 
-\textbf{Messenger}
-
-No Facebook a equipa tem um grupo, onde serão efetuados todos os anúncios do trabalho, como hora das reuniões, documentos em falta, etc. 
-
 \textbf{Discord}
 
-O Discord é utilizado para todas as chamadas e videochamadas do grupo, e para a discussão de qualquer aspeto relativos ao trabalho. 
+O Discord é a plataforma principal de comunicação. Recorrer-se-á a esta para todas as reuniões remotas, chamadas e videochamadas do grupo, bem como para discussão de qualquer aspeto relativo ao trabalho.  Para além disso, tem a possibilidade de, num mesmo grupo, definir diferentes canais de comunicação de texto ou de voz que serão criados para diferentes assuntos do projecto. Desta forma será criado um canal para assuntos gerais, um para validação de documentos e ainda canais para cada sub-equipa, quando assim for necessário.
+
+\textbf{Messenger}
+
+A equipa tem um \textit{chat} de grupo no Facebook Messenger que será usada maioritariamente para realizar anúncios relacionados com o projeto.
 
 \subsection{Gestão}
 
 \textbf{Trello}
 
-O Trello funciona como a ``agenda'' do grupo. Nesta ferramenta, para além das datas das reuniões, colocamos as deadlines para cada tarefa. É uma ferramenta indispensável para organização do grupo. 
+O Trello funciona como a ``agenda'' do grupo. Esta aplicação, para além das datas das reuniões, irá gerir as \textit{deadlines} para cada tarefa. Futuramente, poder-se-á recorrer a outras ferramentas de gestão de agendas conforme a necessidade. 
 
-
-\section{Avaliação da equipa}
+\newpage
+\section{Avaliação Interna}
 Todas as secções são avaliadas entre 0 a 20 valores, de maneira a refletir com mais precisão o empenho e o trabalho realizado por cada membro da equipa.
 
 \subsection{Assiduidade (15\%)}
 \begin{itemize}
-    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha Excel que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. Se um membro estiver presente, é lhe atribuído a nota máxima, caso contrário, será a nota mínima. No final do projecto, é feita a média a cada membro.
+    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha Excel que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. A nota de cada membro é feita através so seguinte proporcional: 
+    \begin{itemize}
+        \item 20 valores: o aluno estar presente no inicio da reunião
+        \item 0 valores: o aluno não estar presente no final de reunião
+        \item x valores (entre 0 a 20): com base no atraso do membro elemento, relativo à hora de inicio e de fim.
+    \end{itemize}
+    No final do projecto, é feita a média a cada membro.
 \end{itemize}
 \subsection{Cumprimento dos Requisitos das Tarefas (30\%)}
 Por tarefa, serão sempre atribuídos membros executores, e membros avaliadores. 
@@ -340,9 +361,10 @@ Por tarefa, serão sempre atribuídos membros executores, e membros avaliadores.
 \subsection{Trabalho de equipa (20\%)}
 Este ponto tem como objetivo avaliar como o membro colabora e trabalha em equipa. No final do projeto cada membro é avaliado pelos restantes membros e por si (com o peso de cada avaliação igualmente distribuída por cada elemento), em três qualidades:
 \begin{enumerate} 
-\item Resolução passiva de conflitos
-\item Respeito pelos restantes membros da equipa
-\item Cooperação e Iniciativa
+\item Resolução passiva de conflitos;
+\item Respeito pelos restantes membros da equipa;
+\item Cooperação e Iniciativa;
+\item Avaliação do desempenho da tarefa de cada membro.
 \end{enumerate}
 Esta avaliação é realizada apenas no final do projeto.
 \subsection{Participação (5\%)}
@@ -360,11 +382,39 @@ Semelhante à sub-secção anterior, esta qualidade é avaliada por todos os mem
     \includegraphics[width=1\linewidth]{Imagens/template ata.png}
     \label{fig:my_label}
 \end{figure}
+
 \subsection{Convocatória da Reunião}
 \begin{figure} [H]
     \centering
     \includegraphics[width=1\linewidth]{Imagens/template_convocatoria.png}
     \label{fig:my_label}
 \end{figure}
+
+\subsection{Avaliação Interna Final}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/AvaliacaiInternaFinal.png}
+    \label{fig:my_label}
+\end{figure}
+
+\subsection{Avaliação Assiduidade}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/Assiduidade.png}
+    \label{fig:my_label}
+\end{figure}
+
+\subsection{Avaliação entre Avaliadores e Executores}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagens/AvaliadoresExecutores.png}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{flushright}
+Documento revisto e aprovado por: \\
+....\\
+....
+\end{flushright}
 
 \end{document}
