@@ -267,7 +267,7 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
     
     \subsection{Controlo de Produção}
     
-    Em todas as ocasiões em que seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por pelo menos um membro da equipa que se tenha voluntariado, ou que tenha sido eleito pelo líder.
+    Em todas as ocasiões em que seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto pelo menos por um membro da equipa que se tenha voluntariado, ou que tenha sido eleito pelo líder.
     
     A validação final de documentos será rotativa pelos membros da equipa. Caso alguma alteração seja feita num documento já publicado, a mesma deve registada no controlo de versões.
     
@@ -295,7 +295,7 @@ Com o objetivo de organizar o grupo e o trabalho da melhor maneira, conseguindo 
 \subsection{Repositório}
 \textbf{GitHub}
 
-Para partilha e gestão de software foi adotado o Github. Esta aplicação web permite gerir o acesso e a gestão de várias versões do código escrito pela equipa, tal como a análise e a junção de software progressivo do projeto.
+Para partilha e gestão de software foi adotado o Github. Esta aplicação web permite o acesso e a gestão de várias versões do código escrito pela equipa, tal como a análise e a junção de software progressivo do projeto.
 
 % O GitHub será utilizado para o código correspondente ao desenvolvimento do software. Esta ferramenta permite trabalhar em simultâneo no mesmo ficheiro, e juntar os diferentes trabalhos, quando necessário. Permite fazer também um controlo de versões, essencial para um projeto desta natureza. 
 
@@ -350,7 +350,7 @@ Todas as secções são avaliadas entre 0 a 20 valores, de maneira a refletir co
 
 \subsection{Assiduidade (15\%)}
 \begin{itemize}
-    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha de cálculo que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. A nota de cada membro é feita através so seguinte proporcional: 
+    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha de cálculo que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. A nota de cada membro é feita através do seguinte proporcional: 
     \begin{itemize}
         \item 20 valores: o aluno estar presente no inicio da reunião
         \item 0 valores: o aluno não estar presente no final de reunião
@@ -424,7 +424,7 @@ Semelhante à sub-secção anterior, esta qualidade é avaliada por todos os mem
 \begin{flushright}
 Documento revisto e aprovado por: \\
 Diogo Landau\\
-....
+Pedro Castro
 \end{flushright}
 
 \end{document}
