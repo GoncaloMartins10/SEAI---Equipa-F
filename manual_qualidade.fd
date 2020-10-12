@@ -73,14 +73,8 @@ Vicente Brito \quad up201605145
 \begin{tabular}{clc}
 \hlineB{2}
 \textbf{Versão} & \multicolumn{1}{c}{\textbf{Alterações}}                               & \textbf{Data} \\ \hlineB{2}
-0.0             & Criação do documento e definição dos tópicos a abordar                & 05/10/2020    \\ \hline
-0.1             & Actualização dos Objetivos do Manual de Qualidade                     & 06/10/2020    \\
-                & Actualização da Constituição da Equipa                                                \\ \hline
-0.2             & Actualização dos Templates                                            & 06/10/2020    \\ \hline
-0.3             & Actualização das Ferramentas de Trabalho                              & 07/10/2020    \\ \hline
-0.4             & Actualização da Avaliação Interna                                     & 08/10/2020     \\ 
-                & Actualização das Regras de Funcionamento                                              \\ 
-                & Actualização da Divisão de Cargos e Responsabilidades                                 \\ \hline
+1.0             & Documento inicial                 & 05/10/2020    \\ \hline
+
 \end{tabular}
 \caption{Controlo de versões do documento}
 \label{controlo_versoes}
@@ -231,7 +225,23 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
     
     \item A ausência de um membro deve ser devidamente justificada à equipa. 
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \item Devido às restrições impostas pela situação pandémica vivida no nosso país, reuniões presenciais em que a presença de todos os membros não seja possível, devem ser escolhidos os membros consoante a sua disponibilidade e cargo. Assim, é importante o Líder (ou o sub-Líder) estar sempre presente, bem como o secretário e um moderador.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     \item Os documentos necessários às reuniões deverão sempre seguir os templates disponíveis no fim deste documento.
 
@@ -253,11 +263,11 @@ As regras de funcionamento compilam um conjunto de normas e procedimentos que de
     
     A atribuição de tarefas é realizada de uma forma democrática e voluntária no decorrer das reuniões. 
     
-    Dá-se primazia ao voluntariado. Caso ninguém se ofereça para assumir a tarefa, o líder, o sublíder e o gestor de tarefas atribuirá a mesma a um dos elementos do grupo.
+    Dá-se primazia ao voluntariado. Caso ninguém se ofereça para assumir a tarefa, o líder, o sublíder e o gestor de tarefas atribuirão a mesma a um dos elementos do grupo.
     
     \subsection{Controlo de Produção}
     
-    Em todas as ocasiões em que seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por todos os membros da equipa, de forma a todos estarem a par da situação. 
+    Em todas as ocasiões em que seja gerado um documento (p.e. reuniões) o mesmo deverá ser revisto por pelo menos um membro da equipa que se tenha voluntariado, ou que tenha sido eleito pelo líder.
     
     A validação final de documentos será rotativa pelos membros da equipa. Caso alguma alteração seja feita num documento já publicado, a mesma deve registada no controlo de versões.
     
@@ -332,7 +342,7 @@ A equipa tem um \textit{chat} de grupo no Facebook Messenger que será usada mai
 
 \textbf{Trello}
 
-O Trello funciona como a ``agenda'' do grupo. Esta aplicação, para além das datas das reuniões, irá gerir as \textit{deadlines} para cada tarefa. Futuramente, poder-se-á recorrer a outras ferramentas de gestão de agendas conforme a necessidade. 
+O Trello é uma aplicação de gestão de tarefas que permite classificar as mesmas dentro de diferentes categorias. Considerou-se necessário a criação de 4 tabelas de categorização: "Por fazer", "A fazer", "A Verificar" e "Feito". A cada tarefa, deve-se atribuir um ou mais membros como executores e caso seja necessário poderá haver membros avaliadores. A informação da função do membro na tarefa será incluída na descrição desta. Um prazo de execução pode ser adicionado a uma tarefa, que deve ser tido em conta por cada membro atribuído.
 
 \newpage
 \section{Avaliação Interna}
@@ -340,7 +350,7 @@ Todas as secções são avaliadas entre 0 a 20 valores, de maneira a refletir co
 
 \subsection{Assiduidade (15\%)}
 \begin{itemize}
-    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha Excel que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. A nota de cada membro é feita através so seguinte proporcional: 
+    \item Todas as reuniões fixas, ou marcadas com mais de 2 dias de antecedência terão uma folha de cálculo que terá em conta todos os membros participantes. Para cada reunião há um conjunto de membros que se espera participarem na mesma. A nota de cada membro é feita através so seguinte proporcional: 
     \begin{itemize}
         \item 20 valores: o aluno estar presente no inicio da reunião
         \item 0 valores: o aluno não estar presente no final de reunião
@@ -356,7 +366,7 @@ Por tarefa, serão sempre atribuídos membros executores, e membros avaliadores.
 \end{itemize}
 \subsection{Prazos de entrega (30\%)}
 \begin{itemize}
-    \item Cada tarefa tem um prazo de entrega que deve ser cumprido por todos os \textbf{executores} da mesma. Caso um membro não cumpra com este prazo, por cada dia de atraso, é penalizado por um valor. No caso da realização da tarefa exceder 5 dias de atraso é lhe atribuído 0 valores se o trabalho não tiver sido realizado. No caso de estar apenas incompleto, será a nota de 15 valores. A classificação do trabalho como não realizado, incompleto ou realizado é uma tarefa do(s) \textbf{avaliador(es)}.
+    \item Cada tarefa tem um prazo de entrega que deve ser cumprido por todos os \textbf{executores}. Caso um membro não cumpra com este prazo, por cada dia de atraso, é penalizado por um valor. No caso da realização da tarefa exceder 5 dias de atraso é lhe atribuído 0 valores se o trabalho não tiver sido realizado. No caso de estar apenas incompleto, será a nota de 15 valores. A classificação do trabalho como não realizado, incompleto ou realizado é uma tarefa do(s) \textbf{avaliador(es)}.
 \end{itemize}
 \subsection{Trabalho de equipa (20\%)}
 Este ponto tem como objetivo avaliar como o membro colabora e trabalha em equipa. No final do projeto cada membro é avaliado pelos restantes membros e por si (com o peso de cada avaliação igualmente distribuída por cada elemento), em três qualidades:
@@ -364,7 +374,7 @@ Este ponto tem como objetivo avaliar como o membro colabora e trabalha em equipa
 \item Resolução passiva de conflitos;
 \item Respeito pelos restantes membros da equipa;
 \item Cooperação e Iniciativa;
-\item Avaliação do desempenho da tarefa de cada membro.
+\item Avaliação do desempenho do cargo do membro.
 \end{enumerate}
 Esta avaliação é realizada apenas no final do projeto.
 \subsection{Participação (5\%)}
@@ -413,7 +423,7 @@ Semelhante à sub-secção anterior, esta qualidade é avaliada por todos os mem
 
 \begin{flushright}
 Documento revisto e aprovado por: \\
-....\\
+Diogo Landau\\
 ....
 \end{flushright}
 
