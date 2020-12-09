@@ -8,8 +8,8 @@ services:
     container_name: pgadmin_container
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-ii@project.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-ii_project}
+      PGADMIN_DEFAULT_EMAIL: seai@projeto.com
+      PGADMIN_DEFAULT_PASSWORD: seai_projeto
     volumes:
        - pgadmin:/root/.pgadmin
        - ./pgadmin_config:/cfg
@@ -22,15 +22,13 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-ii}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ii_project}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
       - ./postgres_config/1-init.sql:/docker-entrypoint-initdb.d/1-init.sql
       - ./postgres_config/2-create_tables.sql:/docker-entrypoint-initdb.d/2-create_tables.sql
-      # Comment the line bellow to disable initial inserts into db
-      #- ./postgres_config/3-populate.sql:/docker-entrypoint-initdb.d/3-populate.sql
     networks:
       - postgres-network
     restart: unless-stopped
