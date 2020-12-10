@@ -15,7 +15,7 @@ Onde seai_env.yaml é o ficheiro de configuração no git com as dependências d
 
 Para criar este ficheiro, instalar os pacotes necessários e usar:
 ```bash
-conda env export > file_name.yaml
+conda env export --no-build > file_name.yaml
 ```
 Este ficheiro irá ser criado no diretório onde estão a trabalhar atualmente.
 
