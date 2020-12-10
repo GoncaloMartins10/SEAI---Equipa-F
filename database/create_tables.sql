@@ -1,4 +1,5 @@
-CREATE DATABASE SEAI;
+CREATE DATABASE seai;
+\c seai
 CREATE SCHEMA ges_ativos;
 
 

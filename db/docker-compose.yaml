@@ -27,8 +27,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-      - ./postgres_config/1-init.sql:/docker-entrypoint-initdb.d/1-init.sql
-      - ./postgres_config/2-create_tables.sql:/docker-entrypoint-initdb.d/2-create_tables.sql
+      - ../database/create_tables.sql:/docker-entrypoint-initdb.d/2-create_tables.sql
     networks:
       - postgres-network
     restart: unless-stopped
