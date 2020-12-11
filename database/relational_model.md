@@ -17,9 +17,8 @@ Transformer_Algorithm_Weights(<u>#id_transformer -> Transformador</u>, <u>#id_al
 3. comentar a tabela weights fazendo referência a que algoritmo utiliza cada parágrafo de codigo;
 4. ENUM type para o algoritmo. Faz sentido?
 5. As restantes tabelas a acrescentar à base de dados (data).
-6. tabela oil quality: color type
-7. tabela oil quality: interfacial tension???? 
-8. Para completarmos o diagrama de classes da base de dados precisamos de indicar os tipos das variaveis.
-9. adicionar timestamps.
-10. quais sao os tipos de cada variavel de manutenção? booleano?
-11. 
+6. Para completarmos o diagrama de classes da base de dados precisamos de indicar os tipos das variaveis.
+7. adicionar timestamps.
+8. quais sao os tipos de cada variavel de manutenção? booleano?
+9. tabela maintenance what is infrea-red?
+10. 

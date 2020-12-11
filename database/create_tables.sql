@@ -59,10 +59,11 @@ CREATE TABLE ges_ativos.transformer_algorithm_weights (
 
 CREATE TABLE ges_ativos.oil_quality_measurements (
     id_oil_quality_measurement SERIAL PRIMARY KEY,
+    timestamp_oil_quality_measurement TIMESTAMP,
     breakdown_voltage REAL,
     water_content REAL,
     acidity REAL,
-    color TEXT,
+    color REAL,
     interfacial_tension REAL
 );
 
@@ -74,6 +75,7 @@ CREATE TABLE ges_ativos.furfural_measurements(
 
 CREATE TABLE ges_ativos.dissolved_gas_measurements (
     id_dissolved_gas_measurement SERIAL PRIMARY KEY,
+    timestamp_dissolved_gas_measurements TIMESTAMP,
     H2 REAL,
     CH4 REAL,
     C2H6 REAL,
@@ -95,7 +97,7 @@ CREATE TABLE ges_ativos.maintenance (
     timestamp_maintenance TIMESTAMP,
     bushings BOOLEAN,
     oil_leaks BOOLEAN,
-    infrea_red BOOLEAN,
+    infra_red BOOLEAN,
     cooling BOOLEAN,
     main_tank BOOLEAN,
     oil_tank BOOLEAN,
