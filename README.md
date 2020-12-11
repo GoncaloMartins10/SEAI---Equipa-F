@@ -81,7 +81,6 @@ Depois de instalar a "Remote - WSL", é possível através do VSCode, correr có
 2. Os ficheiros relativos à base de dados estão neste momento no branch "landau" 
 3. correr no diretório "db/" ->docker-compose up 
 4. Assumindo que o processo do docker-compose up correu bem e ainda esta a correr, podem ir ao browser visitar http://localhost:5050/
-5. 
-  user: seai@projeto.com
-  password: seai_projeto
+5. user: seai@projeto.com
+   password: seai_projeto
 6. Onde diz servers, clicam na seta, e depois no que diz SEAI, e a password é ->postgres
