@@ -69,9 +69,9 @@ Para instalação de pacotes, usar de preferência o conda. Se for necessário u
   3. Escolher o ambiente criado anteriormente (seai_env)
   
 Algumas extensões que pode ser preciso instalar no VSCode. Basta procurar as seguintes na loja de extensões, e instalar:
-  Remote - WSL
-  Python Extension
-  Anaconda Extension Pack
+  1. Remote - WSL
+  2. Python Extension
+  3. Anaconda Extension Pack
 
 Depois de instalar a "Remote - WSL", é possível através do VSCode, correr código no subsistema Linux, e aceder aos ficheiros que estão no WSL, em vez de ele estar a correr diretamente no Windows.
 
