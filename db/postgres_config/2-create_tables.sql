@@ -3,7 +3,9 @@ CREATE DATABASE seai;
 CREATE SCHEMA ges_ativos;
 
 
-CREATE TYPE algorithm AS ENUM ('algorithm1', 'algorithm2', 'algorithm3', 'algorithm4');
+CREATE TYPE algorithm AS ENUM ('1', '2', '3', '4');
+
+CREATE TYPE indice_manutencao as ENUM ('-2', '-1', '0', '1', '2')
 
 CREATE TABLE ges_ativos.transformer (
     id_transformer SERIAL PRIMARY KEY,
@@ -54,11 +56,12 @@ CREATE TABLE ges_ativos.transformer_algorithm_weights (
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     id_algorithm ALGORITHM,
     id_weights INTEGER REFERENCES ges_ativos.weights(id_weights),
-    PRIMARY KEY (id_transformer, id_algorithm, id_weights)
+    PRIMARY KEY (id_transformer, id_algorithm)
 );
 
 CREATE TABLE ges_ativos.oil_quality_measurements (
     id_oil_quality_measurement SERIAL PRIMARY KEY,
+    id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_oil_quality_measurement TIMESTAMP,
     breakdown_voltage REAL,
     water_content REAL,
@@ -69,12 +72,14 @@ CREATE TABLE ges_ativos.oil_quality_measurements (
 
 CREATE TABLE ges_ativos.furfural_measurements(
     id_furfural_measurement SERIAL PRIMARY KEY,
+    id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_furfural_measurement TIMESTAMP,
     quantity REAL
 );
 
 CREATE TABLE ges_ativos.dissolved_gas_measurements (
     id_dissolved_gas_measurement SERIAL PRIMARY KEY,
+    id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_dissolved_gas_measurements TIMESTAMP,
     H2 REAL,
     CH4 REAL,
@@ -87,6 +92,7 @@ CREATE TABLE ges_ativos.dissolved_gas_measurements (
 
 CREATE TABLE ges_ativos.load_measurements (
     id_load_measurement SERIAL PRIMARY KEY,
+    id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_load_measurement TIMESTAMP,
     power_factor REAL,
     load_factor REAL
@@ -94,15 +100,7 @@ CREATE TABLE ges_ativos.load_measurements (
 
 CREATE TABLE ges_ativos.maintenance (
     id_maintenance SERIAL PRIMARY KEY, 
+    id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_maintenance TIMESTAMP,
-    bushings BOOLEAN,
-    oil_leaks BOOLEAN,
-    infra_red BOOLEAN,
-    cooling BOOLEAN,
-    main_tank BOOLEAN,
-    oil_tank BOOLEAN,
-    foundation BOOLEAN,
-    grounding BOOLEAN, 
-    gaskets BOOLEAN,
-    connectors BOOLEAN
+    indice INDICE_MANUTANCAO
 );
