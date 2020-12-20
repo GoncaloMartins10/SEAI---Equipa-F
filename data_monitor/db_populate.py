@@ -25,7 +25,6 @@ class DataBase:
 			print(sqlalchemy_txt)
 
 			self.metaData = MetaData(self.engine)
-			print(self.metaData.tables)
 
 			Session = sessionmaker(bind=self.engine)
 			self.session = Session()
@@ -38,9 +37,14 @@ class DataBase:
 	def insert(self, object):
 		try:
 			self.session.add(object)
-			self.session.commit()
 		except (Exception, exc.SQLAlchemyError) as error:
 			print("\t<<< Error inserting to DataBase >>>\n", error)
+
+	def commit(self):
+		try:
+			self.session.commit()
+		except (Exception, exc.SQLAlchemyError) as error:
+			print("\t<<< Error commiting to DataBase >>>\n", error)
 
 	def delete(self, object, id):
 		raise NotImplemented
@@ -67,13 +71,56 @@ class Dissolved_gas_measurements(Base):
 	id_dissolved_gas_measurement  = Column(Integer, primary_key=True)
 	timestamp_dissolved_gas_measurements = Column(DateTime)
 	h2 		= Column(Float)
-	ch4		= Column(Float)
-	c2h6	= Column(Float)
-	c2h4	= Column(Float)
-	c2h2	= Column(Float)
 	co 		= Column(Float)
 	coh2	= Column(Float)
+	ch4		= Column(Float)
+	c2h4	= Column(Float)
+	c2h6	= Column(Float)
+	c2h2	= Column(Float)
 
+	def __init__(self, time, h2_in, co_in, coh2_in, ch4_in, c2h4_in, c2h6_in, c2h2_in):
+		self.timestamp_dissolved_gas_measurements = time
+		self.h2 	= h2_in
+		self.co 	= co_in
+		self.coh2	= coh2_in
+		self.ch4	= ch4_in
+		self.c2h4	= c2h4_in
+		self.c2h6	= c2h6_in
+		self.c2h2	= c2h2_in
+
+class Oil_quality_measurements(Base):
+	__tablename__="oil_quality_measurements"
+	__table_args__ ={"schema": "ges_ativos"}
+	
+	id_oil_quality_measurement  = Column(Integer, primary_key=True)
+	timestamp_oil_quality_measurement = Column(DateTime)
+	breakdown_voltage	= Column(Float)
+	water_content 		= Column(Float)
+	acidity				= Column(Float)
+	color				= Column(Float)
+	interfacial_tension	= Column(Float)
+
+	def __init__(self, time, breakdown_voltage, water_content, acidity, color, interfacial_tension):
+		self.timestamp_oil_quality_measurement = time
+		self.breakdown_voltage	= breakdown_voltage
+		self.water_content 		= water_content
+		self.acidity			= acidity
+		self.color				= color
+		self.interfacial_tension= interfacial_tension
+
+class Load_measurments():
+	__tablename__="load_measurments"
+	__table_args__ ={"schema": "ges_ativos"}
+	
+	id_load_measurement  = Column(Integer, primary_key=True)
+	timestamp_load_measurement = Column(DateTime)
+	power_factor	= Column(Float)
+	load_factor		= Column(Float)
+
+	def __init__(self, time, power, load):
+		self.timestamp_load_measurement = time
+		self.power_factor	=  power
+		self.load_factor	=  load
 
 if __name__ == "__main__":
 	db_select = "docker"
@@ -97,7 +144,7 @@ if __name__ == "__main__":
 
 	test_data = Dissolved_gas_measurements()
 	
-	test_data.id_dissolved_gas_measurement = 2
+	
 	test_data.h2 = 2.2
 	test_data.ch4 = 43
 	test_data.c2h6 = 12

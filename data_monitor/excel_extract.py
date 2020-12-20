@@ -120,6 +120,6 @@ if __name__ == "__main__":
 	# df_s, df_r = filter_PF()
 	# df = filter_GOT()
 
-	_, _, df = ee.filter_Load()
+	df1, _ = ee.filter_Load()
 
-	print (df)
+	print (df1)
