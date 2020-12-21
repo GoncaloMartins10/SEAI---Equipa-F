@@ -3,10 +3,6 @@ CREATE DATABASE seai;
 CREATE SCHEMA ges_ativos;
 
 
-CREATE TYPE algorithm AS ENUM ('1', '2', '3', '4');
-
-CREATE TYPE indice_manutencao as ENUM ('-2', '-1', '0', '1', '2')
-
 CREATE TABLE ges_ativos.transformer (
     id_transformer SERIAL PRIMARY KEY,
     age INTEGER,
@@ -17,44 +13,46 @@ CREATE TABLE ges_ativos.weights (
     id_weights SERIAL PRIMARY KEY,
     
     /**/
-    H2 REAL,
-    CH4 REAL,
-    C2H6 REAL,
-    C2H4 REAL,
-    C2H2 REAL,
-    CO REAL,
-    COH2 REAL,
+
+    h2 REAL,
+    ch4 REAL,
+    c2h6 REAL,
+    c2h4 REAL,
+    c2h2 REAL,
+    co REAL,
+    coh2 REAL,
 
     /**/
-    DGA_scores REAL[6][6],
-    oil_scores REAL[6][6],
-    DS_weight REAL,
-    IT_weight REAL,
-    AN_weight REAL,
-    WC_weight REAL,
-    C_weight REAL,
-    DF_weight REAL,
+    dga REAL[6][6],
+    oil REAL[6][6],
+
+    ds REAL,
+    it REAL,
+    an REAL,
+    wc REAL,
+    c REAL,
+    df REAL,
 
     /**/
-    DGATC_scores REAL[4][4],
-    DGATC_quantity REAL,
+    dgatc_scores REAL[4][4],
+    dgatc_quant REAL,
 
     /**/
     factor REAL[4],
-    micro_water_weight REAL,
-    acid_value_weight REAL,
-    dielectric_loss_weight REAL,
-    breakdown_voltage_weight REAL,
+    micro_water REAL,
+    acid_value REAL,
+    dielectric_loss REAL,
+    breakdown_voltage REAL,
 
     /*low, medium, high*/
-    algoritmo1 REAL[3],
+    algorithm1 REAL[3],
     /*oil, gases, furan*/
-    algoritmo2 REAL[3]
+    algorithm4 REAL[3]
 ); 
 
 CREATE TABLE ges_ativos.transformer_algorithm_weights (
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
-    id_algorithm ALGORITHM,
+    id_algorithm INTEGER CHECK(id_algorithm>=1 AND id_algorithm<=4),
     id_weights INTEGER REFERENCES ges_ativos.weights(id_weights),
     PRIMARY KEY (id_transformer, id_algorithm)
 );
@@ -81,13 +79,13 @@ CREATE TABLE ges_ativos.dissolved_gas_measurements (
     id_dissolved_gas_measurement SERIAL PRIMARY KEY,
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_dissolved_gas_measurements TIMESTAMP,
-    H2 REAL,
-    CH4 REAL,
-    C2H6 REAL,
-    C2H4 REAL,
-    C2H2 REAL,
-    CO REAL,
-    COH2 REAL
+    h2 REAL,
+    ch4 REAL,
+    c2h6 REAL,
+    c2h4 REAL,
+    c2h2 REAL,
+    co REAL,
+    coh2 REAL
 );
 
 CREATE TABLE ges_ativos.load_measurements (
@@ -102,5 +100,5 @@ CREATE TABLE ges_ativos.maintenance (
     id_maintenance SERIAL PRIMARY KEY, 
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_maintenance TIMESTAMP,
-    indice INDICE_MANUTANCAO
+    indice INTEGER CHECK(indice>=-2 AND indice <=2)
 );
