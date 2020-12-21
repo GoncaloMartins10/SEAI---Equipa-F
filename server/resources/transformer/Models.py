@@ -15,7 +15,7 @@ class Transformer(Base):
     nominal_voltage = Column(Float)
 
     algorithm_weights = relationship('Transformer_Algorithm_Weights', back_populates="transformer")
-
+    furfural          = relationship('Furfural', back_populates="transformer")
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
         for key, value in kwargs.items():
