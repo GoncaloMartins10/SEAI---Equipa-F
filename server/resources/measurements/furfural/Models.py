@@ -2,10 +2,11 @@ class Furfural(Base):
     __tablename__   = "furfural"
     __table_args__  = {"schema": "ges_ativos"}
 
-    id = Column(Integer, primary_key=True)
+    id_furfural     = Column(Integer, primary_key=True)
     id_transformer  = Column(Integer, ForeignKey('transformer.id'))
     
-    quatity         = Column(Float)
+    quantity        = Column(Float)
+    date_stamp      = Column(Date)
 
     # Aqui, furfural vai ser a respetica relação na classe Transformer
     transformer     = relationship("Transformer", back_populates="furfural")
@@ -18,3 +19,24 @@ class Furfural(Base):
                 setattr(self, key, value)
             else:
                 raise AttributeException()
+    
+    @classmethod
+    def add_batch(cls, furfural_list, session):
+        session.bulk_save_objects(furfural_list) 
+        try:
+            session.commit()
+        except Exception as e:
+            raise e 
+
+    def get(self, session):
+        try:
+            return session.query(Furfural).get(self.id_furfural)
+        except Exception as e:
+            raise e
+
+    def add(self, session):
+        session.add(self)
+        try:
+            session.commit()
+        except Exception as e:
+            raise e
