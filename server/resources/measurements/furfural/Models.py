@@ -1,15 +1,22 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date
+from sqlalchemy.orm import relationship
+
+from resources import Base
+
+from resources.Exceptions import AttributeException
+
 class Furfural(Base):
     __tablename__   = "furfural"
     __table_args__  = {"schema": "ges_ativos"}
 
-    id_furfural     = Column(Integer, primary_key=True)
-    id_transformer  = Column(Integer, ForeignKey('transformer.id'))
+    id_furfural_measurements     = Column(Integer, primary_key=True)
+    id_transformer               = Column(Integer, ForeignKey('transformer.id'))
     
-    quantity        = Column(Float)
-    date_stamp      = Column(Date)
+    quantity                     = Column(Float)
+    date_stamp                   = Column(Date)
 
     # Aqui, furfural vai ser a respetica relação na classe Transformer
-    transformer     = relationship("Transformer", back_populates="furfural")
+    transformer                  = relationship("Transformer", back_populates="furfural")
     
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
