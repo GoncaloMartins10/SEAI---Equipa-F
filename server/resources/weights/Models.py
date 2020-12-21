@@ -1,10 +1,7 @@
-from sqlalchemy import Column, Integer, Float
-from sqlalchemy.orm import relationship
-
-from resources import Base
-
-from resources.Exceptions import AttributeException
-
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float, ARRAY
+from server import Base, Session
+from server.Exceptions import AttributeException
+from sqlalchemy.exc import SQLAlchemyError
 
 class Weights(Base):
     __tablename__="weights"
@@ -12,38 +9,37 @@ class Weights(Base):
 
     id_weights = Column(Integer, primary_key=True)
     
-    H2   = Column(Float)
-    CH4  = Column(Float)
-    C2H6 = Column(Float)
-    C2H4 = Column(Float)
-    C2H2 = Column(Float)
-    CO   = Column(Float)
-    COH2 = Column(Float)
+    h2   = Column(Float)
+    ch4  = Column(Float)
+    c2h6 = Column(Float)
+    c2h4 = Column(Float)
+    c2h2 = Column(Float)
+    co   = Column(Float)
+    coh2 = Column(Float)
 
-    DGAScores = Column(ARRAY(Float, dimensions=2))
-    OilScores = Column(ARRAY(Float, dimensions=2))
+    dga = Column(ARRAY(Float, dimensions=2))
+    oil = Column(ARRAY(Float, dimensions=2))
     
-    
-    DS_Weight = Column(Float)
-    IT_Weight = Column(Float)
-    AN_Weight = Column(Float)
-    WC_Weight = Column(Float)
-    C_Weight  = Column(Float)
-    DF_Weight = Column(Float)
+    ds = Column(Float)
+    it = Column(Float)
+    an = Column(Float)
+    wc = Column(Float)
+    c  = Column(Float)
+    df = Column(Float)
 
-    DGATCScores   = Column(ARRAY(Float, dimensions=2))
-    DGATCQuantity = Column(Float)
+    dgatc_scores  = Column(ARRAY(Float, dimensions=2))
+    dgatc_quant = Column(Float)
 
-    Factor                   = Column(ARRAY(Float, dimensions=1))
-    Micro_Water_Weight       = Column(Float)
-    Acid_Value_Weight        = Column(Float)
-    Dielectric_Loss_Weight   = Column(Float)
-    Breakdown_Voltage_Weight = Column(Float)
+    factor            = Column(ARRAY(Float, dimensions=1))
+    micro_water       = Column(Float)
+    acid_value        = Column(Float)
+    dielectric_loss   = Column(Float)
+    breakdown_voltage = Column(Float)
 
-    algoritmo1 = Column(ARRAY(Float, dimensions=1))
-    algoritmo4 = Column(ARRAY(Float, dimensions=1))  
+    algorithm1 = Column(ARRAY(Float, dimensions=1))
+    algorithm4 = Column(ARRAY(Float, dimensions=1))  
 
-    # transformer_algorithm = relationship("Transformer_Algorithm_Weights", back_populates="transformer_algorithm_weights")
+    #algorithm_weights = relationship("Transformer_Algorithm_Weights", back_populates="transformer_algorithm_weights")
 
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
@@ -53,3 +49,32 @@ class Weights(Base):
                 setattr(self, key, value)
             else:
                 raise AttributeException()
+
+
+def post_weights(session,**kwargs):
+    
+    try:
+        weights=Weights(**kwargs)
+        session.add(weights)
+        session.commit()
+    #except AttributeException as att:
+    #    pass
+    except SQLAlchemyError as e:
+        session.rollback()
+        error = str(e.__dict__['orig'])
+        return error
+
+
+
+def get_weights(session,**kwargs):
+    
+    results=session.query(Weights)
+
+    col_names = [col.name for col in Weights.__table__.columns]
+    for key, value in kwargs.items():
+            if key in col_names:
+                results.filter(key==value)
+            else:
+                raise AttributeException()
+    
+    return results
