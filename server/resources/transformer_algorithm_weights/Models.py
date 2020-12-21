@@ -16,6 +16,7 @@ class Transformer_Algorithm_Weights(Base):
     id_weights      = Column(Integer, ForeignKey('ges_ativos.weights.id_weights'), primary_key=True)
 
     transformer = relationship("Transformer", back_populates="algorithm_weights")
+    weights = relationship("Weights", back_populates="transformer_algorithm")
 
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]

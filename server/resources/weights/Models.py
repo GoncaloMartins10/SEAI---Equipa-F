@@ -1,7 +1,10 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float, ARRAY
-from server import Base, Session
-from server.Exceptions import AttributeException
+from sqlalchemy import Column, Integer, Float, ARRAY
+from sqlalchemy.orm import relationship
 from sqlalchemy.exc import SQLAlchemyError
+
+from resources import Base, Session
+from resources.Exceptions import AttributeException
+
 
 class Weights(Base):
     __tablename__="weights"
@@ -39,7 +42,7 @@ class Weights(Base):
     algorithm1 = Column(ARRAY(Float, dimensions=1))
     algorithm4 = Column(ARRAY(Float, dimensions=1))  
 
-    #algorithm_weights = relationship("Transformer_Algorithm_Weights", back_populates="transformer_algorithm_weights")
+    transformer_algorithm = relationship("Transformer_Algorithm_Weights", back_populates="weights")
 
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
