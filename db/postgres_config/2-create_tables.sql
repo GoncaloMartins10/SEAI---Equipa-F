@@ -3,9 +3,6 @@ CREATE DATABASE seai;
 CREATE SCHEMA ges_ativos;
 
 
-CREATE TYPE algorithm AS ENUM ('1', '2', '3', '4');
-
-CREATE TYPE indice_manutencao as ENUM ('-2', '-1', '0', '1', '2')
 
 CREATE TABLE ges_ativos.transformer (
     id_transformer SERIAL PRIMARY KEY,
@@ -54,7 +51,7 @@ CREATE TABLE ges_ativos.weights (
 
 CREATE TABLE ges_ativos.transformer_algorithm_weights (
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
-    id_algorithm ALGORITHM,
+    id_algorithm INTEGER CHECK(id_algorithm>=0 and id_algorithm<=4),
     id_weights INTEGER REFERENCES ges_ativos.weights(id_weights),
     PRIMARY KEY (id_transformer, id_algorithm)
 );
@@ -102,5 +99,5 @@ CREATE TABLE ges_ativos.maintenance (
     id_maintenance SERIAL PRIMARY KEY, 
     id_transformer INTEGER REFERENCES ges_ativos.transformer(id_transformer),
     timestamp_maintenance TIMESTAMP,
-    indice INDICE_MANUTANCAO
+    indice INTEGER CHECK(indice>=-2 AND indice<=2)
 );
