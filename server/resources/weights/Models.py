@@ -68,7 +68,7 @@ class Weights(Base):
             error = str(e.__dict__['orig'])
             return error
 
-    def get(self, session, **kwargs): #pesquisar pelo num do algoritmo
+    def get(self, session, **kwargs):
         
         query = session.query(Weights)
         
