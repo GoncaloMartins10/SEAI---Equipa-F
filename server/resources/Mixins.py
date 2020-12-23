@@ -1,4 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import Column, Date
 
 
 class MixinsTables:
@@ -16,7 +17,8 @@ class MixinsTables:
         pks = [c.name for c in self.__table__.primary_key.columns]
         attr = tuple(getattr(self, pk) for pk in pks)
         try:
-            return session.query(self.__class__).get(attr)
+            aux = session.query(self.__class__).get(attr)
+            self.__dict__.update(aux.__dict__)
         except Exception as e:
             session.rollback()
             raise e
@@ -33,4 +35,16 @@ class MixinsTables:
         except Exception as e:
             session.rollback()
             return str(e)
+
+
+class MixinsTablesMeasurements:
+    #date_stamp = Column(Date)
+
+    def get_measurments(self, session):
+        attr = getattr(self, 'id_transformer')
+        try:
+            return session.query(self.__class__).filter(self.__class__.id_transformer == attr)
+        except Exception as e:
+            session.rollback()
+            raise e
 

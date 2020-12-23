@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Text
 from sqlalchemy.orm import relationship
 
 from resources import Base
@@ -12,11 +12,13 @@ class Transformer(Base, MixinsTables):
     __tablename__="transformer"
     __table_args__ ={"schema": "ges_ativos"}
 
-    id_transformer  = Column(Integer, primary_key=True)
+    id_transformer  = Column(Text, primary_key=True)
     age             = Column(Integer)
     nominal_voltage = Column(Float)
 
-    algorithm_weights = relationship('Transformer_Algorithm_Weights', back_populates="transformer")
+    #algorithm_weights = relationship('Transformer_Algorithm_Weights', back_populates="transformer")
+    weights = relationship('Weights', back_populates='transformer')
+    furfural = relationship("Furfural", back_populates="transformer")
 
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
