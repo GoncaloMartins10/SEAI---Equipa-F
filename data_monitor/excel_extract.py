@@ -88,12 +88,15 @@ class Excel_extract:
 		df_load_peak.dropna(axis=0, inplace=True) # Drops the rest of the nan values
 		df_n_intances = df.iloc[2:7,12:14]
 
-		# Tabelas desconhecidas
-		df_desconhecida_1 = df.iloc[:,21:33]
-		df_desconhecida_1.dropna(axis=0, how='all', inplace=True) # Drops the rest of the nan values
-		df_desconhecida_2 = df.iloc[:,37:47]
+		# Tabela com o pico de fator de cargo mensal para todas as sub estações
+		df_load_monthly_peak = df.iloc[:,21:33]
+		df_load_monthly_peak.dropna(axis=0, how='all', inplace=True) # Drops the rest of the nan values
+		#if 
+		df_load_monthly_peak.dropna(axis=1, how='all', inplace=True)
+		# Tabela com dados incompletos
+		# df_desconhecida_2 = df.iloc[:,37:47]
 
-		return df_load_peak, df_n_intances
+		return df_load_monthly_peak, Sb, df_n_intances
 
 
 	def filter_Maintenance(self):
@@ -101,7 +104,9 @@ class Excel_extract:
 
 		df_rating_table = df.iloc[2:9,:11] 	# Tabela superior esquerda
 		df_ratings = df.iloc[13:,:12]		# Tabela inferior esquerda
-		df_maintenances = df.iloc[7:,17:]	# Tabela direita
+		df_maintenances = df.iloc[0:,14:]	# Tabela direita
+		df_maintenances.dropna(axis=0, how='all', inplace=True)
+		df_maintenances.dropna(axis=1, how='all', inplace=True)
 
 		return df_rating_table, df_ratings, df_maintenances
 
@@ -120,6 +125,6 @@ if __name__ == "__main__":
 	# df_s, df_r = filter_PF()
 	# df = filter_GOT()
 
-	df1, _ = ee.filter_Load()
+	df1, Sb, _ = ee.filter_Load()
 
 	print (df1)
