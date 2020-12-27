@@ -57,12 +57,30 @@ class MixinsTablesMeasurements:
         except Exception as e:
             session.rollback()
             raise e
+    
 
     @classmethod
     def get_all_measurements(cls, session, id_transformer):
         try:
-            return session.query(Furfural, Transformer).filter(Furfural.id_transformer == id_transformer, Transformer.id_transformer == id_transformer)
+            return session.query(Transformer,Furfural,Oil_Quality).filter(Furfural.id_transformer == 'SE2')
         except Exception as e:
             session.rollback()
             raise e
+    
+    #generalizar para um class method
+    #intervalo para qualquer tipo de medição
+    def get_by_interval(self, session, **kwargs):
+        
+        attr = getattr(self, 'id_transformer')
+        res = session.query(self.__class__).filter(self.__class__.id_transformer == attr)
+        
+        for key, value in kwargs.items():
+            if key == 'mindate':
+                res=res.filter(self.__class__.datestamp>=value)
+            elif key == 'maxdate':
+                res=res.filter(self.__class__.datestamp<=value)
+        
+        return res
+
+    
 
