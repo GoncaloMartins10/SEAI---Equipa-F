@@ -36,7 +36,23 @@ class MixinsTables:
             return str(e)
 
     def update(self, session):
-        pass
+        """
+        1. search for the object using its primary_key
+        2. update the parameters that are not the primary_key in the self object
+        """
+        pks = [c.name for c in self.__table__.primary_key.columns]
+        attr = {pk: self.getattr(self, pk) for pk in pks}
+        aux = self.__class__(**attr)
+        try:
+            aux.get(session)
+            col_names = [col.name for col in self.__table__.columns]
+            for col_name in col_names:
+                if getattr(self, col_name) != None:
+                    setattr(aux, col_name, getattr(self, col_name))
+            session.commit()
+        except Exception as e:
+            raise e
+
 
     def delete(self, session):
         pass
