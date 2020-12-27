@@ -23,7 +23,6 @@ class MixinsTables:
             session.rollback()
             raise e
 
-
     def add(self, session):
         session.add(self)
         try:
@@ -35,6 +34,18 @@ class MixinsTables:
         except Exception as e:
             session.rollback()
             return str(e)
+
+    def update(self, session):
+        pass
+
+    def delete(self, session):
+        pass
+
+    def get_batch(self, session):
+        pass
+
+    def add_batch(self, session):
+        pass
 
 
 class MixinsTablesMeasurements:

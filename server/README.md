@@ -2,7 +2,7 @@ MixinsTabelasGerais:
 ------------------------------
 GET
 obj = Class(pk=x)
-get(session)
+obj.get(session)
 ------------------------------
 
 ------------------------------
