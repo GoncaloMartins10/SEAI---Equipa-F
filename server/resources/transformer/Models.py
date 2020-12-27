@@ -19,6 +19,9 @@ class Transformer(Base, MixinsTables):
     #algorithm_weights = relationship('Transformer_Algorithm_Weights', back_populates="transformer")
     weights = relationship('Weights', back_populates='transformer')
     furfural = relationship("Furfural", back_populates="transformer")
+    load = relationship("Load", back_populates="transformer")
+    oil_quality = relationship("Oil_Quality", back_populates="transformer")
+    dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer")
 
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]

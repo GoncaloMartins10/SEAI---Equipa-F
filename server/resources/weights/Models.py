@@ -12,7 +12,7 @@ class Weights(Base,MixinsTables):
     __table_args__ ={"schema": "ges_ativos"}
 
     id_weights = Column(Integer, primary_key=True)
-    id_algorithm = Column(Integer),
+    id_algorithm = Column(Integer)
     id_transformer = Column(Text, ForeignKey('ges_ativos.transformer.id_transformer'))
     transformer = relationship("Transformer", back_populates="weights")
     
@@ -46,5 +46,4 @@ class Weights(Base,MixinsTables):
     algorithm1 = Column(ARRAY(Float, dimensions=1))
     algorithm4 = Column(ARRAY(Float, dimensions=1))
     
-
 
