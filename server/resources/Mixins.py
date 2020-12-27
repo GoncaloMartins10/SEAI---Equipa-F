@@ -58,11 +58,14 @@ class MixinsTablesMeasurements:
             session.rollback()
             raise e
     
-
+    # Procurar nomes das classes de medição pelo subclasses do MixinsTablesMeasurements
+    # 
     @classmethod
     def get_all_measurements(cls, session, id_transformer):
+        subcls=MixinsTablesMeasurements.__subclasses__()
         try:
             return session.query(Transformer,Furfural,Oil_Quality).filter(Furfural.id_transformer == 'SE2')
+            #return session.query(*subcls).filter(subcls[0].id_transformer == 'SE2')
         except Exception as e:
             session.rollback()
             raise e
