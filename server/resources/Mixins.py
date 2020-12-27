@@ -38,7 +38,7 @@ class MixinsTables:
 
 
 class MixinsTablesMeasurements:
-    #date_stamp = Column(Date)
+    datestamp = Column(Date)
 
     def get_measurments(self, session):
         attr = getattr(self, 'id_transformer')
