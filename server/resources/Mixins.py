@@ -35,21 +35,52 @@ class MixinsTables:
             session.rollback()
             return str(e)
 
-<<<<<<< HEAD
-=======
     def update(self, session):
         pass
 
     def delete(self, session):
-        pass
+        """
+        1. Search the object to delete
+        2. Delete the object
+        """
+        try:
+            self.get(session)
+            session.delete(self)        
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
 
     def get_batch(self, session):
-        pass
+        """
+        1. Search all objects with attributes defined in self
+        2. return list of all objects
+        """
+        try:
+            return session.query(self.__class__).filter(*[getattr(self.__class__, col.name) == getattr(self, col.name) for col in self.__table__.columns if getattr(self, col.name) != None]).all()
+        except Exception as e:
+            session.rollback()
+            raise e
 
-    def add_batch(self, session):
-        pass
-
->>>>>>> origin/landau
+    @classmethod
+    def add_batch(self, session, obj_list):
+        session.bulk_save_objects(obj_list)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+    
+    @classmethod
+    def delete_batch(self, session, obj_list):
+        for obj in obj_list:
+            obj.get(session)
+            session.delete(obj)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
 
 class MixinsTablesMeasurements:
     #date_stamp = Column(Date)
@@ -61,7 +92,3 @@ class MixinsTablesMeasurements:
         except Exception as e:
             session.rollback()
             raise e
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/landau

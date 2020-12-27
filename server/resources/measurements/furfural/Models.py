@@ -44,8 +44,4 @@ class Furfural(Base,MixinsTables,MixinsTablesMeasurements):
     #     try:
     #         session.commit()
     #     except Exception as e:
-<<<<<<< HEAD
     #         raise e
-=======
-    #         raise e
->>>>>>> origin/landau
