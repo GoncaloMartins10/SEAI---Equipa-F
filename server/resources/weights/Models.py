@@ -1,16 +1,20 @@
-from sqlalchemy import Column, Integer, Float, ARRAY
+from sqlalchemy import Column, Integer, Float, ARRAY, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import SQLAlchemyError
 
 from resources import Base, Session
 from resources.Exceptions import AttributeException
+from resources.Mixins import MixinsTables
 
 
-class Weights(Base):
+class Weights(Base,MixinsTables):
     __tablename__="weights"
     __table_args__ ={"schema": "ges_ativos"}
 
     id_weights = Column(Integer, primary_key=True)
+    id_algorithm = Column(Integer),
+    id_transformer = Column(Text, ForeignKey('ges_ativos.transformer.id_transformer'))
+    transformer = relationship("Transformer", back_populates="weights")
     
     h2   = Column(Float)
     ch4  = Column(Float)
@@ -40,44 +44,7 @@ class Weights(Base):
     breakdown_voltage = Column(Float)
 
     algorithm1 = Column(ARRAY(Float, dimensions=1))
-    algorithm4 = Column(ARRAY(Float, dimensions=1))  
-
-    transformer_algorithm = relationship("Transformer_Algorithm_Weights", back_populates="weights")
-
-    def __init__(self, **kwargs):
-        col_names = [col.name for col in self.__table__.columns]
-        for key, value in kwargs.items():
-            if key in col_names:
-                print(key,value)
-                setattr(self, key, value)
-            else:
-                raise AttributeException()
-
-
-def post_weights(session,**kwargs):
+    algorithm4 = Column(ARRAY(Float, dimensions=1))
     
-    try:
-        weights=Weights(**kwargs)
-        session.add(weights)
-        session.commit()
-    #except AttributeException as att:
-    #    pass
-    except SQLAlchemyError as e:
-        session.rollback()
-        error = str(e.__dict__['orig'])
-        return error
 
 
-
-def get_weights(session,**kwargs):
-    
-    results=session.query(Weights)
-
-    col_names = [col.name for col in Weights.__table__.columns]
-    for key, value in kwargs.items():
-            if key in col_names:
-                results.filter(key==value)
-            else:
-                raise AttributeException()
-    
-    return results
