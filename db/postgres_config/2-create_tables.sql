@@ -54,7 +54,7 @@ CREATE TABLE ges_ativos.weights (
 CREATE TABLE ges_ativos.oil_quality_measurements (
     id_oil_quality_measurement SERIAL PRIMARY KEY,
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    timestamp_oil_quality_measurement TIMESTAMP,
+    datestamp DATE,
     breakdown_voltage REAL,
     water_content REAL,
     acidity REAL,
@@ -65,14 +65,14 @@ CREATE TABLE ges_ativos.oil_quality_measurements (
 CREATE TABLE ges_ativos.furfural_measurements(
     id_furfural_measurement SERIAL PRIMARY KEY,
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    timestamp_furfural_measurement TIMESTAMP,
+    datestamp DATE,
     quantity REAL
 );
 
 CREATE TABLE ges_ativos.dissolved_gas_measurements (
     id_dissolved_gas_measurement SERIAL PRIMARY KEY,
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    timestamp_dissolved_gas_measurements TIMESTAMP,
+    datestamp DATE,
     h2 REAL,
     ch4 REAL,
     c2h6 REAL,
@@ -85,7 +85,7 @@ CREATE TABLE ges_ativos.dissolved_gas_measurements (
 CREATE TABLE ges_ativos.load_measurements (
     id_load_measurement SERIAL PRIMARY KEY,
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    timestamp_load_measurement TIMESTAMP,
+    datestamp DATE,
     power_factor REAL,
     load_factor REAL
 );
@@ -93,6 +93,6 @@ CREATE TABLE ges_ativos.load_measurements (
 CREATE TABLE ges_ativos.maintenance (
     id_maintenance SERIAL PRIMARY KEY, 
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    timestamp_maintenance TIMESTAMP,
-    indice INTEGER CHECK(indice>=-2 AND indice <=2)
+    datestamp DATE,
+    impact_index INTEGER CHECK(impact_index >=-2 AND impact_index <=2)
 );

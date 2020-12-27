@@ -11,7 +11,7 @@ class Furfural(Base,MixinsTables,MixinsTablesMeasurements):
     id_transformer               = Column(Integer, ForeignKey('ges_ativos.transformer.id_transformer'))
     
     quantity      = Column(Float)
-    timestamp_furfural_measurement    = Column(Date)
+    #timestamp_furfural_measurement    = Column(Date)
 
     # Aqui, furfural vai ser a respetica relação na classe Transformer
     transformer= relationship("Transformer", back_populates="furfural")
