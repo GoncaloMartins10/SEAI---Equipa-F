@@ -1,7 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import Column, Date
 
-
 class MixinsTables:
     def __init__(self, **kwargs):
         col_names = [col.name for col in self.__table__.columns]
@@ -44,6 +43,14 @@ class MixinsTablesMeasurements:
         attr = getattr(self, 'id_transformer')
         try:
             return session.query(self.__class__).filter(self.__class__.id_transformer == attr)
+        except Exception as e:
+            session.rollback()
+            raise e
+
+    @classmethod
+    def get_all_measurements(cls, session, id_transformer):
+        try:
+            return session.query(Furfural, Transformer).filter(Furfural.id_transformer == id_transformer, Transformer.id_transformer == id_transformer)
         except Exception as e:
             session.rollback()
             raise e
