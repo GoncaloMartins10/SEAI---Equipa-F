@@ -23,7 +23,6 @@ class MixinsTables:
             session.rollback()
             raise e
 
-
     def add(self, session):
         session.add(self)
         try:
@@ -36,6 +35,21 @@ class MixinsTables:
             session.rollback()
             return str(e)
 
+<<<<<<< HEAD
+=======
+    def update(self, session):
+        pass
+
+    def delete(self, session):
+        pass
+
+    def get_batch(self, session):
+        pass
+
+    def add_batch(self, session):
+        pass
+
+>>>>>>> origin/landau
 
 class MixinsTablesMeasurements:
     #date_stamp = Column(Date)
@@ -47,3 +61,7 @@ class MixinsTablesMeasurements:
         except Exception as e:
             session.rollback()
             raise e
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/landau
