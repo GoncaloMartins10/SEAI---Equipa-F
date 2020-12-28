@@ -59,29 +59,72 @@ class Excel_extract:
 		return df
 
 	def filter_OQF(self):
-		pass
+		df = pd.read_excel(self.file_path, sheet_name='OQF')
+		number_of_tables = len(df.index)
+
+		df_array = []
+		for j in range(0, 12, 11): # Para percorrer as tabelas na horizontal
+			for i in range(0, number_of_tables, 9): # Para percorrer as tabelas na vertical
+				df_aux = df.iloc[i:i+7,j:j+9]
+				df_aux.drop(df.columns[[j+0,j+1,j+5,j+7]], axis=1, inplace=True) # É possível retirar este conteudo com o método de cima, mas preferi que ficasse explicito que largamos os nomes
+
+				# Apenas para não inserir tabelas sem conteudo, um pouco trolha, só vê o primeiro valor da tabela
+				if df_aux.iloc[0,0] is np.nan: break
+
+				df_array.append(df_aux)
+
+		raise NotImplementedError
+		return df_array
 
 	def filter_Load(self):
-		pass
+		# Falta implementar as outras tabelas, mas não sei o que elas são
+		df = pd.read_excel(self.file_path, sheet_name='Load')
+		
+		LF = df.iloc[2,2]
+		Sb = df.iloc[5,2]
+
+
+		df_load_peak = df.iloc[1:,4:7]
+		df_load_peak.dropna(axis=0, inplace=True) # Drops the rest of the nan values
+		df_n_intances = df.iloc[2:7,12:14]
+
+		# Tabela com o pico de fator de cargo mensal para todas as sub estações
+		df_load_monthly_peak = df.iloc[:,21:33]
+		df_load_monthly_peak.dropna(axis=0, how='all', inplace=True) # Drops the rest of the nan values
+		#if 
+		df_load_monthly_peak.dropna(axis=1, how='all', inplace=True)
+		# Tabela com dados incompletos
+		# df_desconhecida_2 = df.iloc[:,37:47]
+
+		return df_load_monthly_peak, Sb, df_n_intances
+
 
 	def filter_Maintenance(self):
-		pass
+		df = pd.read_excel(self.file_path, sheet_name='Maintenance')
+
+		df_rating_table = df.iloc[2:9,:11] 	# Tabela superior esquerda
+		df_ratings = df.iloc[13:,:12]		# Tabela inferior esquerda
+		df_maintenances = df.iloc[0:,14:]	# Tabela direita
+		df_maintenances.dropna(axis=0, how='all', inplace=True)
+		df_maintenances.dropna(axis=1, how='all', inplace=True)
+
+		return df_rating_table, df_ratings, df_maintenances
 
 	def filter_OverallCondition(self):
-		pass
+		raise NotImplementedError
 
 	def filter_FinalCalculation(self):
-		pass
+		raise NotImplementedError
 
 if __name__ == "__main__":	
 	
 	ee = Excel_extract(r'dados/Template SE1.xlsx')
-	# df_DGA = filter_DGA(r'dados/Template SE1.xlsx')
-	# df_DGAF,_ = filter_DGAF(r'dados/Template SE1.xlsx') # O _ serve para ignorar o segundo retorno da função
-	# df = filter_FAL(r'dados/Template SE1.xlsx')
-	# df_s, df_r = filter_PF(r'dados/Template SE1.xlsx')
-	# df = filter_GOT(r'dados/Template SE1.xlsx')
+	# df_DGA = filter_DGA()
+	# df_DGAF,_ = ee.filter_DGAF() # O _ serve para ignorar o segundo retorno da função
+	# df = filter_FAL()
+	# df_s, df_r = filter_PF()
+	# df = filter_GOT()
 
-	df = ee.filter_GOT()
+	df1, Sb, _ = ee.filter_Load()
 
-	print (df)
+	print (df1)
