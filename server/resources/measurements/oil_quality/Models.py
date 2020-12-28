@@ -17,3 +17,6 @@ class Oil_Quality(Base):
     #timestamp_oil_quality_measurement = Column(Date)
 
     transformer = relationship("Transformer", back_populates="oil_quality")
+
+    def __init__(self, **kwargs):
+        MixinsTables.__init__(self, **kwargs)

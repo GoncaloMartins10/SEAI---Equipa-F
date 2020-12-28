@@ -16,8 +16,7 @@ class MixinsTables:
         pks = [c.name for c in self.__table__.primary_key.columns]
         attr = tuple(getattr(self, pk) for pk in pks)
         try:
-            aux = session.query(self.__class__).get(attr)
-            self.__dict__.update(aux.__dict__)
+            return session.query(self.__class__).get(attr)
         except Exception as e:
             session.rollback()
             raise e
@@ -35,16 +34,62 @@ class MixinsTables:
             return str(e)
 
     def update(self, session):
-        pass
+        pks = [c.name for c in self.__table__.primary_key.columns]
+        attr = {pk: getattr(self, pk) for pk in pks}
+        aux = self.__class__(**attr)
+        try:
+            aux = aux.get(session)
+            for col in self.__table__.columns: 
+                if getattr(self, col.name) != None:
+                    setattr(aux, col.name, getattr(self, col.name))
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
 
     def delete(self, session):
-        pass
+        self = self.get(session)
+        session.delete(self)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e 
+
 
     def get_batch(self, session):
-        pass
+        """
+        1. Search all objects with attributes defined in self
+        2. return list of all objects
+        """
+        try:
+            return session.query(self.__class__).filter(*[getattr(self.__class__, col.name) == getattr(self, col.name) 
+                                                            for col in self.__table__.columns 
+                                                            if getattr(self, col.name) != None
+                                                         ]).all()
+        except Exception as e:
+            session.rollback()
+            raise e
 
-    def add_batch(self, session):
-        pass
+    @classmethod
+    def add_batch(self, session, obj_list):
+        session.bulk_save_objects(obj_list)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+    
+    @classmethod
+    def delete_batch(self, session, obj_list):
+        for obj in obj_list:
+            obj = obj.get(session)
+            session.delete(obj)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
 
 
 class MixinsTablesMeasurements:
