@@ -1,11 +1,11 @@
 {
     "Servers": {
       "1": {
-        "Name": "II Server",
+        "Name": "SEAI",
         "Group": "Servers",
         "Port": 5432,
-        "Username": "ii",
-        "Host": "192.168.99.100",
+        "Username": "postgres",
+        "Host": "postgres",
         "SSLMode": "prefer",
         "MaintenanceDB": "postgres"
       }
