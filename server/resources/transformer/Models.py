@@ -5,7 +5,7 @@ from resources import Base
 
 from resources.Exceptions import AttributeException
 
-from resources.Mixins import MixinsTables
+from resources.Mixins import MixinsTables,MixinsTablesMeasurements
 
 
 class Transformer(Base, MixinsTables):
@@ -38,4 +38,12 @@ class Transformer(Base, MixinsTables):
         try:
             session.commit()
         except Exception as e:
-            raise e 
+            raise e
+
+    def get_all_measurements(self, session):
+        subclasses=MixinsTablesMeasurements.__subclasses__()
+        res={}
+        for subcls in subclasses:
+            res[subcls]=self.subcls
+
+        return res

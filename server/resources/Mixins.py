@@ -48,9 +48,10 @@ class MixinsTables:
 
 
 class MixinsTablesMeasurements:
+    
     datestamp = Column(Date)
 
-    def get_measurments(self, session):
+    def get_measurements(self, session):
         attr = getattr(self, 'id_transformer')
         try:
             return session.query(self.__class__).filter(self.__class__.id_transformer == attr)
@@ -60,15 +61,13 @@ class MixinsTablesMeasurements:
     
     # Procurar nomes das classes de medição pelo subclasses do MixinsTablesMeasurements
     # 
-    @classmethod
-    def get_all_measurements(cls, session, id_transformer):
-        subcls=MixinsTablesMeasurements.__subclasses__()
-        try:
-            return session.query(Transformer,Furfural,Oil_Quality).filter(Furfural.id_transformer == 'SE2')
-            #return session.query(*subcls).filter(subcls[0].id_transformer == 'SE2')
-        except Exception as e:
-            session.rollback()
-            raise e
+    # def get_all_measurements(self, session):
+    #     subclasses=MixinsTablesMeasurements.__subclasses__()
+    #     res={}
+    #     for subcls in subclasses:
+    #         res[subcls]=self.subcls
+
+    #     return res
     
     #generalizar para um class method
     #intervalo para qualquer tipo de medição
