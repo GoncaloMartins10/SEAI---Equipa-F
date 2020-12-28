@@ -16,7 +16,6 @@ class Transformer(Base, MixinsTables):
     age             = Column(Integer)
     nominal_voltage = Column(Float)
 
-    #algorithm_weights = relationship('Transformer_Algorithm_Weights', back_populates="transformer")
     weights = relationship('Weights', back_populates='transformer')
     furfural = relationship("Furfural", back_populates="transformer")
     load = relationship("Load", back_populates="transformer")
@@ -24,18 +23,6 @@ class Transformer(Base, MixinsTables):
     dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer")
 
     def __init__(self, **kwargs):
-        col_names = [col.name for col in self.__table__.columns]
-        for key, value in kwargs.items():
-            if key in col_names:
-                print(key,value)
-                setattr(self, key, value)
-            else:
-                raise AttributeException()
+        MixinsTables.__init__(self, **kwargs)
 
-    @classmethod
-    def add_batch(cls, transformer_list, session):
-        session.bulk_save_objects(transformer_list) 
-        try:
-            session.commit()
-        except Exception as e:
-            raise e 
+

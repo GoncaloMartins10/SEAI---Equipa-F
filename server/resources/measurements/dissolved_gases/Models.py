@@ -15,18 +15,12 @@ class Dissolved_Gases(Base):
     c2h4 = Column(Float)
     c2h2 = Column(Float)
     co = Column(Float)
-    cOh2 = Column(Float)
+    coh2 = Column(Float)
     #timestamp_dissolved_gases_measurements = Column(Date)
 
     transformer = relationship("Transformer", back_populates="dissolved_gases")
 
-
-    # @classmethod
-    # def add_batch(cls, furfural_list, session):
-    #     session.bulk_save_objects(furfural_list) 
-    #     try:
-    #         session.commit()
-    #     except Exception as e:
-    #         raise e 
+    def __init__(self, **kwargs):
+        MixinsTables.__init__(self, **kwargs)
 
     

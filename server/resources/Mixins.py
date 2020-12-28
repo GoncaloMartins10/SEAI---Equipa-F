@@ -16,8 +16,7 @@ class MixinsTables:
         pks = [c.name for c in self.__table__.primary_key.columns]
         attr = tuple(getattr(self, pk) for pk in pks)
         try:
-            aux = session.query(self.__class__).get(attr)
-            self.__dict__.update(aux.__dict__)
+            return session.query(self.__class__).get(attr)
         except Exception as e:
             session.rollback()
             raise e
@@ -35,20 +34,28 @@ class MixinsTables:
             return str(e)
 
     def update(self, session):
-        """
-        1. Search the object to delete
-        2. Delete the object
-        """
         pks = [c.name for c in self.__table__.primary_key.columns]
-        attr = {pk: self.getattr(self, pk) for pk in pks}
+        attr = {pk: getattr(self, pk) for pk in pks}
         aux = self.__class__(**attr)
         try:
-            self.get(session)
-            session.delete(self)        
+            aux = aux.get(session)
+            for col in self.__table__.columns: 
+                if getattr(self, col.name) != None:
+                    setattr(aux, col.name, getattr(self, col.name))
             session.commit()
         except Exception as e:
             session.rollback()
             raise e
+
+    def delete(self, session):
+        self = self.get(session)
+        session.delete(self)
+        try:
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e 
+
 
     def get_batch(self, session):
         """
@@ -76,7 +83,7 @@ class MixinsTables:
     @classmethod
     def delete_batch(self, session, obj_list):
         for obj in obj_list:
-            obj.get(session)
+            obj = obj.get(session)
             session.delete(obj)
         try:
             session.commit()

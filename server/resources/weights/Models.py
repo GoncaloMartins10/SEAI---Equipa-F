@@ -47,3 +47,5 @@ class Weights(Base,MixinsTables):
     algorithm4 = Column(ARRAY(Float, dimensions=1))
     
 
+    def __init__(self, **kwargs):
+        MixinsTables.__init__(self, **kwargs)
