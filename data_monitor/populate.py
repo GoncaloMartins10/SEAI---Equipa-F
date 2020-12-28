@@ -30,6 +30,20 @@ def insert_DGA(db:DataBase, dga):
 		sample = Dissolved_gas_measurements(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
 		db.insert(sample)
 
+def insert_FAL(db:DataBase, fal):
+	for _, data in fal.iterrows():
+		a = []
+		for d in data:
+			if type(d) is int or type(d) is float:
+				d = convertToFloat(d)
+			a.append(d)
+		print(a)
+		sample = Furfural_measurements(a[0],a[1],a[2],a[3])
+		print(sample.timestamp_furfural_measurement)
+		print(sample.quantity)
+		print(sample.rating_code)
+		print(sample.number)
+
 def insert_GOT(db:DataBase, got):
 	for _, data in got.iteritems():
 			a = []
@@ -40,11 +54,11 @@ def insert_GOT(db:DataBase, got):
 
 # https://stackoverflow.com/questions/42950/how-to-get-the-last-day-of-the-month
 def last_day_of_month(any_day):
-    # this will never fail
-    # get close to the end of the month for any day, and add 4 days 'over'
-    next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
-    # subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
-    return next_month - datetime.timedelta(days=next_month.day)
+	# this will never fail
+	# get close to the end of the month for any day, and add 4 days 'over'
+	next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
+	# subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
+	return next_month - datetime.timedelta(days=next_month.day)
 
 def insert_Load(db:DataBase, transformer: str, load, Sb):
 	substation = re.search(r"SE\d?", transformer)
@@ -61,7 +75,7 @@ def insert_Load(db:DataBase, transformer: str, load, Sb):
 		months = {"jan": 1, "fev" : 2, "mar": 3, "abril": 4, "maio": 5, "jun": 6, "jul": 7, "agosto": 8, "set": 9, "out": 10, "nov": 11, "dez": 12}
 		print(data[substation])
 		timestamp = last_day_of_month(datetime.datetime(year, months[data.iloc[1]], 1))
-		print(timestamp)
+
 
 def insert_Maintenance(db:DataBase, maintenance):
 	transformer_voltage = None
