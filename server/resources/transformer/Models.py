@@ -5,8 +5,10 @@ from resources import Base
 
 from resources.Exceptions import AttributeException
 
+from resources.Mixins import MixinsTables
 
-class Transformer(Base):
+
+class Transformer(Base, MixinsTables):
     __tablename__="transformer"
     __table_args__ ={"schema": "ges_ativos"}
 
@@ -32,25 +34,3 @@ class Transformer(Base):
             session.commit()
         except Exception as e:
             raise e 
-
-    def get(self, session):
-        try:
-            return session.query(Transformer).get(self.id_transformer)
-        except Exception as e:
-            raise e
-
-    def add(self, session):
-        session.add(self)
-        try:
-            session.commit()
-        except Exception as e:
-            raise e
-
-    def get(self, session):
-        try:
-            return session.query(Transformer).get(self.id_transformer)
-        except Exception as e:
-            raise e
-
-
-
