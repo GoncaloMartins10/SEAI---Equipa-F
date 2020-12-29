@@ -93,41 +93,8 @@ class MixinsTables:
 
 
 class MixinsTablesMeasurements:
-    
     datestamp = Column(Date)
-
-    def get_measurements(self, session):
-        attr = getattr(self, 'id_transformer')
-        try:
-            return session.query(self.__class__).filter(self.__class__.id_transformer == attr)
-        except Exception as e:
-            session.rollback()
-            raise e
     
-    # Procurar nomes das classes de medição pelo subclasses do MixinsTablesMeasurements
-    # 
-    # def get_all_measurements(self, session):
-    #     subclasses=MixinsTablesMeasurements.__subclasses__()
-    #     res={}
-    #     for subcls in subclasses:
-    #         res[subcls]=self.subcls
-
-    #     return res
-    
-    #generalizar para um class method
-    #intervalo para qualquer tipo de medição
-    def get_by_interval(self, session, **kwargs):
-        
-        attr = getattr(self, 'id_transformer')
-        res = session.query(self.__class__).filter(self.__class__.id_transformer == attr)
-        
-        for key, value in kwargs.items():
-            if key == 'mindate':
-                res=res.filter(self.__class__.datestamp>=value)
-            elif key == 'maxdate':
-                res=res.filter(self.__class__.datestamp<=value)
-        
-        return res
 
     
 
