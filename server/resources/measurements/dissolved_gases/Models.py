@@ -3,7 +3,7 @@ from resources.Mixins import MixinsTables,MixinsTablesMeasurements
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Text
 from sqlalchemy.orm import relationship
 
-class Dissolved_Gases(Base):
+class Dissolved_Gases(Base,MixinsTables,MixinsTablesMeasurements):
     __tablename__="dissolved_gas_measurements"
     __table_args__ ={"schema": "ges_ativos"}
 
