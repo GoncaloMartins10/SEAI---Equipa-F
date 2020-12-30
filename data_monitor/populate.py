@@ -1,4 +1,5 @@
 import os
+import glob
 import time
 import datetime
 import numpy as np
@@ -136,18 +137,18 @@ def insert_Maintenance(transformer: str, maintenance):
 	return samples, transformer_voltage
 		
 def populate_database():
-
+	excel_parent_path = "dados"
 	session = Session()
 
-	# ver glob.glob (permite fazer regex)
-	transformers = os.listdir(excel_parent_path)
+	transformers = glob.glob(os.path.join(excel_parent_path,"*.xlsx"))
 
 	for _, transformer in enumerate(transformers):
-		t = Excel_extract(os.path.join(excel_parent_path,transformer))
+		t = Excel_extract(transformer)
 		ID = extract_transformer_ID(transformer)
 
 		load, Sb, _ = t.filter_Load()
 		dga = t.filter_DGA()
+		got = t.filter_GOT()
 		fal = t.filter_FAL()
 		_, _, maintenance = t.filter_Maintenance()
 
@@ -157,6 +158,7 @@ def populate_database():
 		load_samples = insert_Load(ID, load, Sb)
 		maint_samples, rated_voltage = insert_Maintenance(ID, maintenance)
 
+		# First, insert the transformer in the database because of the foreign key constraint
 		trans = Transformer(id_transformer= ID, nominal_voltage= rated_voltage)
 		MixinsTables.add_batch(session, trans)
 
@@ -187,7 +189,7 @@ if __name__ == "__main__":
 	else:
 		raise DatabaseException("No database selected, database " + db_select + " none existent")
 	
-	session = Session()
+	# session = Session()
 
 	# db = DataBase(db_url,False)
 
@@ -195,6 +197,15 @@ if __name__ == "__main__":
 
 	# ver glob.glob (permite fazer regex)
 	transformers = os.listdir(excel_parent_path)
+
+
+	print(transformers)
+
+	
+	transf = glob.glob(os.path.join(excel_parent_path,"*.xlsx"))
+
+	print(transf)
+
 	for number, transformer in enumerate(transformers):
 		t = Excel_extract(os.path.join(excel_parent_path,transformer))
 		ID = extract_transformer_ID(transformer)
