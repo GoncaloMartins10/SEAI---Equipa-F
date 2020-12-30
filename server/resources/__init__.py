@@ -12,7 +12,7 @@ db_url = {'drivername': 'postgres',
           'port': 5432,
           'database':'seai'}
 
-engine = create_engine(URL(**db_url), echo=True)
+engine = create_engine(URL(**db_url), echo=False)
 try:
     engine.connect()
     Base = declarative_base()

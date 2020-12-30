@@ -1,11 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Text
 from sqlalchemy.orm import relationship
 
-from resources import Base
-
-from resources.Exceptions import AttributeException
-
-from resources.Mixins import MixinsTables,MixinsTablesMeasurements
+from .. import Base
+from ..Exceptions import AttributeException
+from ..Mixins import MixinsTables,MixinsTablesMeasurements
 
 
 class Transformer(Base, MixinsTables):
