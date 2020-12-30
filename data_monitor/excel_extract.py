@@ -9,6 +9,7 @@ class Excel_extract:
 
 	def filter_DGA(self):
 		df = pd.read_excel(self.file_path, sheet_name='DGA')
+		df = df.iloc[:10,:]
 		df.drop(df.columns[[0,1,2]], axis=1, inplace=True)
 		df.drop(df.index[0], axis=0, inplace=True)
 
@@ -53,6 +54,7 @@ class Excel_extract:
 
 	def filter_GOT(self):
 		df = pd.read_excel(self.file_path, sheet_name='GOT')
+		df = df.iloc[:7,:]
 		df.drop(df.columns[0], axis=1, inplace=True)
 		df.drop(df.index[0], axis=0, inplace=True)
 
