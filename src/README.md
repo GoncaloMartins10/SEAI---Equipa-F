@@ -1,5 +1,4 @@
 # Como manipular os dados na DB
-Esta pasta ***server*** funciona como um package para trabalhar com a DB. Por trás das funções e das classes que criámos, está a biblioteca SQLAlchemy. Um script que precise de usar este package deve estar situado no diretório principal.
 
 - [Como manipular os dados na DB](#como-manipular-os-dados-na-db)
 - [Imports](#imports)
@@ -27,9 +26,9 @@ Esta pasta ***server*** funciona como um package para trabalhar com a DB. Por tr
 # Imports
 
 ```python
-from server.resources import Session
-from server.resources.db_classes import Transformer, Weights, Furfural, Load, Oil_Quality, Dissolved_Gases, Maintenance
-from server.resources.Mixins import MixinsTables
+from imports.resources import Session
+from imports.resources.db_classes import Transformer, Weights, Furfural, Load, Oil_Quality, Dissolved_Gases, Maintenance
+from imports.resources.Mixins import MixinsTables
 
 session = Session()
 ```

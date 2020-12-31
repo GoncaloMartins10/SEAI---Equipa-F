@@ -5,14 +5,15 @@ import datetime
 import numpy as np
 import re
 
-from excel_extract import Excel_extract
-from db_populate import DataBase, DatabaseException, Dissolved_gas_measurements, Oil_quality_measurements
+from .excel_extract import Excel_extract
+# from db_populate import DataBase, DatabaseException, Dissolved_gas_measurements, Oil_quality_measurements
 
-import sys
-sys.path.insert(0, sys.path[0] + '/../server/')
-from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
-from resources import Session
-from resources.Mixins import MixinsTables
+# import sys
+# sys.path.insert(0, sys.path[0] + '/../server/')
+
+from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
+from ..resources import Session
+from ..resources.Mixins import MixinsTables
 
 success_msg = """ ____                   _       _             _       _        _                                                       __       _ _ 
 |  _ \ ___  _ __  _   _| | __ _| |_ ___    __| | __ _| |_ __ _| |__   __ _ ___  ___   ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |
@@ -90,7 +91,7 @@ def _parse_data_to_object_GOT(transformer, got):
 		for d in data:
 			a.append(_convert_to_float(d))
 		
-		sample = Oil_quality_measurements(a[0], a[1], a[2], a[3], a[4], a[5])
+		# sample = Oil_quality_measurements(a[0], a[1], a[2], a[3], a[4], a[5])
 		samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
 	return samples
 

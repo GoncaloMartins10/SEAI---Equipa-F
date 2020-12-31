@@ -3,9 +3,9 @@
 #                  É preciso que a DB esteja vazia                      #
 #-----------------------------------------------------------------------#
 
-from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
-from resources import Session
-from resources.Mixins import MixinsTables
+from imports.resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
+from imports.resources import Session
+from imports.resources.Mixins import MixinsTables
 from numpy.random import rand,randint
 
 session = Session()

@@ -1,6 +1,6 @@
-from resources import Session
-from resources.db_classes import Transformer,Weights,Furfural,Load,Oil_Quality,Dissolved_Gases,Maintenance
-from resources.Mixins import MixinsTables
+from imports.resources import Session
+from imports.resources.db_classes import Transformer,Weights,Furfural,Load,Oil_Quality,Dissolved_Gases,Maintenance
+from imports.resources.Mixins import MixinsTables
 
 session=Session()
 
@@ -24,12 +24,10 @@ session=Session()
 
 # # ---- Exemplo get_by_interval() -----
 filt = [
-    {'column': 'quantity',  'min': 0.5},
+    {'column': 'quantity',  'min': 0.05},
     {'column': 'h2',        'max': 0.5},
     {'column': 'datestamp', 'min': '2000-11-01', 'max': '2010-11-30'}
 ]
-trans=Transformer(id_transformer='SE3')
+trans=Transformer(id_transformer='SE2')
 res=trans.get_by_interval(session,filt)
 print(res['Furfural'][0].datestamp)
-
-MixinsTables.delete_all(session)

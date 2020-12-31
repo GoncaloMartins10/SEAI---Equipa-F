@@ -42,4 +42,12 @@ Para instalação de pacotes, usar de preferência o conda. Se for necessário u
 É possível usar o Visual Studio Code (ou PyCharm) com o conda para correr mais fácilmente o programa:
   1. Com o VSCode aberto pressionar em `ctrl`+`shift`+`p` e escrever `Python: Select Interpreter`
   2. Escolher o workspace que irá usar o environment
-  3. Escolher o ambiente criado anteriormente (seai_env)
+  3. Escolher o ambiente criado anteriormente (seai_env)~
+
+# Acesso base de dados FEUP
+
+  1. Conectar ao VPN feup
+  2. Para aceder ao pgadmin aceder a este [link](https://db.fe.up.pt/phppgadmin/)
+  3. User: seai
+  4. pass: HEJt4ZGJc
+  5. É ainda preciso alterar e acrescentar um ficheiro de configuração para usar esta base de dados
