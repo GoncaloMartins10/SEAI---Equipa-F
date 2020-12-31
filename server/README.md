@@ -21,6 +21,7 @@ Esta pasta ***server*** funciona como um package para trabalhar com a DB. Por tr
   - [**.get_all_measurements(session)**](#get_all_measurementssession)
   - [**.get_by_time_interval(session, \*\*kwargs)**](#get_by_time_intervalsession-kwargs)
   - [**.get_by_interval(session, filter_list)**](#get_by_intervalsession-filter_list)
+- [Popular Base de Dados](#Popular-Base-de-Dados)
 
 # Imports
 
@@ -266,4 +267,14 @@ filt = [
 ]
 tr = Transformer(id_transformer='SE3')
 dict_queries = tr.get_by_interval(session,filt)
+```
+
+# Popular Base de Dados
+
+Para popular a base de dados com os dados do excel executar a função populate_database em populate.py. Atenção, os dados anteriormente insereidos serão completamente apagados.
+
+```python
+from data_monitor import populate
+
+populate_database()
 ```
