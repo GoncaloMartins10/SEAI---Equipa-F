@@ -94,5 +94,6 @@ CREATE TABLE ges_ativos.maintenance (
     id_maintenance SERIAL PRIMARY KEY, 
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
     datestamp DATE,
+    descript TEXT,
     impact_index INTEGER CHECK(impact_index >=-2 AND impact_index <=2)
 );

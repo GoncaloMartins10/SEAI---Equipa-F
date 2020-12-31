@@ -10,7 +10,7 @@ class Maintenance(Base, MixinsTables, MixinsTablesMeasurements):
     id_maintenance = Column(Integer, primary_key=True)
     id_transformer  = Column(Text, ForeignKey('ges_ativos.transformer.id_transformer'))
     impact_index = Column(Integer)
-
+    descript = Column(Text)
     transformer = relationship("Transformer", back_populates="maintenance")
 
     def __init__(self, **kwargs):

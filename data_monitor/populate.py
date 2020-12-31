@@ -10,7 +10,7 @@ from db_populate import DataBase, DatabaseException, Dissolved_gas_measurements,
 
 import sys
 sys.path.insert(0, sys.path[0] + '/../server/')
-from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases
+from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
 from resources import Session
 from resources.Mixins import MixinsTables
 
@@ -37,6 +37,21 @@ def _extract_transformer_ID(transformer: str):
 	else:
 		return substation.group(0)
 
+# https://stackoverflow.com/questions/42950/how-to-get-the-last-day-of-the-month
+def _last_day_of_month(any_day):
+	# this will never fail
+	# get close to the end of the month for any day, and add 4 days 'over'
+	next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
+	# subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
+	return next_month - datetime.timedelta(days=next_month.day)
+
+def _fetch_event_score(path_to_file : str):
+	event_sheet = glob.glob(path_to_file)
+	
+	ev = Excel_extract(event_sheet[0])
+	event_score_dictionary = ev.filter_event_score()
+	del ev
+	return event_score_dictionary
 
 def _parse_data_to_object_DGA(transformer, dga):
 	samples = []
@@ -71,14 +86,6 @@ def _parse_data_to_object_GOT(transformer, got):
 		samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
 	return samples
 
-# https://stackoverflow.com/questions/42950/how-to-get-the-last-day-of-the-month
-def _last_day_of_month(any_day):
-	# this will never fail
-	# get close to the end of the month for any day, and add 4 days 'over'
-	next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
-	# subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
-	return next_month - datetime.timedelta(days=next_month.day)
-
 def _parse_data_to_object_Load(transformer: str, load, Sb):
 
 	months = {"jan": 1, "fev" : 2, "mar": 3, "abril": 4, "maio": 5, "jun": 6, "jul": 7, "agosto": 8, "set": 9, "out": 10, "nov": 11, "dez": 12}
@@ -99,8 +106,7 @@ def _parse_data_to_object_Load(transformer: str, load, Sb):
 
 	return samples
 
-
-def _parse_data_to_object_Maintenance(transformer: str, maintenance):
+def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score_dictionary, keep_SE : bool = True):
 	transformer_voltage = None
 
 	has_descriptive_datetime = (len(maintenance.columns)) > 2
@@ -110,12 +116,17 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance):
 
 		prev_timestamp = 0
 		
-		description = re.search(r"^ ?-? ?SE\d\d? ?-? ?| ?-? ?SE\d\d? ?-? ?$",data[0])
-		if description: # If it starts or ends with SE_ doesn't insert space
-			replace_txt = ""
+		if keep_SE:
+			description = data[0]
 		else:
-			replace_txt = " "
-		description = re.sub(r" ?-? ?SE\d\d? ?-? ?", replace_txt, data[0])
+			description = re.search(r"^ ?-? ?SE\d\d? ?-? ?| ?-? ?SE\d\d? ?-? ?$", data[0])
+			if description: # If it starts or ends with SE_ doesn't insert space
+				replace_txt = ""
+			else:
+				replace_txt = " "
+			description = re.sub(r" ?-? ?SE\d\d? ?-? ?", replace_txt, data[0])
+
+		score = event_score_dictionary[data[0]]
 
 		#	Extracts the rated voltage of the tranformer
 		if transformer_voltage is None:
@@ -130,10 +141,8 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance):
 			if prev_timestamp < data[1]:
 				prev_timestamp = data[1]
 				timestamp = datetime.datetime(int(data[1]),12,31)
-		
-		# TODO: Score the impact of the maintenance based on the description
 
-		# samples.append()
+		samples.append(Maintenance(id_transformer = transformer, datestamp = timestamp, impact_index = score, descript = description))
 
 	return samples, transformer_voltage
 		
@@ -142,10 +151,12 @@ def populate_database():
 	Populates the database with all the excel files 
 	"""
 	excel_parent_path = "dados"
+	event_excel_parent_path = "Event_evaluation"
 	session = Session()
 
-	transformers = glob.glob(os.path.join(excel_parent_path,"*.xlsx"))
-
+	event_score_dictionary = _fetch_event_score(os.path.join(excel_parent_path, event_excel_parent_path, "*.xlsx"))
+		
+	transformers = glob.glob(os.path.join(excel_parent_path, "*.xlsx"))
 	for _, transformer in enumerate(transformers):
 		t = Excel_extract(transformer)
 		ID = _extract_transformer_ID(transformer)
@@ -160,8 +171,7 @@ def populate_database():
 		fal_samples = _parse_data_to_object_FAL(ID, fal)
 		got_samples = _parse_data_to_object_GOT(ID, got)
 		load_samples = _parse_data_to_object_Load(ID, load, Sb)
-		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance)
-
+		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance, event_score_dictionary)
 
 		# First, insert the transformer in the database because of the foreign key constraint
 		trans = Transformer(id_transformer= ID, nominal_voltage= rated_voltage)
@@ -171,10 +181,8 @@ def populate_database():
 		MixinsTables.add_batch(session, fal_samples)
 		MixinsTables.add_batch(session, got_samples)
 		MixinsTables.add_batch(session, load_samples)
-		# MixinsTables.add_batch(session, maint_samples)
+		MixinsTables.add_batch(session, maint_samples)
 	
-	session.close()
-
 	session.close()
 
 if __name__ == "__main__":

@@ -79,7 +79,6 @@ class Excel_extract:
 		return df_array
 
 	def filter_Load(self):
-		# Falta implementar as outras tabelas, mas não sei o que elas são
 		df = pd.read_excel(self.file_path, sheet_name='Load')
 		
 		LF = df.iloc[2,2]
@@ -93,13 +92,11 @@ class Excel_extract:
 		# Tabela com o pico de fator de cargo mensal para todas as sub estações
 		df_load_monthly_peak = df.iloc[:,21:33]
 		df_load_monthly_peak.dropna(axis=0, how='all', inplace=True) # Drops the rest of the nan values
-		#if 
 		df_load_monthly_peak.dropna(axis=1, how='all', inplace=True)
 		# Tabela com dados incompletos
 		# df_desconhecida_2 = df.iloc[:,37:47]
 
 		return df_load_monthly_peak, Sb, df_n_intances
-
 
 	def filter_Maintenance(self):
 		df = pd.read_excel(self.file_path, sheet_name='Maintenance')
@@ -115,18 +112,33 @@ class Excel_extract:
 	def filter_OverallCondition(self):
 		raise NotImplementedError
 
+	def filter_event_score(self):
+		"""
+		Returns a dictionay with the event and the corresponding score
+		"""
+		df = pd.read_excel(self.file_path)
+		df = df.iloc[5:,:3]
+		df.dropna(axis=0, how='all', inplace=True)
+		df.dropna(axis=1, how='all', inplace=True)
+
+		score_dictionary = {}
+		for _, key in df.iterrows():
+			score_dictionary[key[1]] = key[2]
+
+		return score_dictionary
+
 	def filter_FinalCalculation(self):
 		raise NotImplementedError
 
 if __name__ == "__main__":	
 	
-	ee = Excel_extract(r'dados/Template SE1.xlsx')
+	ee = Excel_extract(r'dados/Event_evaluation/eventos.xlsx')
 	# df_DGA = filter_DGA()
 	# df_DGAF,_ = ee.filter_DGAF() # O _ serve para ignorar o segundo retorno da função
 	# df = filter_FAL()
 	# df_s, df_r = filter_PF()
 	# df = filter_GOT()
 
-	df1, Sb, _ = ee.filter_Load()
+	df = ee.filter_event_score()
 
-	print (df1)
+	print (df)
