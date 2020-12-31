@@ -1,5 +1,5 @@
-from resources import Base
-from resources.Mixins import MixinsTables,MixinsTablesMeasurements
+from ... import Base
+from ...Mixins import MixinsTables,MixinsTablesMeasurements
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date
 from sqlalchemy.orm import relationship
 
