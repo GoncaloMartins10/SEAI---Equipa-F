@@ -14,6 +14,14 @@ from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Disso
 from resources import Session
 from resources.Mixins import MixinsTables
 
+success_msg = """ ____                   _       _             _       _        _                                                       __       _ _ 
+|  _ \ ___  _ __  _   _| | __ _| |_ ___    __| | __ _| |_ __ _| |__   __ _ ___  ___   ___ _   _  ___ ___ ___  ___ ___ / _|_   _| | |
+| |_) / _ \| '_ \| | | | |/ _` | __/ _ \  / _` |/ _` | __/ _` | '_ \ / _` / __|/ _ \ / __| | | |/ __/ __/ _ \/ __/ __| |_| | | | | |
+|  __/ (_) | |_) | |_| | | (_| | ||  __/ | (_| | (_| | || (_| | |_) | (_| \__ \  __/ \__ \ |_| | (_| (_|  __/\__ \__ \  _| |_| | |_|
+|_|   \___/| .__/ \__,_|_|\__,_|\__\___|  \__,_|\__,_|\__\__,_|_.__/ \__,_|___/\___| |___/\__,_|\___\___\___||___/___/_|  \__,_|_(_)
+           |_|              	
+"""
+
 def _convert_to_float(value):
 	if type(value) is str:
 		filtered = value.split("x") # Não consigo filtrar o ^ por algum motivo...
@@ -148,11 +156,13 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 		
 def populate_database():
 	"""
-	Populates the database with all the excel files 
+	Populates the database with all the excel files and deletes the previous data
 	"""
 	excel_parent_path = "dados"
 	event_excel_parent_path = "Event_evaluation"
 	session = Session()
+	
+	MixinsTables.delete_all(session)
 
 	event_score_dictionary = _fetch_event_score(os.path.join(excel_parent_path, event_excel_parent_path, "*.xlsx"))
 		
@@ -183,6 +193,8 @@ def populate_database():
 		MixinsTables.add_batch(session, load_samples)
 		MixinsTables.add_batch(session, maint_samples)
 	
+	print(success_msg)
+
 	session.close()
 
 if __name__ == "__main__":

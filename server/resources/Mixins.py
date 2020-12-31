@@ -1,6 +1,11 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import Column, Date
 
+if __name__ == "__main__":
+    debug = True
+else:
+    debug = False
+
 class MixinsTables:
 
     def __init__(self, **kwargs):
@@ -23,7 +28,7 @@ class MixinsTables:
         col_names = [col.name for col in self.__table__.columns]
         for key, value in kwargs.items():
             if key in col_names:
-                print(key,value)
+                if debug : print(key,value)
                 setattr(self, key, value)
             else:
                 raise AttributeException()
