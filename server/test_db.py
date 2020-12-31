@@ -3,12 +3,14 @@
 #                  É preciso que a DB esteja vazia                      #
 #-----------------------------------------------------------------------#
 
-from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases
+from resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
 from resources import Session
 from resources.Mixins import MixinsTables
 from numpy.random import rand,randint
 
 session = Session()
+
+MixinsTables.delete_all(session)
 
 def rand_date():
     year = randint(1995,2020)

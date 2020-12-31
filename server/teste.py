@@ -1,5 +1,6 @@
 from resources import Session
-from resources.db_classes import Transformer,Weights,Furfural,Load,Oil_Quality,Dissolved_Gases
+from resources.db_classes import Transformer,Weights,Furfural,Load,Oil_Quality,Dissolved_Gases,Maintenance
+from resources.Mixins import MixinsTables
 
 session=Session()
 
@@ -30,3 +31,5 @@ filt = [
 trans=Transformer(id_transformer='SE3')
 res=trans.get_by_interval(session,filt)
 print(res['Furfural'][0].datestamp)
+
+MixinsTables.delete_all(session)
