@@ -19,12 +19,13 @@ class Transformer(Base, MixinsTables):
     load = relationship("Load", back_populates="transformer")
     oil_quality = relationship("Oil_Quality", back_populates="transformer")
     dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer")
+    maintenance = relationship("Load", back_populates="transformer")
 
     def __init__(self, **kwargs):
         MixinsTables.__init__(self, **kwargs)
 
     def get_measurements(self, session, table):
-        self=self.get(session)
+        self=self.get(session)  # ------------------------------------> pode surgir daqui um erro, se não existir o transf
         
         relationships=self.__mapper__.relationships
         for relation in relationships:
@@ -36,27 +37,31 @@ class Transformer(Base, MixinsTables):
         if 'key' in locals():
             return getattr(self,key)
         else:
-            pass # raise error ....... table does not exist
+            pass # ------------------------------------> raise aqui: 'table with given name does not exist'
 
     def get_all_measurements(self, session):
-        self=self.get(session)
+        self=self.get(session)  # ------------------------------------> pode surgir daqui um erro, se não existir o transf
+
         relationships=self.__mapper__.relationships
         res={}
+
         for relation in relationships:
             clsname = relation.entity.class_.__name__
             key = relation.key
             if clsname == 'Weights':
                 continue
             res[clsname] = getattr(self,key) 
+        
         return res
 
     def get_by_time_interval(self, session, **kwargs):
-        
-        self=self.get(session)
+        self=self.get(session)  # ------------------------------------> pode surgir daqui um erro, se não existir o transf
+
         relationships=self.__mapper__.relationships
         res={}
         
         for relation in relationships:
+            
             Table = relation.entity.class_
             if Table.__name__ == 'Weights':
                 continue
@@ -65,21 +70,22 @@ class Transformer(Base, MixinsTables):
 
             for key, value in kwargs.items():
                 if key == 'mindate':
-                    query=query.filter(Table.datestamp>=value)
+                    query=query.filter(Table.datestamp>=value) # ------------------------------------> pode surgir daqui um erro, se a mindate não estiver formatada da forma correto
                 elif key == 'maxdate':
-                    query=query.filter(Table.datestamp<=value)
+                    query=query.filter(Table.datestamp<=value) # ------------------------------------> pode surgir daqui um erro, se a maxdate não estiver formatada da forma correto
+                else:
+                   pass # ------------------------------------> raise aqui:  key + ' is not a valid keyword' 
 
             res[Table.__name__] = query 
         
         return res
 
     def get_by_interval(self, session, listkwargs):
-        
-        self=self.get(session)
+        self=self.get(session)  # ------------------------------------> pode surgir daqui um erro, se não existir o transf
+
         relationships=self.__mapper__.relationships
         relationship_names=[relation.entity.class_.__name__ for relation in relationships]
         relationship_names.remove('Weights')
-        
         res={}
         
         for relation in relationships:
