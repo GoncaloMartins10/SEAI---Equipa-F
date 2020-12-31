@@ -80,6 +80,7 @@ def _last_day_of_month(any_day):
 	return next_month - datetime.timedelta(days=next_month.day)
 
 def _parse_data_to_object_Load(transformer: str, load, Sb):
+
 	months = {"jan": 1, "fev" : 2, "mar": 3, "abril": 4, "maio": 5, "jun": 6, "jul": 7, "agosto": 8, "set": 9, "out": 10, "nov": 11, "dez": 12}
 	
 	substation = re.search(r"SE\d?", transformer)
@@ -161,6 +162,7 @@ def populate_database():
 		load_samples = _parse_data_to_object_Load(ID, load, Sb)
 		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance)
 
+
 		# First, insert the transformer in the database because of the foreign key constraint
 		trans = Transformer(id_transformer= ID, nominal_voltage= rated_voltage)
 		trans.add(session)
@@ -170,6 +172,8 @@ def populate_database():
 		MixinsTables.add_batch(session, got_samples)
 		MixinsTables.add_batch(session, load_samples)
 		# MixinsTables.add_batch(session, maint_samples)
+	
+	session.close()
 
 	session.close()
 
@@ -195,3 +199,4 @@ if __name__ == "__main__":
 			'database':'seai'}
 	else:
 		raise DatabaseException("No database selected, database " + db_select + " none existent")
+
