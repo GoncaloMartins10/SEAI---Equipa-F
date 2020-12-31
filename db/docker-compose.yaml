@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+  pgadmin:
+    ports:
+      - "5050:80"
+    networks:
+      - postgres-network
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: seai@projeto.com
+      PGADMIN_DEFAULT_PASSWORD: seai_projeto
+    volumes:
+       - pgadmin:/root/.pgadmin
+       - ./pgadmin_config:/cfg
+       - ./pgadmin_config/servers.json:/pgadmin4/servers.json
+    restart: unless-stopped
+
+  postgres:
+    ports:
+      - "5432:5432"
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./postgres_config/2-create_tables.sql:/docker-entrypoint-initdb.d/2-create_tables.sql
+    networks:
+      - postgres-network
+    restart: unless-stopped
+networks:
+  postgres-network:
+    driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
