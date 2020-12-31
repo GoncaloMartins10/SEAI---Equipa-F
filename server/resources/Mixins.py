@@ -233,6 +233,12 @@ class MixinsTables:
             session.rollback()
             raise e
 
+    @classmethod
+    def delete_all(cls, session):
+        for subcls in cls.__subclasses__():
+            session.query(subcls).delete()
+        session.commit()
+
 
 class MixinsTablesMeasurements:
     datestamp = Column(Date)

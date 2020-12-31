@@ -12,6 +12,7 @@ Esta pasta ***server*** funciona como um package para trabalhar com a DB. Por tr
 - [Eliminar da DB](#eliminar-da-db)
   - [**.delete(session)**](#deletesession)
   - [**MixinsTables.delete_batch(session,obj_list)**](#mixinstablesdelete_batchsessionobj_list)
+  - [**MixinsTables.delete_all(session)**](#mixinstablesdelete_allsession)
 - [Retornar da DB (genérico)](#retornar-da-db-genérico)
   - [**.get(session)**](#getsession)
   - [**.get_batch(session)**](#get_batchsession)
@@ -124,6 +125,15 @@ obj_list = [
 MixinsTables.delete_batch(session,obj_list)
 ```
 
+## **MixinsTables.delete_all(session)**
+Apaga os dados de todas as tabelas, mantendo as tabelas em si.
+### Parâmetros
+- `session` 
+### Retornos
+### Exemplo
+```python
+MixinsTables.delete_all(session)
+```
 
 # Retornar da DB (genérico)
 
