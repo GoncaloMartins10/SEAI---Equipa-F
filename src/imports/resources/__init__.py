@@ -2,15 +2,13 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+import json
 
+with open("src/imports/resources/config.json", "r") as config: 
+    configuations = json.load(config)
 
-
-db_url = {'drivername': 'postgres',
-          'username': 'postgres',
-          'password': 'postgres',
-          'host': 'localhost',
-          'port': 5432,
-          'database':'seai'}
+selected = configuations["Selected_DB"]
+db_url = configuations[selected]
 
 engine = create_engine(URL(**db_url), echo=False)
 try:
