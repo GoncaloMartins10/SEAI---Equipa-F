@@ -155,7 +155,7 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 
 	return samples, transformer_voltage
 		
-def populate_database():
+def populate_database(debug : bool = False):
 	"""
 	Populates the database with all the excel files and deletes the previous data
 	"""
@@ -194,7 +194,8 @@ def populate_database():
 		MixinsTables.add_batch(session, load_samples)
 		MixinsTables.add_batch(session, maint_samples)
 	
-	print(success_msg)
+	if debug:
+		print(success_msg)
 
 	session.close()
 

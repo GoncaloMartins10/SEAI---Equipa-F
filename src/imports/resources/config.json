@@ -1,0 +1,19 @@
+{
+	"Selected_DB": "docker_db",
+	"feup_db":{
+		"drivername": "postgres",
+		"username": "seai",
+		"password": "HEJt4ZGJc",
+		"host": "db.fe.up.pt",
+		"port": 5432,
+		"database":"seai"
+	},
+	"docker_db":{
+		"drivername": "postgres",
+		"username": "postgres",
+		"password": "postgres",
+		"host": "localhost",
+		"port": 5432,
+		"database":"seai"
+	}
+}
