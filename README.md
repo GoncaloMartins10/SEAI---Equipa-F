@@ -92,4 +92,4 @@ Depois de instalar a "Remote - WSL", é possível através do VSCode, correr có
   2. Para aceder ao pgadmin aceder a este [link](https://db.fe.up.pt/phppgadmin/)
   3. User: seai
   4. pass: HEJt4ZGJc
-  5. É ainda preciso alterar e acrescentar um ficheiro de configuração para usar esta base de dados
+  5. Alterar Selected_DB, no ficheiro config.json dentro da pasta resources dos imports, para "feup_db", em vez de "docker_db"
