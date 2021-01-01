@@ -3,8 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import json
+import os
 
-with open("src/imports/resources/config.json", "r") as config: 
+cwd = os.getcwd()
+repo_name = 'SEAI---Equipa-F'
+repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
+config_path = os.path.join(repo_dir,"src/imports/resources/config.json")
+
+with open(config_path, "r") as config: 
     configuations = json.load(config)
 
 selected = configuations["Selected_DB"]
