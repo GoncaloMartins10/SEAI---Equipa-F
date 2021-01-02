@@ -2,3 +2,4 @@
 desktop.ini
 *.vim
 __pycache__
+node_modules
