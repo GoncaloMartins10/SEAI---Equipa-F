@@ -1,9 +1,9 @@
-from resources import Base
-from resources.Mixins import MixinsTables,MixinsTablesMeasurements
+from ... import Base
+from ...Mixins import MixinsTables,MixinsTablesMeasurements
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Text
 from sqlalchemy.orm import relationship
 
-class Oil_Quality(Base):
+class Oil_Quality(Base,MixinsTables,MixinsTablesMeasurements):
     __tablename__="oil_quality_measurements"
     __table_args__ ={"schema": "ges_ativos"}
 
@@ -17,3 +17,6 @@ class Oil_Quality(Base):
     #timestamp_oil_quality_measurement = Column(Date)
 
     transformer = relationship("Transformer", back_populates="oil_quality")
+
+    def __init__(self, **kwargs):
+        MixinsTables.__init__(self, **kwargs)

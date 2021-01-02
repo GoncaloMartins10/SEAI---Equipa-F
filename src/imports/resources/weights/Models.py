@@ -2,9 +2,9 @@ from sqlalchemy import Column, Integer, Float, ARRAY, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import SQLAlchemyError
 
-from resources import Base, Session
-from resources.Exceptions import AttributeException
-from resources.Mixins import MixinsTables
+from .. import Base
+from ..Exceptions import AttributeException
+from ..Mixins import MixinsTables
 
 
 class Weights(Base,MixinsTables):
@@ -47,3 +47,5 @@ class Weights(Base,MixinsTables):
     algorithm4 = Column(ARRAY(Float, dimensions=1))
     
 
+    def __init__(self, **kwargs):
+        MixinsTables.__init__(self, **kwargs)
