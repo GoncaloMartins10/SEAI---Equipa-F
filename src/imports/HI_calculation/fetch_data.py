@@ -73,6 +73,7 @@ def query_table(table , session, id):
 	return session.query(table).filter(table.id_transformer==id).order_by(table.datestamp)
 
 def get_next_chronological_envents(queries):
+	""" Returns next list of events whith the corresponding date """
 	same_date_q = []
 	new_date = date.today()
 
