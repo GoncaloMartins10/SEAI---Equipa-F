@@ -208,22 +208,4 @@ if __name__ == "__main__":
 
 	populate_database()
 
-	excel_parent_path = "dados"
-	db_select = "docker"
-	if db_select is "docker":
-		db_url = {'drivername': 'postgres',
-			'username': 'postgres',
-			'password': 'postgres',
-			'host': 'localhost',
-			'port': 5432,
-			'database':'seai'}
-	elif db_select is "feup": 
-		db_url = {'drivername': 'postgres',
-			'username': 'seai',
-			'password': 'HEJt4ZGJc',
-			'host': 'db.fe.up.pt',
-			'port': 5432,
-			'database':'seai'}
-	else:
-		raise DatabaseException("No database selected, database " + db_select + " none existent")
 
