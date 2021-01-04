@@ -39,6 +39,9 @@ class Method:
 		res = [a*b for a,b in zip(lista, listb)]
 		return res
 
+	def calculate_for_transformer(self):
+		pass
+
 	def update_method_weights(self):
 		pass
 
