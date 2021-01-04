@@ -15,7 +15,7 @@ export default class App extends Component {
             <Router>
                 <Switch>
                     <Route exact path='/' component={HomePage} />
-                    <Route path='/transformer' component={TransformerPage} />
+                    <Route path='/transformer/:transformerId' component={TransformerPage} />
                 </Switch>
             </Router>
         );

@@ -5,6 +5,6 @@ from . import views
 
 urlpatterns = [
     path('', views.main, name='transformer_main'),
-    path('<slug:id_transformer>/medicoes/', views.get_medicoes),
+    path('<slug:id_transformer>/medicoes/', views.get_medicoes, name='transformer_measurements'),
 ]
 

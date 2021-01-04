@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import { withRouter } from "react-router-dom";
 
 
 export default class HomePage extends Component {
@@ -12,6 +13,7 @@ export default class HomePage extends Component {
         this.state = {
             transformers: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
     componentDidMount() {
         this.transformersGet();
@@ -29,6 +31,10 @@ export default class HomePage extends Component {
         })
     }
 
+    handleClick(e) {
+        this.props.history.push("/transformer/" + e.target.innerText);
+    }
+
     render() {
         if (!this.state.transformers) {
             return <div />
@@ -40,13 +46,14 @@ export default class HomePage extends Component {
                         Transformers
                     </Typography>
                 </Grid>
-                <Grid item xs={12} align="center">
+                <Grid item xs={6} align="center">
                     <List>
                         {this.state.transformers.map(obj => {
                             return (
-                                <ListItem button>
-                                    <ListItemText primary={obj.id_transformer} />;
+                                <ListItem button onClick={this.handleClick} >
+                                    <ListItemText primary={obj.id_transformer} />
                                 </ListItem>
+                                
                             );
                         })}
                     </List>
