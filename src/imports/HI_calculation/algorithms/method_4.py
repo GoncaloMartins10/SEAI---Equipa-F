@@ -3,43 +3,17 @@ from math import isnan
 import json
 import os
 
+from .methods import  WS, Method
 from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
-from ..resources.db_classes import *
+from ...resources.db_classes import *
 
-class WaS: # Weights and Scores
-	def __init__(self, weight, start, scores):
-		self.weight = weight
-		self.start = start
-		self.scores = scores
+class Method_4(Method):
+	def __init__(self, transformer : Transformer = None):
+		super().__init__("Method 4")
 
-	def get_score(self, value):
-		if value < 0 :
-			print("Invalid number. ", value, " should be positive")
-			raise Exception
-
-		if self.scores[0] < self.scores[1]: # Checks if the scores are in increasing or decreasing order
-			for i, s in enumerate(self.scores[::-1]):
-				if value >= s:
-					result = len(self.scores) - i - 1 + self.start
-					return result
-		else:
-			for i, s in enumerate(self.scores):
-				if value >= s:
-					result = i + self.start
-					return result
-
-class Method_4:
-	def __init__(self, transformer_voltage = None):
-		cwd = os.getcwd()
-		repo_name = 'SEAI---Equipa-F'
-		repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
-		weight_path = os.path.join(repo_dir,"src/imports/HI_calculation/weights.json")
-
-		with open(weight_path, "r") as file: 
-		    self.config = json.load(file)
-		
-		if transformer_voltage:
-			self.update_method_weights(transformer_voltage)
+		if transformer:
+			if transformer.nominal_voltage:
+				self.update_method_weights(transformer.nominal_voltage)
 
 
 	def update_method_weights(self, transformer_voltage):
@@ -47,24 +21,24 @@ class Method_4:
 		s = "starts"
 		sc = "scores"
 
-		for key, val in self.config["Method 4"].items():
+		for key, val in self.config.items():
 			if key == "Dissolved_Gases":
-				self.h2 = WaS(val['h2'][w], val['h2'][s], val['h2'][sc]) 
+				self.h2 = WS(val['h2'][w], val['h2'][s], val['h2'][sc]) 
 
-				self.ch4 = WaS(val['ch4'][w], val['ch4'][s], val['ch4'][sc])
+				self.ch4 = WS(val['ch4'][w], val['ch4'][s], val['ch4'][sc])
 
-				self.c2h6 = WaS(val['c2h6'][w], val['c2h6'][s], val['c2h6'][sc])
+				self.c2h6 = WS(val['c2h6'][w], val['c2h6'][s], val['c2h6'][sc])
 				
-				self.c2h4 = WaS(val['c2h4'][w], val['c2h4'][s], val['c2h4'][sc])
+				self.c2h4 = WS(val['c2h4'][w], val['c2h4'][s], val['c2h4'][sc])
 
-				self.c2h2 = WaS(val['c2h2'][w], val['c2h2'][s], val['c2h2'][sc])
+				self.c2h2 = WS(val['c2h2'][w], val['c2h2'][s], val['c2h2'][sc])
 
-				self.co = WaS(val['co'][w], val['co'][s], val['co'][sc])
+				self.co = WS(val['co'][w], val['co'][s], val['co'][sc])
 
-				self.coh2 = WaS(val['coh2'][w], val['coh2'][s], val['coh2'][sc])
+				self.coh2 = WS(val['coh2'][w], val['coh2'][s], val['coh2'][sc])
 
 
-				self.dga = WaS(self.config["Method 4"][w]["Dissolved_Gases"], val[w]["starts"], val[w]["scores"])
+				self.dga = WS(self.config[w]["Dissolved_Gases"], val[w]["starts"], val[w]["scores"])
 			elif key == "Oil_Quality":
 				for k, v in val.items():
 					if "voltage" in v:
@@ -72,12 +46,12 @@ class Method_4:
 						rated_volts.sort(reverse = True)
 						for volts in rated_volts:
 							if transformer_voltage >= volts:
-								weight = WaS(v[w], v["voltage"][str(volts)][s], v["voltage"][str(volts)][sc])
+								weight = WS(v[w], v["voltage"][str(volts)][s], v["voltage"][str(volts)][sc])
 								break
 					else:
 						if k == "weight":
 							continue
-						weight = WaS(v[w], v[s], v[sc])
+						weight = WS(v[w], v[s], v[sc])
 					if k == "Dielectric_strength":
 						self.breakdown_voltage = weight
 					elif k == "Interfacial_tension":
@@ -93,10 +67,10 @@ class Method_4:
 					else:
 						raise Exception
 
-				self.got = WaS(self.config["Method 4"][w]["Oil_Quality"], val[w]["starts"], val[w]["scores"])
+				self.got = WS(self.config[w]["Oil_Quality"], val[w]["starts"], val[w]["scores"])
 			elif key == "Furfural":
 
-				self.fal = WaS(self.config["Method 4"][w]["Furfural"], val[w]["starts"], val[w]["scores"])
+				self.fal = WS(self.config[w]["Furfural"], val[w]["starts"], val[w]["scores"])
 			elif key == "weight":
 				continue
 				 
@@ -115,10 +89,6 @@ class Method_4:
 		self._prev_data_got = []
 		self._prev_result_got, self._prev_score_got = 0, 0
 
-			
-	def _mult_lists(self, lista, listb):
-		res = [a*b for a,b in zip(lista, listb)]
-		return res
 
 	def _get_result(self, values, weights):
 		n = self._mult_lists(values, weights)
@@ -214,56 +184,37 @@ class Method_4:
 		return health_index
 
 
-def calculate_for_transformer(m : Method_4 , tr: Transformer):
-	"""
-	Returns a list of tupples with the datestamp and the respective result:
-		[(datestamp, result), (datestamp, result), ...])
-	"""
-	queries = fetch_data(tr)
-	if tr.nominal_voltage:
-		m.update_method_weights(tr.nominal_voltage)
-	else:
-		return None
+	def calculate_for_transformer(self, tr: Transformer):
+		"""
+		Returns a list of tupples with the datestamp and the respective result:
+			[(datestamp, result), (datestamp, result), ...])
+		"""
+		queries = fetch_data(tr)
+		if tr.nominal_voltage:
+			self.update_method_weights(tr.nominal_voltage)
+		else:
+			return None
 
-	oldest_events_queries, datestamp = get_next_chronological_envents(queries)
-	data = [None, None, None]
-	results = []
-	prev_result = 0
-	while oldest_events_queries: 			# Verifica se é uma lista vazia
-		for q in oldest_events_queries:
-			d = q.get_data()
-			if isinstance(d, Dissolved_Gases):
-				data[0] = d
-			elif isinstance(d, Furfural):
-				data[1] = d
-			elif isinstance(d, Oil_Quality):
-				data[2] = d
-			else:
-				continue
-
-		result = m.calc_HI(data)
-		if prev_result != result:
-			results.append((datestamp,result))
-			prev_result = result
-		
 		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
-	return results
+		data = [None, None, None]
+		results = []
+		prev_result = 0
+		while oldest_events_queries: 			# Verifica se é uma lista vazia
+			for q in oldest_events_queries:
+				d = q.get_data()
+				if isinstance(d, Dissolved_Gases):
+					data[0] = d
+				elif isinstance(d, Furfural):
+					data[1] = d
+				elif isinstance(d, Oil_Quality):
+					data[2] = d
+				else:
+					continue
 
-def calculate_all_transformers(session):
-	"""
-	Returns a list of tupples with the following structure:
-		[(transformer_id, [(datestamp, result), (datestamp, result), ...]),
-		(transformer_id, [(datestamp, result), (datestamp, result), ...]),...]
-	If a transformer as missing data, it doesn't append to the final result
-	"""
-	transfomer_list = session.query(Transformer)
-	
-	m = Method_4()
-	results = []
-	for tr in transfomer_list:
-		result = calculate_for_transformer(m, tr)
-		if result:
-			results.append((tr.id_transformer, result))
+			result = self.calc_HI(data)
+			if prev_result != result:
+				results.append((datestamp,result))
+				prev_result = result
 
-		pass
-	return results
+			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+		return results

@@ -1,8 +1,8 @@
-from ..resources.db_classes import *
 from datetime import date
+from ...resources.db_classes import *
 
-# Should not be here, should be passed to function arguments (or instantiated in __init__.py??, não sei como esse funciona)
-from ..resources import Session 
+# TODO Should not be here, should be passed to function arguments (or instantiated in __init__.py??, não sei como esse funciona)
+from ...resources import Session 
 session = Session()
 ####
 
