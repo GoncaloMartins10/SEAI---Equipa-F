@@ -97,3 +97,11 @@ CREATE TABLE ges_ativos.maintenance (
     descript TEXT,
     impact_index INTEGER CHECK(impact_index >=-2 AND impact_index <=2)
 );
+
+CREATE TABLE ges_ativos.health_index (
+    id_health_index SERIAL PRIMARY KEY, 
+    id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
+    id_algorithm INTEGER CHECK(id_algorithm>=1 AND id_algorithm<=5),
+    datestamp DATE,
+    hi REAL
+);
