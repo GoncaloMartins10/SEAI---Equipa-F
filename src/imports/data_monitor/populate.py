@@ -159,8 +159,13 @@ def populate_database(debug : bool = False):
 	"""
 	Populates the database with all the excel files and deletes the previous data
 	"""
-	excel_parent_path = "dados"
+
+	cwd = os.getcwd()
+	repo_name = 'SEAI---Equipa-F'
+	repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
+	excel_parent_path = os.path.join(repo_dir,"dados")
 	event_excel_parent_path = "Event_evaluation"
+
 	session = Session()
 	
 	MixinsTables.delete_all(session)
