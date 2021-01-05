@@ -1,5 +1,6 @@
-import json
 import os
+import json
+import abc
 
 cwd = os.getcwd()
 repo_name = 'SEAI---Equipa-F'
@@ -31,7 +32,8 @@ class WS: # Weights and Scores
 					result = i + self.start
 					return result
 
-class Method:
+class Method(metaclass=abc.ABCMeta):
+	
 	def __init__(self, method):
 		self.config = config[method]
 	
@@ -39,7 +41,11 @@ class Method:
 		res = [a*b for a,b in zip(lista, listb)]
 		return res
 
-	def calculate_for_transformer(self):
+	@abc.abstractmethod
+	def calculate_for_transformer(self, transformer):
+		"""
+		Needs to be implemented so that the usage is the same in every other method
+		"""
 		pass
 
 	def update_method_weights(self):
