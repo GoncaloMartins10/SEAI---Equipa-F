@@ -15,11 +15,11 @@ class Transformer(Base, MixinsTables):
     nominal_voltage = Column(Float)
 
     weights = relationship('Weights', back_populates='transformer')
-    furfural = relationship("Furfural", back_populates="transformer")
-    load = relationship("Load", back_populates="transformer")
-    oil_quality = relationship("Oil_Quality", back_populates="transformer")
-    dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer")
-    maintenance = relationship("Maintenance", back_populates="transformer")
+    furfural = relationship("Furfural", back_populates="transformer", order_by='Furfural.datestamp')
+    load = relationship("Load", back_populates="transformer", order_by='Load.datestamp')
+    oil_quality = relationship("Oil_Quality", back_populates="transformer", order_by='Oil_Quality.datestamp')
+    dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer", order_by='Dissolved_Gases.datestamp')
+    maintenance = relationship("Maintenance", back_populates="transformer", order_by='Maintenance.datestamp')
 
     def __init__(self, **kwargs):
         MixinsTables.__init__(self, **kwargs)

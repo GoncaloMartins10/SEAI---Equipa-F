@@ -1,17 +1,19 @@
 html, body {
   display: flex;
   flex-direction: row;
-  height: 100vh;;
+  height: 100vh;
 }
 
 #main {
+  position: absolute;
+  left:0;
+  height: 100%;
+  width: 100%;
   flex: 1;
-  background: #aaa;
   overflow-y: scroll;  
 }
 
 #app {
-  flex: 1;
-  background: #aaa;
-  overflow-y: scroll;  
+  height: 100%;
+  width: 100%;
 }

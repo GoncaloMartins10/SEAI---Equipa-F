@@ -6,7 +6,7 @@ import TabPanel from "./TabPanel";
 export default class DissolvedGasesMeasurements extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.furfuralData)
+        console.log(this.props.measurements)
         this.state = {
             measurements: this.props.measurements,
             tabDisplay: 0
@@ -113,7 +113,7 @@ export default class DissolvedGasesMeasurements extends Component {
                 </TabPanel>
                 <TabPanel 
                   value={this.state.tabDisplay} 
-                  index={5}
+                  index={6}
                 >
                     <Chart 
                         xaxis={this.state.measurements.map(obj => obj.datestamp )} 

@@ -24,7 +24,6 @@ def main(request):
 def get_medicoes(request, id_transformer):
     session = Session()
     try:
-        print(id_transformer)
         transformer = Transformer(id_transformer=id_transformer).get(session)
         body = dict(
                     load=transformer.load, 

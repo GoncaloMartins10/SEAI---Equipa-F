@@ -39,26 +39,23 @@ export default class HomePage extends Component {
         if (!this.state.transformers) {
             return <div />
         }
+        console.log("im sure this is the transformer updated");
         return(
-            <Grid container spacing={1}>
-                <Grid item xs={12} align="center">
-                    <Typography variant="h4" component="h4">
-                        Transformers
-                    </Typography>
-                </Grid>
-                <Grid item xs={6} align="center">
-                    <List onClick={this.handleClick}>
-                        {this.state.transformers.map(obj => {
-                            return (
-                                <ListItem button >
-                                    <ListItemText primary={obj.id_transformer} />
-                                </ListItem>
-                                
-                            );
-                        })}
-                    </List>
-                </Grid>
-            </Grid>
+            <div>
+                <Typography variant="h4" component="h4">
+                    Transformers
+                </Typography>
+                <List onClick={this.handleClick}>
+                    {this.state.transformers.map(obj => {
+                        return (
+                            <ListItem button >
+                                <ListItemText primary={obj.id_transformer} />
+                            </ListItem>
+                            
+                        );
+                    })}
+                </List>
+            </div>
         );
     }
 }

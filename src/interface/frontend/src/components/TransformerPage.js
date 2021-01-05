@@ -40,6 +40,7 @@ export default class TransformerPage extends Component {
 
     render() {
         if (this.state.measurements) {
+            console.log("this is transformerPage render");
             return (
                 <div>
                     <h3>Load Measurements</h3>
@@ -48,7 +49,7 @@ export default class TransformerPage extends Component {
                     <FurfuralMeasurements furfuralData={this.state.measurements.furfural}/>
                     <h3>Oil Quality Measurements</h3>
                     <OilQualityMeasurements oilQualityData={this.state.measurements.oil_quality}/>
-                    <h3>Dissolved Gases</h3>
+                    <h3>Dissolved Gases Measurements</h3>
                     <DissolvedGasesMeasurements measurements={this.state.measurements.dissolved_gases}/>
                 </div>
             );
