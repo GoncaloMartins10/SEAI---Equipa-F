@@ -47,10 +47,10 @@ export default class HomePage extends Component {
                     </Typography>
                 </Grid>
                 <Grid item xs={6} align="center">
-                    <List>
+                    <List onClick={this.handleClick}>
                         {this.state.transformers.map(obj => {
                             return (
-                                <ListItem button onClick={this.handleClick} >
+                                <ListItem button >
                                     <ListItemText primary={obj.id_transformer} />
                                 </ListItem>
                                 
