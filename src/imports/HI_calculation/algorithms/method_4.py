@@ -1,11 +1,9 @@
 from datetime import date
 from math import isnan
-import json
-import os
 
 from .methods import  WS, Method
 from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
-from ...resources.db_classes import *
+from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural
 
 class Method_4(Method):
 	def __init__(self, transformer : Transformer = None):
@@ -40,32 +38,33 @@ class Method_4(Method):
 
 				self.dga = WS(self.config[w]["Dissolved_Gases"], val[w]["starts"], val[w]["scores"])
 			elif key == "Oil_Quality":
-				for k, v in val.items():
-					if "voltage" in v:
-						rated_volts = list(map(int, list(v["voltage"].keys())))
-						rated_volts.sort(reverse = True)
-						for volts in rated_volts:
-							if transformer_voltage >= volts:
-								weight = WS(v[w], v["voltage"][str(volts)][s], v["voltage"][str(volts)][sc])
-								break
-					else:
-						if k == "weight":
-							continue
-						weight = WS(v[w], v[s], v[sc])
-					if k == "Dielectric_strength":
-						self.breakdown_voltage = weight
-					elif k == "Interfacial_tension":
-						self.interfacial_tension = weight
-					elif k == "Acidity":
-						self.acidity = weight
-					elif k == "Water_content":
-						self.water_content = weight
-					elif k == "Color":
-						self.color = weight
-					elif k == "Dissipation_factor":
-						self.dissipation_factor = weight
-					else:
-						raise Exception
+				if transformer_voltage is not None:
+					for k, v in val.items():
+						if "voltage" in v:
+							rated_volts = list(map(int, list(v["voltage"].keys())))
+							rated_volts.sort(reverse = True)
+							for volts in rated_volts:
+								if transformer_voltage >= volts:
+									weight = WS(v[w], v["voltage"][str(volts)][s], v["voltage"][str(volts)][sc])
+									break
+						else:
+							if k == "weight":
+								continue
+							weight = WS(v[w], v[s], v[sc])
+						if k == "Dielectric_strength":
+							self.breakdown_voltage = weight
+						elif k == "Interfacial_tension":
+							self.interfacial_tension = weight
+						elif k == "Acidity":
+							self.acidity = weight
+						elif k == "Water_content":
+							self.water_content = weight
+						elif k == "Color":
+							self.color = weight
+						elif k == "Dissipation_factor":
+							self.dissipation_factor = weight
+						else:
+							raise Exception
 
 				self.got = WS(self.config[w]["Oil_Quality"], val[w]["starts"], val[w]["scores"])
 			elif key == "Furfural":
@@ -190,10 +189,9 @@ class Method_4(Method):
 			[(datestamp, result), (datestamp, result), ...])
 		"""
 		queries = fetch_data(tr)
-		if tr.nominal_voltage:
-			self.update_method_weights(tr.nominal_voltage)
-		else:
-			return None
+		
+		self.update_method_weights(tr.nominal_voltage)
+			
 
 		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
 		data = [None, None, None]
@@ -206,7 +204,7 @@ class Method_4(Method):
 					data[0] = d
 				elif isinstance(d, Furfural):
 					data[1] = d
-				elif isinstance(d, Oil_Quality):
+				elif isinstance(d, Oil_Quality) and tr.nominal_voltage:
 					data[2] = d
 				else:
 					continue

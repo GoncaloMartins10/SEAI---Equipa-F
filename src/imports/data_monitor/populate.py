@@ -160,6 +160,35 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 
 	return samples, transformer_voltage
 		
+def _parse_data_to_object_Maintenance_scores(transformer: str, maintenance_scores):
+	rating_to_score = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
+	samples = []
+	for _, data in maintenance_scores.iterrows():
+		aux = []
+		for d in data[1:]:
+			aux.append(rating_to_score[d])
+
+		samples.append(id_transformer= transformer, datestamp = datetime.date(data[0], 12, 31),\
+					 bushings = aux[0], \
+					 oil_leaks = aux[1], \
+					 oil_level = aux[2], \
+					 infra_red = aux[3], \
+					 cooling = aux[4], \
+					 main_tank = aux[5], \
+					 oil_tank = aux[6], \
+					 foundation = aux[7], \
+					 grounding = aux[8], \
+					 gaskets = aux[9], \
+					 connectors = aux[10])
+
+	return samples
+
+def _parse_data_to_object_Overall_Condition(transformer :str, overall_condition):
+	samples = []
+	for _, data in overall_condition.iterrows():
+		samples.append(id_transformer= transformer, datestamp = datetime.date(data[1], 12, 31), score = data[0])
+	return samples
+	
 def _get_oldest_date(oldest_date, array):
 	
 	datestamp = oldest_date
@@ -211,13 +240,16 @@ def populate_database(debug : bool = False):
 		dga = t.filter_DGA()
 		got = t.filter_GOT()
 		fal = t.filter_FAL()
-		_, _, maintenance = t.filter_Maintenance()
+		_, maintenance_scores, maintenance = t.filter_Maintenance()
+		overall_condition = t.filter_OverallCondition()
 
 		dga_samples = _parse_data_to_object_DGA(ID, dga)
 		fal_samples = _parse_data_to_object_FAL(ID, fal)
 		got_samples = _parse_data_to_object_GOT(ID, got)
 		load_samples = _parse_data_to_object_Load(ID, load, Sb)
 		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance, event_score_dictionary)
+		maint_scores_samples = _parse_data_to_object_Maintenance_scores(ID, maintenance_scores)
+		overall_samples = _parse_data_to_object_Overall_Condition(ID, overall_condition)
 
 		age = get_transformer_age(dga_samples, fal_samples, got_samples, load_samples, maint_samples)
 
@@ -230,6 +262,8 @@ def populate_database(debug : bool = False):
 		MixinsTables.add_batch(session, got_samples)
 		MixinsTables.add_batch(session, load_samples)
 		MixinsTables.add_batch(session, maint_samples)
+		MixinsTables.add_batch(session, maint_scores_samples)
+		MixinsTables.add_batch(session, overall_samples)
 	
 	if debug:
 		print(success_msg)

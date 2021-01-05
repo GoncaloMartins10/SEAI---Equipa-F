@@ -1,7 +1,9 @@
+from .algorithms.method_2 import Method_2
 from .algorithms.method_4 import Method_4
 from ..resources.db_classes import Transformer
 
-method_switcher = {4: Method_4}
+method_switcher = { 2: Method_2,\
+					4: Method_4 }
 
 def calculate_all_transformers(session, method):
 	"""
