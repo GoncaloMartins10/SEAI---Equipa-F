@@ -70,8 +70,8 @@ def _parse_data_to_object_DGA(transformer, dga):
 		a = []
 		for d in data:
 			a.append(_convert_to_data_type(d))
-
-		samples.append(Dissolved_Gases(id_transformer=transformer, datestamp = a[0], h2 = a[1], co = a[2], coh2 = a[3], ch4 = a[4], c2h4 = a[5], c2h6 = a[6], c2h2 = a[7]))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Dissolved_Gases(id_transformer=transformer, datestamp = a[0], h2 = a[1], co = a[2], coh2 = a[3], ch4 = a[4], c2h4 = a[5], c2h6 = a[6], c2h2 = a[7]))
 	return samples
 
 def _parse_data_to_object_FAL(transformer, fal):
@@ -84,7 +84,8 @@ def _parse_data_to_object_FAL(transformer, fal):
 			elif isinstance(d, datetime.datetime):
 				d = d.date()
 			a.append(d)
-		samples.append(Furfural(id_transformer=transformer, datestamp = a[0], quantity = a[1]))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Furfural(id_transformer=transformer, datestamp = a[0], quantity = a[1]))
 	
 	return samples
 
@@ -95,8 +96,8 @@ def _parse_data_to_object_GOT(transformer, got):
 		for d in data:
 			a.append(_convert_to_data_type(d))
 		
-		# sample = Oil_quality_measurements(a[0], a[1], a[2], a[3], a[4], a[5])
-		samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
 	return samples
 
 def _parse_data_to_object_Load(transformer: str, load, Sb):
