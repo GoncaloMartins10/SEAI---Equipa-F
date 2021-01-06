@@ -1,8 +1,8 @@
-from ..resources.db_classes import *
 from datetime import date
+from ...resources.db_classes import *
 
-# Should not be here, should be passed to function arguments (or instantiated in __init__.py??, não sei como esse funciona)
-from ..resources import Session 
+# TODO Should not be here, should be passed to function arguments (or instantiated in __init__.py??, não sei como esse funciona)
+from ...resources import Session 
 session = Session()
 ####
 
@@ -23,7 +23,7 @@ class Queried_data:
 
 	def get_data(self):
 		return self.query[self._position]
-
+	
 	def get_query(self):
 		if self._position is None:
 			return None
@@ -39,6 +39,9 @@ class Queried_data:
 			return self.query[self._position + 1]
 		else:
 			return None
+	
+	def _get_oldest_date(self):
+		return self.query[0].datestamp
 
 	def get_date(self):
 		if self._position is None:
@@ -71,6 +74,15 @@ class Queried_data:
 
 def query_table(table , session, id):
 	return session.query(table).filter(table.id_transformer==id).order_by(table.datestamp)
+
+def get_oldest_date(queries):
+		datestamp = date.today()
+		for q in queries:
+			d = q._get_oldest_date()
+			if d < datestamp:
+				datestamp = d
+		
+		return datestamp
 
 def get_next_chronological_envents(queries):
 	""" Returns next list of events whith the corresponding date """
