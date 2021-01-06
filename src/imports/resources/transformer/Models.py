@@ -20,6 +20,8 @@ class Transformer(Base, MixinsTables):
     oil_quality = relationship("Oil_Quality", back_populates="transformer")
     dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer")
     maintenance = relationship("Maintenance", back_populates="transformer")
+    maintenance_scores = relationship("Maintenance_Scores", back_populates = "transformer")
+    overall_condition = relationship("Overall_Condition", back_populates = "transformer")
     health_index = relationship("Health_Index", back_populates="transformer")
 
     def __init__(self, **kwargs):
