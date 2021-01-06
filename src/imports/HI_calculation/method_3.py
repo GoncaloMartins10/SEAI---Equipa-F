@@ -6,280 +6,312 @@ import os
 from .fetch_data import *
 from ..resources.db_classes import *
 
+
 class MultiFeatureIndex():
+	def __init__(self):
+		cwd = os.getcwd()
+		repo_name = 'SEAI---Equipa-F'
+		repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
+		weight_path = os.path.join(repo_dir,"src/imports/HI_calculation/weights.json")
 
-    # def __init__(self,
-    #              pesos_combinado = def_combinado, 
-    #              pesos_main = def_main,
-    #              pesos_iso= def_iso, 
-    #              pesos_CH = def_CH, 
-    #              pesos_oil = def_oil):
-    #     # definir constantes
-    #     self.pesos_main = pesos_main
-    #     self.pesos_iso= pesos_iso
-    #     self.pesos_CH = pesos_CH
-    #     self.pesos_oil = pesos_oil
-    #     self.pesos_combinado = pesos_combinado
+		with open(weight_path, "r") as file: 
+			self.config = json.load(file)
 
-    #     self.caluculate_indexes()
+		self.pesos_main = self.config["method_3"]["main"]
+		self.pesos_iso= self.config["method_3"]["pesos_iso"]
+		self.pesos_dga = self.config["method_3"]["pesos_DGA"]
+		self.pesos_oil = self.config["method_3"]["pesos_oil"]
+		self.pesos_combinado = self.config["method_3"]["pesos_combinado"]
 
-    def read_json():
-        cwd = os.getcwd()
-        repo_name = 'SEAI---Equipa-F'
-        repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
-        weight_path = os.path.join(repo_dir,"src/imports/HI_calculation/weights.json")
+		#self.caluculate_indexes()
+	
 
-        with open(weight_path, "r") as file: 
-            config = json.load(file)
-            return config["method_3"]
+	def caluculate_indexes(self, data):
+		
+		if data[3] is None:
+			self.hi_main = 0
+		else:
+			self.hi_main= self.get_main(data[3])
 
-    def __init__(self):
-        read_json = read_json()
-        
-        self.pesos_main = read_jason["pesos_main"]
-        self.pesos_iso= read_jason["pesos_iso"]
-        self.pesos_CH = read_json["pesos_CH"]
-        self.pesos_oil = read_json["pesos_oil"]
-        self.pesos_combinado = read_json["pesos_combinado"]
+		if data[0] is None or data[1] is None:
+			self.hi_iso = 0
+		else:
+			self.hi_iso = self.get_iso(data)
+		
+		if data[0] is None:
+			self.hi_dga = 0
+		else:
+			self.hi_dga = self.get_dga(data[0])
 
-        #self.caluculate_indexes()
+		if data[2] is None:
+			self.hi_oil = 0
+		else:
+			self.hi_oil = self.get_oil(data[2])
+
+		HI_combinado = self.get_combinado()
+
+		return HI_combinado 
+
+	def combinado(self):
+		w=np.array(list(self.pesos_combinado.values()))
+
+		HI=np.array([            # Funções dos índices
+			self.main, 
+			self.iso, 
+			self.CH, 
+			self.oil,
+		])
+		# Calcular somatório
+		HI_com = np.sum(w * HI)
+		return HI_com
+	
+	
+	def get_main(self, data: Load):
+		HI0 = self.pesos_main["HI0"]
+		t_exp = self.pesos_main["t_exp"]
+		f_L = data.load_factor    
+
+		#T1 ano da primeira instância
+		T1 = 
+		#T2 ano da instância atual
+		T2 = data.datestamp.split("-")[0]
+
+		B = f_L * (np.log(6.5/0.5) / t_exp)     # Coeficiente de envelhecimento
+		HI_m = HI0 * math.exp(B * (T2 - T1))
+		return HI_m
+
+	def get_iso(self, data) 
+		w_F_CO = self.pesos_iso['CO']
+
+		data: Dissolved_Gases
+		x_CO = data.co
+
+		# Inicializar Fator Oxigénio-Carbono
+		a = [0.0067, 0.0017, 0.02, 0.0125, 0]		
+		b = [0, 1.5, -14.97, -7.5, 0]
+
+		#cond = [x_CO range(0,300), x_CO range(300,900), x_CO range(900, 1000), x_CO range(1000, 1400), x_CO 1400]
+
+		if 0 < x_CO <= 300 :
+			F_CO = a[0] * x_CO + b[0]
+		elif 300 < x_CO <= 900 :
+			F_CO = a[1] * x_CO + b[1]
+		elif 900 < x_CO <= 1000 :
+			F_CO = a[2] * x_CO + b[2]
+		elif 1000 < x_CO <= 1400 :
+			F_CO = a[3] * x_CO + b[3]
+		elif x_CO > 1400 :
+			F_CO = 10
 
 
-    def read_pesos():
-        
-        print(pesos_main['HI0'])
+		HI_CO = F_CO
 
-    # def caluculate_indexes(self):
-    #     self.main = self.get_main()
-    #     self.iso = self.get_iso()
-    #     self.CH = self.get_CH()
-    #     self.oil = self.get_oil()
-    #     self.combinado = self.get_combinado()
+		data: Furfural
+		C_fur = data.quantity
+		# Calcular o indíce HI_C,O
+		
+		HI_fur = 3.344 * C_fur**0.413   # Calcular HI_fur
 
-    # def combinado(self):
-    #     w=np.array(list(self.pesos_combinado.values()))
+		w1 = 0.3
+		w2 = 0.7
+		HI_iso = w1 * HI_CO + w2 * HI_fur
+		return HI_iso
 
-    #     HI=np.array([            # Funções dos índices
-    #         self.main, 
-    #         self.iso, 
-    #         self.CH, 
-    #         self.oil,
-    #     ])
-    #     # Calcular somatório
-    #     HI_com = np.sum(w * HI)
-    #     print("Indice de vida:", HI_com)
-        
+	def get_dga(self, data: Dissolved_Gases):
+	  
+		w_CH = [self.pesos_dga["H2"], self.pesos_dga["CH4"], self.pesos_dga["C2H6"], self.pesos_dga["C2H4"], self.pesos_dga["C2H2"]]
+		x_CH = [data.h2, data.ch4, data.c2h6, data.c2h4, data.c2h2]
+		F_CH = [None, None, None, None, None]
+
+		# Calcular F_C,H dos diferentes gases consoante o seu conteúdo (uL/L)
+		# H2
+		if x_CH[0] <= 30:               
+			F_CH[0] = 0
+		elif 30 < x_CH[0] <= 50:
+			F_CH[0] = 0.1*x_CH[0] - 3 
+		elif 50 < x_CH[0] <= 100:
+			F_CH[0] = 0.06*x_CH[0] + 1
+		elif 100 < x_CH[0] <= 500:
+			F_CH[0] = 0.0125*x_CH[0] + 3.75
+		else:
+			F_CH[0] = 10
+		
+		# CH4
+		if x_CH[1] <= 10:               
+			F_CH[1] = 0
+		elif 10 < x_CH[1] <= 15:
+			F_CH[1] = 0.4*x_CH[1] - 2 
+		elif 15 < x_CH[1] <= 115:
+			F_CH[1] = 0.0727*x_CH[1] + 0.9
+		else:
+			F_CH[1] = 10
+
+		# C2H6
+		if x_CH[2] <= 5:               
+			F_CH[2] = 0
+		elif 5 < x_CH[2] <= 20:
+			F_CH[2] = 0.1333*x_CH[2] - 0.6667 
+		elif 20 < x_CH[2] <= 35:
+			F_CH[2] = 0.2*x_CH[2] - 2
+		elif 35 < x_CH[2] <= 70:
+			F_CH[2] = 0.125*x_CH[2] + 0.625
+		else:
+			F_CH[2] = 10
+		
+		# C2H4
+		if x_CH[3] <= 10:               
+			F_CH[3] = 0
+		elif 10 < x_CH[3] <= 30:
+			F_CH[3] = 0.1*x_CH[3] - 1
+		elif 30 < x_CH[3] <= 50:
+			F_CH[3] = 0.15*x_CH[3] - 2.5
+		elif 50 < x_CH[3] <= 175:
+			F_CH[3] = 0.04*x_CH[3] + 3
+		else:
+			F_CH[3] = 10
+
+		# C2H2
+		if x_CH[4] <= 0.5:               
+			F_CH[4] = 0
+		elif 0.5 < x_CH[4] <= 3:
+			F_CH[4] = 0.8*x_CH[4] - 0.4
+		elif 3 < x_CH[4] <= 5:
+			F_CH[4] = 1.5*x_CH[4] - 2.5
+		elif 5 < x_CH[4] <= 35:
+			F_CH[4] = 0.1667*x_CH[4] + 4.167
+		else:
+			F_CH[4] = 10
+
+		HI_CH = self._mult_lists(F_CH, w_CH)
+
+		return HI_CH
+
+	def get_oil(self, data: Oil_Quality):
+		w_oil = [self.pesos_oil["mw"], self.pesos_oil["av"], self.pesos_oil["bv"]]
+		F_oil = [None, None, None]
+
+		# Fatores que influenciam a qualidade do óleo | VALORES ALTERÁVEIS
+		mw = self.data.water_content             	 # Micro-Water (mg/L)
+		av = self.data.acidity            			 # Acid Value (mgKOH/g)
+		# dl = self.data.            					 # Dielectric Loss (25ºC)  Não temos este valor 
+		bv = self.data.breakdown_voltage             # Breakdown Voltage (kV)
+
+		# Calcular fatores de qualidade
+		# Micro-Water
+		if mw <= 20:
+			F_oil[0] = 0
+		elif 20 < mw <= 30:
+			F_oil[0] = 0.2*mw - 4
+		elif 30 < mw <= 45:
+			F_oil[0] = 0.4*mw - 10
+		else:
+			F_oil[0] = 10
+
+		# Acid Value
+		if av <= 0.015:
+			F_oil[1] = 0
+		elif 0.015 < av <= 0.1:
+			F_oil[1] = 23.53*av - 0.353
+		elif 0.1 < av <= 0.2:
+			F_oil[1] = 20*av 
+		elif 0.2 < av <= 0.3:
+			F_oil[1] = 40*av - 4
+		else:
+			F_oil[1] = 10
+
+		 # Dielectric Loss
+		# if dl <= 0.005:
+		#     F_oil[2] = 0
+		# elif 0.005 < dl <= 0.015:
+		#     F_oil[2] = 20*dl - 1
+		# elif 0.015 < dl <= 0.5:
+		#     F_oil[2] = 5.714*dl + 1.143
+		# elif 0.5 < dl <= 1.5:
+		#     F_oil[2] = 4*dl + 2
+		# else:
+		#     F_oil[2] = 10
+		
+		# Breakdown Voltage
+		if bv <= 30:
+			F_oil[3] = 10
+		elif 30 < bv <= 40:
+			F_oil[3] = -0.4*bv + 20
+		elif 40 < bv <= 43:
+			F_oil[3] = -0.664*bv + 30.68
+		elif 43 < bv <= 45:
+			F_oil[3] = -1*bv + 45
+		else:
+			F_oil[3] = 0
+		
+		# Calcular índice
+		HI_oil = self._mult_lists(w_oil, F_oil)
+
+		return HI_oil
+
+	def _mult_lists(self, lista, listb):
+		res = [a*b for a,b in zip(lista, listb)]
+		return res
 
 
-    # def get_main(pesos):
-    #     pesos = self.pesos_main
-    #     B = pesos['f_L'] * (np.log(6.5/0.5) / pesos['t_exp'])     # Coeficiente de envelhecimento
-    #     HI_m = pesos['HI0'] * math.exp(B * (pesos['T2'] - pesos['T1']))
-    #     return HI_m
 
-    # def get_iso(): 
-    #     w_F_CO = self.pesos_iso['w_F_CO']
-    #     x = self.pesos_iso["x"]
-    #     # Inicializar Fator Oxigénio-Carbono
-    #     a = np.matrix([[0.0067, 0.008 , 0.0006  ]
-    #                    [0.0017, 0.0033, 0.00014 ],
-    #                    [0.02  , 0.0005, 0.000033],
-    #                    [0.0125, 0.0008, 9.44e-6 ],
-    #                    [0     , 0.0003, 0       ]])
-        
-    #     b = np.matrix([[0     , 0   , 0   ],
-    #                    [1.5   , -6.0, 1.59],
-    #                    [-14.97, 2.4 , 2.66],
-    #                    [-7.5  , 0.9 , 6.65],
-    #                    [0     , 5.9 , 0   ]])
+def calculate_for_transformer(m : MultiFeatureIndex, tr: Transformer):
+	"""
+	Returns a list of tupples with the datestamp and the respective result:
+		[(datestamp, result), (datestamp, result), ...])
+	"""
+	queries = fetch_data(tr)
+	
 
-    #     cond = np.matrix([[x["CO"] in range(0,300)     , x["CO2"] in range(0,2400)      , x["CO_CO2"] in range(0,3000)        ],
-    #                       [x["CO"] in range(300,900)   , x["CO2"] in range(2400, 3000)  , x["CO_CO2"] in range(3000,10000)    ],
-    #                       [x["CO"] in range(900, 1000) , x["CO2"] in range(3000, 5000)  , x["CO_CO2"] in range(10000, 170000) ],
-    #                       [x["CO"] in range(1000, 1400), x["CO2"] in range(5000, 10000) , x["CO_CO2"] in range(170000, 350000)],
-    #                       [x["CO"] > 1400              , x["CO2"] in range(10000, 13000), x["CO_CO2"] > 350000                ]])
-    #     F_CO = dict();
+	oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+	data = [None, None, None, None]
+	results = []
+	prev_result = 0
+	while oldest_events_queries: 			# Verifica se é uma lista vazia
+		for q in oldest_events_queries:
+			d = q.get_data()
+			print(type(d),isinstance(d, Load))
+			if isinstance(d, Dissolved_Gases):
+				data[0] = d
+			elif isinstance(d, Furfural):
+				data[1] = d
+			elif isinstance(d, Oil_Quality):
+				data[2] = d     
+			elif isinstance(d, Load):
+				data[3] = d
+			else:
+				continue
 
-    #     dot_product = lambda x,y: int(np.dot(np.transpose(x), y))
+		
+			result = m.caluculate_indexes(data)
 
-    #     a_k, b_k = dot_product(a[:,0], cond[:,0]) , dot_product(b[:,0], cond[:,0])
-    #     F_CO["CO"] = a_k * x["CO"] + b_k if (a_k, b_k) != (0, 0) else 10
 
-    #     a_k, b_k = dot_product(a[:,1], cond[:,1]) , dot_product(b[:,1], cond[:,1])
-    #     F_CO["CO2"] = a_k * x["CO2"] + b_k if (a_k, b_k) != (0, 0) else 10
+		if prev_result != result:
+			results.append((datestamp,result))
+			prev_result = result
+		
+		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+	return results
 
-    #     a_k, b_k = dot_product(a[:,2], cond[:,2]) , dot_product(b[:,2], cond[:,2])
-    #     F_CO["CO_CO2"] = a_k * x["CO_CO2"] + b_k if (a_k, b_k) != (0, 0) else 10
+def calculate_all_transformers(session):
+	"""
+	Returns a list of tupples with the following structure:
+		[(transformer_id, [(datestamp, result), (datestamp, result), ...]),
+		(transformer_id, [(datestamp, result), (datestamp, result), ...]),...]
+	If a transformer as missing data, it doesn't append to the final result
+	"""
+	transfomer_list = session.query(Transformer)
+	
+	m = MultiFeatureIndex()
+	results = []
+	for tr in transfomer_list:
+		result = calculate_for_transformer(m, tr)
+		if result:
+			results.append((tr.id_transformer, result))
 
-    #     F_CO_vector = np.array(list(F_CO.values()))
-    #     C_fur = 1
-    #     # Calcular o indíce HI_C,O
-    #     HI_CO = np.sum(w_F_CO * F_CO_vector)
-    #     HI_fur = 3.344 * C_fur**0.413   # Calcular HI_fur
+		pass
+	return results
+	
 
-    #     w1 = 0.3
-    #     w2 = 0.7
-    #     HI_iso = w1 * HI_CO + w2 * HI_fur
-    #     return HI_iso
 
-    # def get_CH():
-    #     w_CH = np.array([
-    #         0.2310,         # H2
-    #         0.2306,         # CH4
-    #         0.0772,         # C2H6
-    #         0.2301,         # C2H4
-    #         0.2312          # C2H2
-    #     ])
 
-    #     F_CH = np.array([   # Inicializar vetor
-    #         0,
-    #         0,
-    #         0,
-    #         0,
-    #         0
-    #     ])
 
-    #     # Fatores Xi (uL/L) | VALORES ALTERÁVEIS
-    #     x_CH = np.array([
-    #         50,             # H2
-    #         15,             # CH4
-    #         20,             # C2H6
-    #         10,             # C2H4
-    #         3               # C2H2
-    #     ])
-
-    #     # Calcular F_C,H dos diferentes gases consoante o seu conteúdo (uL/L)
-    #     # H2
-    #     if x_CH[0] <= 30:               
-    #         F_CH[0] = 0
-    #     elif 30 < x_CH[0] <= 50:
-    #         F_CH[0] = 0.1*x_CH[0] - 3 
-    #     elif 50 < x_CH[0] <= 100:
-    #         F_CH[0] = 0.06*x_CH[0] + 1
-    #     elif 100 < x_CH[0] <= 500:
-    #         F_CH[0] = 0.0125*x_CH[0] + 3.75
-    #     else:
-    #         F_CH[0] = 10
-        
-    #     # CH4
-    #     if x_CH[1] <= 10:               
-    #         F_CH[1] = 0
-    #     elif 10 < x_CH[1] <= 15:
-    #         F_CH[1] = 0.4*x_CH[1] - 2 
-    #     elif 15 < x_CH[1] <= 115:
-    #         F_CH[1] = 0.0727*x_CH[1] + 0.9
-    #     else:
-    #         F_CH[1] = 10
-
-    #     # C2H6
-    #     if x_CH[2] <= 5:               
-    #         F_CH[2] = 0
-    #     elif 5 < x_CH[2] <= 20:
-    #         F_CH[2] = 0.1333*x_CH[2] - 0.6667 
-    #     elif 20 < x_CH[2] <= 35:
-    #         F_CH[2] = 0.2*x_CH[2] - 2
-    #     elif 35 < x_CH[2] <= 70:
-    #         F_CH[2] = 0.125*x_CH[2] + 0.625
-    #     else:
-    #         F_CH[2] = 10
-        
-    #     # C2H4
-    #     if x_CH[3] <= 10:               
-    #         F_CH[3] = 0
-    #     elif 10 < x_CH[3] <= 30:
-    #         F_CH[3] = 0.1*x_CH[3] - 1
-    #     elif 30 < x_CH[3] <= 50:
-    #         F_CH[3] = 0.15*x_CH[3] - 2.5
-    #     elif 50 < x_CH[3] <= 175:
-    #         F_CH[3] = 0.04*x_CH[3] + 3
-    #     else:
-    #         F_CH[3] = 10
-
-    #     # C2H2
-    #     if x_CH[4] <= 0.5:               
-    #         F_CH[4] = 0
-    #     elif 0.5 < x_CH[4] <= 3:
-    #         F_CH[4] = 0.8*x_CH[4] - 0.4
-    #     elif 3 < x_CH[4] <= 5:
-    #         F_CH[4] = 1.5*x_CH[4] - 2.5
-    #     elif 5 < x_CH[4] <= 35:
-    #         F_CH[4] = 0.1667*x_CH[4] + 4.167
-    #     else:
-    #         F_CH[4] = 10
-
-    #     HI_CH = w_CH * F_CH
-
-    #     return np.sum(HI_CH)
-
-    # def get_oil():
-    #     w_oil = np.array([  # peso dos fatores
-    #         0.4565,         # mw
-    #         0.2598,         # av
-    #         0.1386,         # dl
-    #         0.1452          # bv
-    #     ])
-
-    #     F_oil = np.array([   # Inicializar vetor de fator de qualidade do óleo
-    #         0,
-    #         0,
-    #         0,
-    #         0
-    #     ])
-
-    #     # Fatores que influenciam a qualidade do óleo | VALORES ALTERÁVEIS
-    #     mw = 30             # Micro-Water (mg/L)
-    #     av = 0.2            # Acid Value (mgKOH/g)
-    #     dl = 0.5            # Dielectric Loss (25ºC)
-    #     bv = 43             # Breakdown Voltage (kV)
-
-    #     # Calcular fatores de qualidade
-    #     # Micro-Water
-    #     if mw <= 20:
-    #         F_oil[0] = 0
-    #     elif 20 < mw <= 30:
-    #         F_oil[0] = 0.2*mw - 4
-    #     elif 30 < mw <= 45:
-    #         F_oil[0] = 0.4*mw - 10
-    #     else:
-    #         F_oil[0] = 10
-
-    #     # Acid Value
-    #     if av <= 0.015:
-    #         F_oil[1] = 0
-    #     elif 0.015 < av <= 0.1:
-    #         F_oil[1] = 23.53*av - 0.353
-    #     elif 0.1 < av <= 0.2:
-    #         F_oil[1] = 20*av 
-    #     elif 0.2 < av <= 0.3:
-    #         F_oil[1] = 40*av - 4
-    #     else:
-    #         F_oil[1] = 10
-
-    #      # Dielectric Loss
-    #     if dl <= 0.005:
-    #         F_oil[2] = 0
-    #     elif 0.005 < dl <= 0.015:
-    #         F_oil[2] = 20*dl - 1
-    #     elif 0.015 < dl <= 0.5:
-    #         F_oil[2] = 5.714*dl + 1.143
-    #     elif 0.5 < dl <= 1.5:
-    #         F_oil[2] = 4*dl + 2
-    #     else:
-    #         F_oil[2] = 10
-        
-    #     # Breakdown Voltage
-    #     if bv <= 30:
-    #         F_oil[3] = 10
-    #     elif 30 < bv <= 40:
-    #         F_oil[3] = -0.4*bv + 20
-    #     elif 40 < bv <= 43:
-    #         F_oil[3] = -0.664*bv + 30.68
-    #     elif 43 < bv <= 45:
-    #         F_oil[3] = -1*bv + 45
-    #     else:
-    #         F_oil[3] = 0
-        
-    #     # Calcular índice
-    #     HI_oil = w_oil * F_oil
-
-    #     return np.sum(HI_oil)
