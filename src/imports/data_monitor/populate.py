@@ -116,7 +116,7 @@ def _parse_data_to_object_Load(transformer: str, load, Sb):
 		if year != data.iloc[0] and not np.isnan(data.iloc[0]):
 			year = int(data.iloc[0])
 		timestamp = _last_day_of_month(datetime.date(year, months[data.iloc[1]], 1))
-		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= data[substation], power_factor = 1))
+		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= (data[substation]/ Sb), power_factor = 1))
 
 	return samples
 

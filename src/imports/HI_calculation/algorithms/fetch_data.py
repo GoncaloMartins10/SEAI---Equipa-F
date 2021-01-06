@@ -9,8 +9,11 @@ session = Session()
 class Queried_data:
 	def __init__(self, query):
 		self.query = query
-		self.type = type(query[0])
+		self._type = type(query[0])
 		self._position = None
+
+	def __repr__(self):
+		return f'Type {self._type}'
 
 	def get_data_as_list(self):
 		data_list = []
@@ -113,14 +116,16 @@ def get_next_chronological_envents(queries):
 # Usar o isinstance() para averiguar de que tipo é o objeto
 # isinstance(queries[0].get_next_query(), Dissolved_Gases)
 
-def fetch_data(transformer):
+def fetch_data(transformer, classes_to_query_list: list):
 	""" Returns list of the 5 types of data for HI calculation """
 	queries = []
 
-	queries.append( Queried_data( query_table(Dissolved_Gases, session, transformer.id_transformer)))
-	queries.append( Queried_data( query_table(Furfural, session, transformer.id_transformer)))
-	queries.append( Queried_data( query_table(Oil_Quality, session, transformer.id_transformer)))
-	queries.append( Queried_data( query_table(Load, session, transformer.id_transformer)))
-	queries.append( Queried_data( query_table(Maintenance, session, transformer.id_transformer)))
+	for c in classes_to_query_list:
+		queries.append( Queried_data( query_table(c, session, transformer.id_transformer)))
+	# queries.append( Queried_data( query_table(Dissolved_Gases, session, transformer.id_transformer)))
+	# queries.append( Queried_data( query_table(Furfural, session, transformer.id_transformer)))
+	# queries.append( Queried_data( query_table(Oil_Quality, session, transformer.id_transformer)))
+	# queries.append( Queried_data( query_table(Load, session, transformer.id_transformer)))
+	# queries.append( Queried_data( query_table(Maintenance_scores, session, transformer.id_transformer)))
 
 	return queries

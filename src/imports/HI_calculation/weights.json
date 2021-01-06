@@ -157,7 +157,7 @@
 				"weight": 2,
 				"scores":[16,11,7,4,0]
 			},
-			"Oil Tank":{
+			"Oil tank":{
 				"weight": 1,
 				"scores":[7,5,3,1,0]
 			},
@@ -195,8 +195,8 @@
 		"weight":{
 			"Dissolved_Gases": 10,
 			"Load": 10,
-			"Power_factor":10,
-			"Overall Condition":8,
+			"Power_Factor":10,
+			"Overall_Condition":8,
 			"Oil_Quality": 6,
 			"Furfural": 5
 		}

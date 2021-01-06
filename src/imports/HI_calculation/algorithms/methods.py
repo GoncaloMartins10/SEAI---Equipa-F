@@ -16,6 +16,9 @@ class WS: # Weights and Scores
 		self.start = start
 		self.scores = scores
 
+	def __repr__(self):
+		return f"{repr(self.weight)}: {repr(self.scores)}"
+
 	def get_score(self, value):
 		if value < 0 :
 			print("Invalid number. ", value, " should be positive")

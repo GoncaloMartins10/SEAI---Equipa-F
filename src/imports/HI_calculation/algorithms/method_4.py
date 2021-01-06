@@ -13,6 +13,8 @@ class Method_4(Method):
 			if transformer.nominal_voltage:
 				self.update_method_weights(transformer.nominal_voltage)
 
+	def __repr__(self):
+		return f'Method 4'
 
 	def update_method_weights(self, transformer_voltage):
 		w = "weight"
@@ -188,8 +190,9 @@ class Method_4(Method):
 		Returns a list of tupples with the datestamp and the respective result:
 			[(datestamp, result), (datestamp, result), ...])
 		"""
-		queries = fetch_data(tr)
-		
+		classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality]
+		queries = fetch_data(tr, classes_to_query)
+
 		self.update_method_weights(tr.nominal_voltage)
 			
 
@@ -206,8 +209,6 @@ class Method_4(Method):
 					data[1] = d
 				elif isinstance(d, Oil_Quality) and tr.nominal_voltage:
 					data[2] = d
-				else:
-					continue
 
 			result = self.calc_HI(data)
 			if prev_result != result:

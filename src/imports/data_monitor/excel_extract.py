@@ -7,6 +7,9 @@ class Excel_extract:
 	def __init__(self,file_path):
 		self.file_path = file_path
 
+	def __repr__(self):
+		return f'Excel to {self.file_path}'
+
 	def filter_DGA(self):
 		df = pd.read_excel(self.file_path, sheet_name='DGA')
 		df = df.iloc[:10,:]
