@@ -11,7 +11,7 @@ from .excel_extract import Excel_extract
 # import sys
 # sys.path.insert(0, sys.path[0] + '/../server/')
 
-from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
+from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance, Maintenance_Scores, Overall_Condition
 from ..resources import Session
 from ..resources.Mixins import MixinsTables
 
@@ -116,7 +116,7 @@ def _parse_data_to_object_Load(transformer: str, load, Sb):
 		if year != data.iloc[0] and not np.isnan(data.iloc[0]):
 			year = int(data.iloc[0])
 		timestamp = _last_day_of_month(datetime.date(year, months[data.iloc[1]], 1))
-		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= data[substation], power_factor = 1))
+		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= (data[substation]/ Sb), power_factor = 1))
 
 	return samples
 
@@ -160,15 +160,17 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 
 	return samples, transformer_voltage
 		
-def _parse_data_to_object_Maintenance_scores(transformer: str, maintenance_scores):
+def _parse_data_to_object_Maintenance_Scores(transformer: str, maintenance_scores):
 	rating_to_score = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
 	samples = []
 	for _, data in maintenance_scores.iterrows():
 		aux = []
 		for d in data[1:]:
-			aux.append(rating_to_score[d])
-
-		samples.append(id_transformer= transformer, datestamp = datetime.date(data[0], 12, 31),\
+			if d is np.nan:
+				aux.append(d)
+			else:
+				aux.append(rating_to_score[d])
+		samples.append(Maintenance_Scores(id_transformer= transformer, datestamp = datetime.date(data[0], 12, 31),\
 					 bushings = aux[0], \
 					 oil_leaks = aux[1], \
 					 oil_level = aux[2], \
@@ -179,14 +181,15 @@ def _parse_data_to_object_Maintenance_scores(transformer: str, maintenance_score
 					 foundation = aux[7], \
 					 grounding = aux[8], \
 					 gaskets = aux[9], \
-					 connectors = aux[10])
+					 connectors = aux[10]))
 
 	return samples
 
 def _parse_data_to_object_Overall_Condition(transformer :str, overall_condition):
 	samples = []
 	for _, data in overall_condition.iterrows():
-		samples.append(id_transformer= transformer, datestamp = datetime.date(data[1], 12, 31), score = data[0])
+		samples.append(Overall_Condition(id_transformer= transformer, datestamp = datetime.date(data[1], 12, 31), score = data[0]))
+
 	return samples
 	
 def _get_oldest_date(oldest_date, array):
@@ -248,7 +251,7 @@ def populate_database(debug : bool = False):
 		got_samples = _parse_data_to_object_GOT(ID, got)
 		load_samples = _parse_data_to_object_Load(ID, load, Sb)
 		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance, event_score_dictionary)
-		maint_scores_samples = _parse_data_to_object_Maintenance_scores(ID, maintenance_scores)
+		maint_scores_samples = _parse_data_to_object_Maintenance_Scores(ID, maintenance_scores)
 		overall_samples = _parse_data_to_object_Overall_Condition(ID, overall_condition)
 
 		age = get_transformer_age(dga_samples, fal_samples, got_samples, load_samples, maint_samples)

@@ -6,5 +6,5 @@ from .measurements.oil_quality.Models import Oil_Quality
 from .measurements.dissolved_gases.Models import Dissolved_Gases
 from .measurements.maintenance.Models import Maintenance
 from .measurements.maintenance_scores.Models import Maintenance_Scores
+from .measurements.overall_condition.Models import Overall_Condition
 from .health_index.Models import Health_Index
-#from .overall_condition.Models import Overall_Condition

@@ -1,3 +1,4 @@
+import inspect
 from datetime import date
 from math import isnan
 
@@ -13,11 +14,16 @@ class Method_2(Method):
 			if transformer.nominal_voltage:
 				self.update_method_weights(transformer.nominal_voltage)
 
+	def __repr__(self):
+		return f'Method 2'
 
 	def update_method_weights(self, transformer_voltage):
 		w = "weight"
 		s = "starts"
 		sc = "scores"
+
+		maintenance_parameters = ["Bushings", "Infra-red", "Main tank", "Cooling", "Oil tank", "Foundation", \
+									"Grounding", "Gaskets", "Connectors", "Oil leaks", "Oil level"]
 
 		for key, val in self.config.items():
 			if key == "Dissolved_Gases":
@@ -71,55 +77,55 @@ class Method_2(Method):
 
 				self.fal = WS(self.config[w]["Furfural"], val[w][s], val[w][sc])
 			elif key == "Load":
-				self.N_scores = WS(self.config[w]["Load"], val[w][s], val[w][sc])
+				self.load = WS(self.config[w]["Load"], val[s], val[sc])
 				self.N_scale = val["N"]["scale"]
 				continue
 			elif key == "Maintenance":
-				for k, v in val:
-					if k == "Bushings":
-						self.bushings = WS(v[w], val[s], v[sc])
-					elif k == "Infra-red":
-						self.infra_red = WS(v[w], val[s], v[sc])
-					elif k == "Main tank":
-						self.main_tank = WS(v[w], val[s], v[sc])
-					elif k == "Cooling":
-						self.cooling = WS(v[w], val[s], v[sc])
-					elif k == "Oil Tank":
-						self.oil_tank = WS(v[w], val[s], v[sc])
-					elif k == "Foundation":
-						self.foundation = WS(v[w], val[s], v[sc])
-					elif k == "Grounding":
-						self.grounding = WS(v[w], val[s], v[sc])
-					elif k == "Gaskets":
-						self.gaskets = WS(v[w], val[s], v[sc])
-					elif k == "Connectors":
-						self.connectors = WS(v[w], val[s], v[sc])
-					elif k == "Oil leaks":
-						self.oil_leaks = WS(v[w], val[s], v[sc])
-					elif k == "Oil level":
-						self.oil_level = WS(v[w], val[s], v[sc])
+
+				self.maint = {}
+				for k, v in val.items():
+					if k in maintenance_parameters:
+						l = k.replace(" ", "_").replace("-", "_").lower()
+						self.maint[l] = WS(v[w], val[s], v[sc])
+					elif k == "starts":
+						continue
+					else:
+						raise Exception(f"Wrong attribute {k}")
+					"""
+				self.maint = [temp_maint["bushings"], \
+								temp_maint["infra_red"], \
+								temp_maint["cooling"], \
+								temp_maint["main_tank"], \
+								temp_maint["oil_tank"], \
+								temp_maint["foundation"], \
+								temp_maint["grounding"], \
+								temp_maint["gaskets"], \
+								temp_maint["connectors"], \
+								temp_maint["oil_leaks"], \
+								temp_maint["oil_level"]]
+								"""
 			elif key == "Power_Factor":
-				self.power_factor = WS(self.config[w]["Power_Factor"], val[s], val[sc])
+				self.power_factor = WS(self.config[w]["Power_Factor"], val[w][s], val[w][sc])
 			elif key == "weight":
-				continue
+				self.overall_weight = val["Overall_Condition"]
 				 
 			else:
 				print("Unavailable key type: ", key)
 				raise Exception
 		
 		self._reset_internal_scores()
-		
 
 	def _reset_internal_scores(self):
-		self._prev_data_dga = []
+		self._prev_data_dga = None
 		self._prev_result_dga, self._prev_score_dga = 0, 0
 		self._prev_data_fal = 0 
 		self._prev_score_fal = 0
-		self._prev_data_got = []
+		self._prev_data_got = None
 		self._prev_result_got, self._prev_score_got = 0, 0
-		self._prev_data_maint = []
-		self._prev_score_maint = 0
-		self._prev_data_load = []
+		self._prev_data_maint = None
+		self._prev_score_maint = []
+		self._prev_weight_maint = []
+		self._prev_data_load = None
 		self._prev_score_load = 0
 		self._N_count = [0, 0, 0, 0, 0]
 
@@ -192,27 +198,66 @@ class Method_2(Method):
 
 		return result, score
 
+	def calc_load(self, data: Load):
+		for i, n in enumerate(self.N_scale):
+			if data.load_factor < n or i == len(self.N_scale) - 1:
+				self._N_count[i - 1] += 1
+				break
+		
+		lf = sum([(4-i)*n for i, n in reversed(list(enumerate(self._N_count)))]) / sum(self._N_count)
+
+		res_load = self.load.get_score(lf)
+
+		res_power = self.power_factor.get_score(data.power_factor)
+
+		return res_load, res_power
+
+	def calc_overall(self, data: Overall_Condition):
+		return data.score
+
+	def calc_maint(self, data: Maintenance_Scores):
+		if self._prev_data_maint == data:
+			return self._prev_score_maint, self._prev_weight_maint
+		self._prev_data_maint = data
+		scores = []
+		w = []
+		for m in self.maint.keys() & data.__dict__.keys():
+			scores.append(data.__dict__[m])
+			w.append(self.maint[m].weight)
+		
+		self._prev_score_maint = scores
+		self._prev_weight_maint = w
+		return scores, w
+
 	def calc_HI(self, data):
-		w = [0, 0, 0, 0, 0]
-		if data[0] is None:
-			dga_score = 0
-		else:
-			_, dga_score = self.calc_dga(data[0])
+		w = [0, 0, 0, 0, 0, 0]
+		values = [0, 0, 0, 0, 0, 0]
+		if data[0] is not None:
+			_, values[0] = self.calc_dga(data[0])
 			w[0] = self.dga.weight
 		
-		if data[1] is None:
-			fal_score = 0
-		else:
-			fal_score = self.calc_fal(data[1])
+		if data[1] is not None:
+			values[1] = self.calc_fal(data[1])
 			w[1] = self.fal.weight
 
-		if data[2] is None:
-			got_score = 0
-		else:
-			_, got_score = self.calc_got(data[2])
+		if data[2] is not None:
+			_, values[2] = self.calc_got(data[2])
 			w[2] = self.got.weight
+		
+		if data[3] is not None:
+			values[3], values[4] = self.calc_load(data[3])
+			w[3], w[4] = self.load.weight, self.power_factor.weight
+		
+		if data[4] is not None:
+			values[5] = self.calc_overall(data[4])
+			w[5] = self.overall_weight 								
 
-		health_index = self._get_HI([dga_score, fal_score, got_score], w)
+		if data[5] is not None:
+			scores, maint_w = self.calc_maint(data[5])
+			values.extend(scores)
+			w.extend(maint_w)
+
+		health_index = self._get_HI(values, w)
 
 		return health_index
 
@@ -222,11 +267,13 @@ class Method_2(Method):
 		Returns a list of tupples with the datestamp and the respective result:
 			[(datestamp, result), (datestamp, result), ...])
 		"""
-		queries = fetch_data(tr)
+		classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition]
+		queries = fetch_data(tr, classes_to_query)
 		
+		self.update_method_weights(tr.nominal_voltage)
 
 		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
-		data = [None, None, None, None, None]
+		data = [None, None, None, None, None, None]
 		results = []
 		prev_result = 0
 		while oldest_events_queries: 			# Verifica se é uma lista vazia
@@ -240,15 +287,17 @@ class Method_2(Method):
 					data[2] = d
 				elif isinstance(d, Load): # Load e power factor
 					data[3] = d
-				elif isinstance(d, Maintenance):
+				elif isinstance(d, Overall_Condition):
 					data[4] = d
-				else:
-					continue
+				elif isinstance(d, Maintenance_Scores):
+					data[5] = d
 
+			
 			result = self.calc_HI(data)
 			if prev_result != result:
-				results.append((datestamp,result))
+				results.append( Health_Index(id_transformer = tr.id_transformer, id_algorithm = 2, datestamp = datestamp, hi = result))
 				prev_result = result
+			
 
 			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
 		return results

@@ -98,19 +98,13 @@ CREATE TABLE ges_ativos.maintenance (
     impact_index INTEGER CHECK(impact_index >=-2 AND impact_index <=2)
 );
 
-CREATE TABLE ges_ativos.maintenance_score (
-    id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
-    datestamp DATE,
-    score INT,
-    PRIMARY KEY (id_transformer, datestamp)
-);
-
-CREATE TABLE ges_ativos.overall_condition (
+CREATE TABLE ges_ativos.maintenance_scores (
     id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
     datestamp DATE,
     bushings INT,
     infra_red INT,
     cooling INT,
+    main_tank INT,
     oil_tank INT,
     foundation INT,
     grounding INT,
@@ -118,6 +112,13 @@ CREATE TABLE ges_ativos.overall_condition (
     connectors INT,
     oil_leaks INT,
     oil_level INT,
+    PRIMARY KEY (id_transformer, datestamp)
+);
+
+CREATE TABLE ges_ativos.overall_condition (
+    id_transformer TEXT REFERENCES ges_ativos.transformer(id_transformer) ON DELETE CASCADE,
+    datestamp DATE,
+    score INT,
     PRIMARY KEY (id_transformer, datestamp)
 );
 

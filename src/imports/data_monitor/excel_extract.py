@@ -7,6 +7,9 @@ class Excel_extract:
 	def __init__(self,file_path):
 		self.file_path = file_path
 
+	def __repr__(self):
+		return f'Excel to {self.file_path}'
+
 	def filter_DGA(self):
 		df = pd.read_excel(self.file_path, sheet_name='DGA')
 		df = df.iloc[:10,:]
@@ -103,6 +106,8 @@ class Excel_extract:
 
 		df_score_table = df.iloc[2:9,:11] 	# Tabela superior esquerda
 		df_scores = df.iloc[13:,:12]		# Tabela inferior esquerda
+		df_scores.dropna(axis=0, how='all', inplace=True)
+		df_scores.dropna(axis=1, how='all', inplace=True)
 		df_maintenances = df.iloc[0:,14:]	# Tabela direita
 		df_maintenances.dropna(axis=0, how='all', inplace=True)
 		df_maintenances.dropna(axis=1, how='all', inplace=True)

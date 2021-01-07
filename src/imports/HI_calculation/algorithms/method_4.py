@@ -3,7 +3,7 @@ from math import isnan
 
 from .methods import  WS, Method
 from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
-from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural
+from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural, Health_Index
 
 class Method_4(Method):
 	def __init__(self, transformer : Transformer = None):
@@ -13,6 +13,8 @@ class Method_4(Method):
 			if transformer.nominal_voltage:
 				self.update_method_weights(transformer.nominal_voltage)
 
+	def __repr__(self):
+		return f'Method 4'
 
 	def update_method_weights(self, transformer_voltage):
 		w = "weight"
@@ -188,8 +190,9 @@ class Method_4(Method):
 		Returns a list of tupples with the datestamp and the respective result:
 			[(datestamp, result), (datestamp, result), ...])
 		"""
-		queries = fetch_data(tr)
-		
+		classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality]
+		queries = fetch_data(tr, classes_to_query)
+
 		self.update_method_weights(tr.nominal_voltage)
 			
 
@@ -206,13 +209,12 @@ class Method_4(Method):
 					data[1] = d
 				elif isinstance(d, Oil_Quality) and tr.nominal_voltage:
 					data[2] = d
-				else:
-					continue
 
 			result = self.calc_HI(data)
 			if prev_result != result:
-				results.append((datestamp,result))
+				results.append( Health_Index(id_transformer = tr.id_transformer, id_algorithm = 4, datestamp = datestamp, hi = result))
 				prev_result = result
+				
 
 			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
 		return results
