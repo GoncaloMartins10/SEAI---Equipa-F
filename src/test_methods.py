@@ -1,7 +1,5 @@
-from imports.HI_calculation.method_3 import *
+from imports.HI_calculation.health_index import calculate_all_transformers
 from imports.resources import Session
 
 session = Session()
-
-MultiFeatureIndex.read_pesos()
-
+calculate_all_transformers(session, 3)

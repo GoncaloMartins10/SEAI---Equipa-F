@@ -3,8 +3,9 @@ import math
 import json
 import os
 
-from .fetch_data import *
-from ..resources.db_classes import *
+from .methods import  WS, Method
+from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
+from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural, Load
 
 
 class MultiFeatureIndex():
@@ -26,12 +27,12 @@ class MultiFeatureIndex():
 		#self.caluculate_indexes()
 	
 
-	def caluculate_indexes(self, data):
+	def caluculate_indexes(self, data, oldest_date):
 		
 		if data[3] is None:
 			self.hi_main = 0
 		else:
-			self.hi_main= self.get_main(data[3])
+			self.hi_main= self.get_main(data[3], oldest_date)
 
 		if data[0] is None or data[1] is None:
 			self.hi_iso = 0
@@ -48,31 +49,31 @@ class MultiFeatureIndex():
 		else:
 			self.hi_oil = self.get_oil(data[2])
 
-		HI_combinado = self.get_combinado()
+		HI_combinado = self.get_combinado(self.hi_main, self.hi_iso, self.hi_dga, self.hi_oil)
 
 		return HI_combinado 
 
-	def combinado(self):
+	def combinado(self, hi_main, hi_iso, hi_dga, hi_oil):
 		w=np.array(list(self.pesos_combinado.values()))
 
 		HI=np.array([            # Funções dos índices
-			self.main, 
-			self.iso, 
-			self.CH, 
-			self.oil,
+			hi_main,
+			hi_iso,
+			hi_dga,
+			hi_oil
 		])
 		# Calcular somatório
 		HI_com = np.sum(w * HI)
 		return HI_com
 	
 	
-	def get_main(self, data: Load):
+	def get_main(self, data: Load, oldest_date):
 		HI0 = self.pesos_main["HI0"]
 		t_exp = self.pesos_main["t_exp"]
 		f_L = data.load_factor    
 
 		#T1 ano da primeira instância
-		T1 = 
+		T1 = oldest_date.split("-")[0]
 		#T2 ano da instância atual
 		T2 = data.datestamp.split("-")[0]
 
@@ -80,7 +81,7 @@ class MultiFeatureIndex():
 		HI_m = HI0 * math.exp(B * (T2 - T1))
 		return HI_m
 
-	def get_iso(self, data) 
+	def get_iso(self, data): 
 		w_F_CO = self.pesos_iso['CO']
 
 		data: Dissolved_Gases
@@ -254,62 +255,46 @@ class MultiFeatureIndex():
 
 
 
-def calculate_for_transformer(m : MultiFeatureIndex, tr: Transformer):
-	"""
-	Returns a list of tupples with the datestamp and the respective result:
-		[(datestamp, result), (datestamp, result), ...])
-	"""
-	queries = fetch_data(tr)
-	
+	def calculate_for_transformer(self, tr: Transformer):
+		"""
+		Returns a list of tupples with the datestamp and the respective result:
+			[(datestamp, result), (datestamp, result), ...])
+		"""
+		queries = fetch_data(tr)
+		oldest_date = get_oldest_date(queries)
 
-	oldest_events_queries, datestamp = get_next_chronological_envents(queries)
-	data = [None, None, None, None]
-	results = []
-	prev_result = 0
-	while oldest_events_queries: 			# Verifica se é uma lista vazia
-		for q in oldest_events_queries:
-			d = q.get_data()
-			print(type(d),isinstance(d, Load))
-			if isinstance(d, Dissolved_Gases):
-				data[0] = d
-			elif isinstance(d, Furfural):
-				data[1] = d
-			elif isinstance(d, Oil_Quality):
-				data[2] = d     
-			elif isinstance(d, Load):
-				data[3] = d
-			else:
-				continue
-
-		
-			result = m.caluculate_indexes(data)
-
-
-		if prev_result != result:
-			results.append((datestamp,result))
-			prev_result = result
-		
 		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
-	return results
+		data = [None, None, None, None]
+		results = []
+		prev_result = 0
+		
+		while oldest_events_queries: 			# Verifica se é uma lista vazia
+			for q in oldest_events_queries:
+				d = q.get_data()
+				print(type(d),isinstance(d, Load))
+				if isinstance(d, Dissolved_Gases):
+					data[0] = d
+				elif isinstance(d, Furfural):
+					data[1] = d
+				elif isinstance(d, Oil_Quality):
+					data[2] = d     
+				elif isinstance(d, Load):
+					data[3] = d
+				else:
+					continue
 
-def calculate_all_transformers(session):
-	"""
-	Returns a list of tupples with the following structure:
-		[(transformer_id, [(datestamp, result), (datestamp, result), ...]),
-		(transformer_id, [(datestamp, result), (datestamp, result), ...]),...]
-	If a transformer as missing data, it doesn't append to the final result
-	"""
-	transfomer_list = session.query(Transformer)
-	
-	m = MultiFeatureIndex()
-	results = []
-	for tr in transfomer_list:
-		result = calculate_for_transformer(m, tr)
-		if result:
-			results.append((tr.id_transformer, result))
+			
+			result = self.caluculate_indexes(data, oldest_date)
 
-		pass
-	return results
+
+			if prev_result != result:
+				results.append((datestamp,result))
+				prev_result = result
+			
+			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+		return results
+
+
 	
 
 
