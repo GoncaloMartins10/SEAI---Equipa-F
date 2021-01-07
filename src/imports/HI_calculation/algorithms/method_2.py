@@ -295,7 +295,7 @@ class Method_2(Method):
 			
 			result = self.calc_HI(data)
 			if prev_result != result:
-				results.append((datestamp,result))
+				results.append( Health_Index(id_transformer = tr.id_transformer, id_algorithm = 2, datestamp = datestamp, hi = result))
 				prev_result = result
 			
 

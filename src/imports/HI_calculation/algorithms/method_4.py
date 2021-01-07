@@ -3,7 +3,7 @@ from math import isnan
 
 from .methods import  WS, Method
 from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
-from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural
+from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural, Health_Index
 
 class Method_4(Method):
 	def __init__(self, transformer : Transformer = None):
@@ -212,8 +212,9 @@ class Method_4(Method):
 
 			result = self.calc_HI(data)
 			if prev_result != result:
-				results.append((datestamp,result))
+				results.append( Health_Index(id_transformer = tr.id_transformer, id_algorithm = 4, datestamp = datestamp, hi = result))
 				prev_result = result
+				
 
 			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
 		return results
