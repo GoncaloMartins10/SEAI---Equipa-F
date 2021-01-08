@@ -4,25 +4,19 @@ import json
 import os
 
 from .methods import  WS, Method
-from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data
-from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural, Load
+from .fetch_data import fetch_data, get_next_chronological_envents, Queried_data, get_oldest_date
+from ...resources.db_classes import Transformer, Dissolved_Gases, Oil_Quality, Furfural, Load, Health_Index
 
 
-class MultiFeatureIndex():
+class MultiFeatureIndex(Method):
 	def __init__(self):
-		cwd = os.getcwd()
-		repo_name = 'SEAI---Equipa-F'
-		repo_dir = cwd[:cwd.rindex(repo_name) + len(repo_name)] # retira tudo depois de 'SEAI---Equipa-F'
-		weight_path = os.path.join(repo_dir,"src/imports/HI_calculation/weights.json")
+		super().__init__("method_3")
 
-		with open(weight_path, "r") as file: 
-			self.config = json.load(file)
-
-		self.pesos_main = self.config["method_3"]["main"]
-		self.pesos_iso= self.config["method_3"]["pesos_iso"]
-		self.pesos_dga = self.config["method_3"]["pesos_DGA"]
-		self.pesos_oil = self.config["method_3"]["pesos_oil"]
-		self.pesos_combinado = self.config["method_3"]["pesos_combinado"]
+		self.pesos_main = self.config["main"]
+		self.pesos_iso= self.config["pesos_iso"]
+		self.pesos_dga = self.config["pesos_DGA"]
+		self.pesos_oil = self.config["pesos_oil"]
+		self.pesos_combinado = self.config["pesos_combinado"]
 
 		#self.caluculate_indexes()
 	
@@ -37,7 +31,7 @@ class MultiFeatureIndex():
 		if data[0] is None or data[1] is None:
 			self.hi_iso = 0
 		else:
-			self.hi_iso = self.get_iso(data)
+			self.hi_iso = self.get_iso(data[0], data[1])
 		
 		if data[0] is None:
 			self.hi_dga = 0
@@ -53,18 +47,18 @@ class MultiFeatureIndex():
 
 		return HI_combinado 
 
-	def combinado(self, hi_main, hi_iso, hi_dga, hi_oil):
-		w=np.array(list(self.pesos_combinado.values()))
+	def get_combinado(self, hi_main, hi_iso, hi_dga, hi_oil):
+		w=[self.pesos_combinado["HI_m"], self.pesos_combinado["HI_iso"], self.pesos_combinado["HI_CH"], self.pesos_combinado["HI_oil"]]
 
-		HI=np.array([            # Funções dos índices
+		HI=[            # Funções dos índices
 			hi_main,
 			hi_iso,
 			hi_dga,
 			hi_oil
-		])
+		]
 		# Calcular somatório
-		HI_com = np.sum(w * HI)
-		return HI_com
+		HI_com = self._mult_lists(w, HI)
+		return sum(HI_com)
 	
 	
 	def get_main(self, data: Load, oldest_date):
@@ -73,19 +67,19 @@ class MultiFeatureIndex():
 		f_L = data.load_factor    
 
 		#T1 ano da primeira instância
-		T1 = oldest_date.split("-")[0]
+		T1 = oldest_date.year
 		#T2 ano da instância atual
-		T2 = data.datestamp.split("-")[0]
+		T2 = data.datestamp.year
 
 		B = f_L * (np.log(6.5/0.5) / t_exp)     # Coeficiente de envelhecimento
 		HI_m = HI0 * math.exp(B * (T2 - T1))
 		return HI_m
 
-	def get_iso(self, data): 
+	def get_iso(self, data_dg: Dissolved_Gases, data_f: Furfural ): 
 		w_F_CO = self.pesos_iso['CO']
 
-		data: Dissolved_Gases
-		x_CO = data.co
+		
+		x_CO = data_dg.co
 
 		# Inicializar Fator Oxigénio-Carbono
 		a = [0.0067, 0.0017, 0.02, 0.0125, 0]		
@@ -107,8 +101,8 @@ class MultiFeatureIndex():
 
 		HI_CO = F_CO
 
-		data: Furfural
-		C_fur = data.quantity
+		
+		C_fur = data_f.quantity
 		# Calcular o indíce HI_C,O
 		
 		HI_fur = 3.344 * C_fur**0.413   # Calcular HI_fur
@@ -185,17 +179,17 @@ class MultiFeatureIndex():
 
 		HI_CH = self._mult_lists(F_CH, w_CH)
 
-		return HI_CH
+		return sum(HI_CH)
 
 	def get_oil(self, data: Oil_Quality):
 		w_oil = [self.pesos_oil["mw"], self.pesos_oil["av"], self.pesos_oil["bv"]]
 		F_oil = [None, None, None]
 
 		# Fatores que influenciam a qualidade do óleo | VALORES ALTERÁVEIS
-		mw = self.data.water_content             	 # Micro-Water (mg/L)
-		av = self.data.acidity            			 # Acid Value (mgKOH/g)
-		# dl = self.data.            					 # Dielectric Loss (25ºC)  Não temos este valor 
-		bv = self.data.breakdown_voltage             # Breakdown Voltage (kV)
+		mw = data.water_content             	 # Micro-Water (mg/L)
+		av = data.acidity            			 # Acid Value (mgKOH/g)
+		# dl = data.            					 # Dielectric Loss (25ºC)  Não temos este valor 
+		bv = data.breakdown_voltage             # Breakdown Voltage (kV)
 
 		# Calcular fatores de qualidade
 		# Micro-Water
@@ -234,24 +228,21 @@ class MultiFeatureIndex():
 		
 		# Breakdown Voltage
 		if bv <= 30:
-			F_oil[3] = 10
+			F_oil[2] = 10
 		elif 30 < bv <= 40:
-			F_oil[3] = -0.4*bv + 20
+			F_oil[2] = -0.4*bv + 20
 		elif 40 < bv <= 43:
-			F_oil[3] = -0.664*bv + 30.68
+			F_oil[2] = -0.664*bv + 30.68
 		elif 43 < bv <= 45:
-			F_oil[3] = -1*bv + 45
+			F_oil[2] = -1*bv + 45
 		else:
-			F_oil[3] = 0
+			F_oil[2] = 0
 		
 		# Calcular índice
 		HI_oil = self._mult_lists(w_oil, F_oil)
 
-		return HI_oil
+		return sum(HI_oil)
 
-	def _mult_lists(self, lista, listb):
-		res = [a*b for a,b in zip(lista, listb)]
-		return res
 
 
 
@@ -260,7 +251,9 @@ class MultiFeatureIndex():
 		Returns a list of tupples with the datestamp and the respective result:
 			[(datestamp, result), (datestamp, result), ...])
 		"""
-		queries = fetch_data(tr)
+		classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load]
+		queries = fetch_data(tr, classes_to_query)
+
 		oldest_date = get_oldest_date(queries)
 
 		oldest_events_queries, datestamp = get_next_chronological_envents(queries)
@@ -288,7 +281,7 @@ class MultiFeatureIndex():
 
 
 			if prev_result != result:
-				results.append((datestamp,result))
+				results.append( Health_Index(id_transformer = tr.id_transformer, id_algorithm = 3, datestamp = datestamp, hi = result))
 				prev_result = result
 			
 			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
