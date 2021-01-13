@@ -64,7 +64,7 @@ class MultiFeatureIndex(Method):
 	def get_main(self, data: Load, oldest_date):
 		HI0 = self.pesos_main["HI0"]
 		t_exp = self.pesos_main["t_exp"]
-		f_L = data.load_factor    
+		f_L = data.load_factor   
 
 		#T1 ano da primeira instância
 		T1 = oldest_date.year

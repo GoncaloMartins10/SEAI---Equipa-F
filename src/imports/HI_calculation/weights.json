@@ -1,4 +1,10 @@
 {
+    "method_1":{
+        "high": 15,
+        "med": 10,
+        "low": 5
+    },
+
     "method_3": {
         "main": {
             "HI0": 0.5,

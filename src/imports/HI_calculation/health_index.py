@@ -1,10 +1,12 @@
+from .algorithms.method_1 import Method_1
 from .algorithms.method_2 import Method_2
 from .algorithms.method_4 import Method_4
 from .algorithms.method_3 import MultiFeatureIndex
 from ..resources.db_classes import Transformer
 from ..resources.Mixins import MixinsTables
 
-method_switcher = { 2: Method_2,\
+method_switcher = { 1: Method_1, \
+					2: Method_2,\
 					3: MultiFeatureIndex, \
 					4: Method_4 }
 
