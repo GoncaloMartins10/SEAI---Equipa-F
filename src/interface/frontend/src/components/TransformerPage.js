@@ -24,9 +24,12 @@ export default class TransformerPage extends Component {
             method: "GET"
         })
           .then( (response) => {
+                console.log(response);
+                console.log("estamos aqui cabrao");
                 return response.json();
           })
           .then( (obj) => {
+                console.log(obj);
                 this.setState({
                     measurements: {
                         load: obj.load,

@@ -31,8 +31,13 @@ def get_medicoes(request, id_transformer):
                     oil_quality=transformer.oil_quality,
                     dissolved_gases=transformer.dissolved_gases,
                )
-        return HttpResponse(encode(body, unpicklable=False), content_type='application/json')
+        response = HttpResponse(encode(body, unpicklable=False), content_type='application/json')
+        response['Accept'] = 'application/json'
+        return response
     except Exception as e:
         raise e 
     finally:
         session.close()
+
+def HI(request, id_transformer):
+    pass
