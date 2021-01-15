@@ -92,6 +92,7 @@ def get_next_chronological_envents(queries):
 	same_date_q = []
 	new_date = date.today()
 
+        # para que serve este ciclo? nao acaba por ser feito já na função a seguir?
 	for q in queries:
 		# print(q.get_next_date(), q.type)
 		d = q.get_next_date()
@@ -99,6 +100,8 @@ def get_next_chronological_envents(queries):
 			continue
 		elif new_date > d:
 			new_date = d
+ 
+  
 
 	# Check all event with the same date as the oldest event
 	for q in queries:

@@ -17,7 +17,7 @@ class WS: # Weights and Scores
 		self.scores = scores
 
 	def __repr__(self):
-		return f"{repr(self.weight)}: {repr(self.scores)}"
+		return f"{repr(self.weight)}: {repr(self.scores)}, {self.start}"
 
 	def get_score(self, value):
 		if value < 0 :
