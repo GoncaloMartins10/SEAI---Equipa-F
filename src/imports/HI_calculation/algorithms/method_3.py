@@ -43,9 +43,10 @@ class MultiFeatureIndex(Method):
 		else:
 			self.hi_oil = self.get_oil(data[2])
 
-		HI_combinado = self.get_combinado(self.hi_main, self.hi_iso, self.hi_dga, self.hi_oil)
+		HI_combinado = self.get_combinado(self.hi_main, self.hi_iso, self.hi_dga, self.hi_oil) 
+		HI_combinado_norm = HI_combinado * 10
 
-		return HI_combinado 
+		return HI_combinado_norm
 
 	def get_combinado(self, hi_main, hi_iso, hi_dga, hi_oil):
 		w=[self.pesos_combinado["HI_m"], self.pesos_combinado["HI_iso"], self.pesos_combinado["HI_CH"], self.pesos_combinado["HI_oil"]]
