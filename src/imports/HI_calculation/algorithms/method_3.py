@@ -265,7 +265,7 @@ class MultiFeatureIndex(Method):
 		while oldest_events_queries: 			# Verifica se é uma lista vazia
 			for q in oldest_events_queries:
 				d = q.get_data()
-				print(type(d),isinstance(d, Load))
+			
 				if isinstance(d, Dissolved_Gases):
 					data[0] = d
 				elif isinstance(d, Furfural):
