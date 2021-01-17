@@ -21,13 +21,13 @@
   - [**.get_all_measurements(session)**](#get_all_measurementssession)
   - [**.get_by_time_interval(session, \*\*kwargs)**](#get_by_time_intervalsession-kwargs)
   - [**.get_by_interval(session, filter_list)**](#get_by_intervalsession-filter_list)
-- [Popular Base de Dados](#Popular-Base-de-Dados)
+- [Popular Base de Dados](#popular-base-de-dados)
 
 # Imports
 
 ```python
 from imports.resources import Session
-from imports.resources.db_classes import Transformer, Weights, Furfural, Load, Oil_Quality, Dissolved_Gases, Maintenance
+from imports.resources.db_classes import Transformer, Weights, Furfural, Load, Oil_Quality, Dissolved_Gases, Maintenance, Health_Index
 from imports.resources.Mixins import MixinsTables
 
 session = Session()
