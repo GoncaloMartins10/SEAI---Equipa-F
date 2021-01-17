@@ -7,6 +7,9 @@ class Excel_extract:
 	def __init__(self,file_path):
 		self.file_path = file_path
 
+	def __repr__(self):
+		return f'Excel to {self.file_path}'
+
 	def filter_DGA(self):
 		df = pd.read_excel(self.file_path, sheet_name='DGA')
 		df = df.iloc[:10,:]
@@ -101,16 +104,25 @@ class Excel_extract:
 	def filter_Maintenance(self):
 		df = pd.read_excel(self.file_path, sheet_name='Maintenance')
 
-		df_rating_table = df.iloc[2:9,:11] 	# Tabela superior esquerda
-		df_ratings = df.iloc[13:,:12]		# Tabela inferior esquerda
+		df_score_table = df.iloc[2:9,:11] 	# Tabela superior esquerda
+		df_scores = df.iloc[13:,:12]		# Tabela inferior esquerda
+		df_scores.dropna(axis=0, how='all', inplace=True)
+		df_scores.dropna(axis=1, how='all', inplace=True)
 		df_maintenances = df.iloc[0:,14:]	# Tabela direita
 		df_maintenances.dropna(axis=0, how='all', inplace=True)
 		df_maintenances.dropna(axis=1, how='all', inplace=True)
 
-		return df_rating_table, df_ratings, df_maintenances
+		return df_score_table, df_scores, df_maintenances
 
 	def filter_OverallCondition(self):
-		raise NotImplementedError
+		df = pd.read_excel(self.file_path, sheet_name='Overall Condition')
+
+		df = df.iloc[10:,[0,2]]
+		df.dropna(axis=0, how='all', inplace=True)
+
+		# Deletes rows with incorrect assigned values
+		df = df[df["Overall Condition"] != False] 
+		return df
 
 	def filter_event_score(self):
 		"""
@@ -132,13 +144,15 @@ class Excel_extract:
 
 if __name__ == "__main__":	
 	
-	ee = Excel_extract(r'dados/Event_evaluation/eventos.xlsx')
+	ee = Excel_extract(r'dados/Template SE2.xlsx')
 	# df_DGA = filter_DGA()
 	# df_DGAF,_ = ee.filter_DGAF() # O _ serve para ignorar o segundo retorno da função
 	# df = filter_FAL()
 	# df_s, df_r = filter_PF()
 	# df = filter_GOT()
+	df = ee.filter_OverallCondition()
 
-	df = ee.filter_event_score()
+	# ee = Excel_extract(r'../../dados/Event_evaluation/eventos.xlsx')
+	# df = ee.filter_event_score()
 
 	print (df)

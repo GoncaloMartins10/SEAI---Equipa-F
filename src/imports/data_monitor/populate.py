@@ -11,7 +11,7 @@ from .excel_extract import Excel_extract
 # import sys
 # sys.path.insert(0, sys.path[0] + '/../server/')
 
-from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance
+from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance, Maintenance_Scores, Overall_Condition
 from ..resources import Session
 from ..resources.Mixins import MixinsTables
 
@@ -23,7 +23,7 @@ success_msg = """ ____                   _       _             _       _        
            |_|              	
 """
 
-def _convert_to_float(value):
+def _convert_to_data_type(value):
 	if type(value) is str:
 		filtered = value.split("x") # Não consigo filtrar o ^ por algum motivo...
 		i = float(filtered[0].replace(',','.'))
@@ -34,6 +34,8 @@ def _convert_to_float(value):
 			return i
 	elif type(value) is int or type(value) is float:
 		return float(value)
+	elif type(value) is datetime.datetime:
+		return value.date()
 	else:
 		# Não levanta excessão, apenas devolve o valor (meio trolha eu sei)
 		return value
@@ -67,9 +69,9 @@ def _parse_data_to_object_DGA(transformer, dga):
 	for _, data in dga.iteritems():
 		a = []
 		for d in data:
-			a.append(_convert_to_float(d))
-
-		samples.append(Dissolved_Gases(id_transformer=transformer, datestamp = a[0], h2 = a[1], co = a[2], coh2 = a[3], ch4 = a[4], c2h4 = a[5], c2h6 = a[6], c2h2 = a[7]))
+			a.append(_convert_to_data_type(d))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Dissolved_Gases(id_transformer=transformer, datestamp = a[0], h2 = a[1], co = a[2], coh2 = a[3], ch4 = a[4], c2h4 = a[5], c2h6 = a[6], c2h2 = a[7]))
 	return samples
 
 def _parse_data_to_object_FAL(transformer, fal):
@@ -78,9 +80,12 @@ def _parse_data_to_object_FAL(transformer, fal):
 		a = []
 		for d in data:
 			if type(d) is int or type(d) is float:
-				d = _convert_to_float(d)
+				d = _convert_to_data_type(d)
+			elif isinstance(d, datetime.datetime):
+				d = d.date()
 			a.append(d)
-		samples.append(Furfural(id_transformer=transformer, datestamp = a[0], quantity = a[1]))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Furfural(id_transformer=transformer, datestamp = a[0], quantity = a[1]))
 	
 	return samples
 
@@ -89,10 +94,10 @@ def _parse_data_to_object_GOT(transformer, got):
 	for _, data in got.iteritems():
 		a = []
 		for d in data:
-			a.append(_convert_to_float(d))
+			a.append(_convert_to_data_type(d))
 		
-		# sample = Oil_quality_measurements(a[0], a[1], a[2], a[3], a[4], a[5])
-		samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
+		if all(v is not np.nan for v in a[1:]):
+			samples.append(Oil_Quality(id_transformer=transformer, datestamp = a[0], breakdown_voltage = a[1], water_content = a[2], acidity = a[3], color = a[4], interfacial_tension = a[5]))
 	return samples
 
 def _parse_data_to_object_Load(transformer: str, load, Sb):
@@ -111,7 +116,7 @@ def _parse_data_to_object_Load(transformer: str, load, Sb):
 		if year != data.iloc[0] and not np.isnan(data.iloc[0]):
 			year = int(data.iloc[0])
 		timestamp = _last_day_of_month(datetime.date(year, months[data.iloc[1]], 1))
-		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= data[substation], power_factor = 1))
+		samples.append(Load(id_transformer= transformer, datestamp= timestamp, load_factor= (data[substation]/ Sb), power_factor = 1))
 
 	return samples
 
@@ -151,12 +156,69 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 		else:
 			if prev_timestamp < data[1]:
 				prev_timestamp = data[1]
-				timestamp = datetime.datetime(int(data[1]),12,31)
+				timestamp = datetime.date(int(data[1]),12,31)
 
 		samples.append(Maintenance(id_transformer = transformer, datestamp = timestamp, impact_index = score, descript = description))
 
 	return samples, transformer_voltage
 		
+def _parse_data_to_object_Maintenance_Scores(transformer: str, maintenance_scores):
+	rating_to_score = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
+	samples = []
+	for _, data in maintenance_scores.iterrows():
+		aux = []
+		for d in data[1:]:
+			if d is np.nan:
+				aux.append(d)
+			else:
+				aux.append(rating_to_score[d])
+		samples.append(Maintenance_Scores(id_transformer= transformer, datestamp = datetime.date(data[0], 12, 31),\
+					 bushings = aux[0], \
+					 oil_leaks = aux[1], \
+					 oil_level = aux[2], \
+					 infra_red = aux[3], \
+					 cooling = aux[4], \
+					 main_tank = aux[5], \
+					 oil_tank = aux[6], \
+					 foundation = aux[7], \
+					 grounding = aux[8], \
+					 gaskets = aux[9], \
+					 connectors = aux[10]))
+
+	return samples
+
+def _parse_data_to_object_Overall_Condition(transformer :str, overall_condition):
+	samples = []
+	for _, data in overall_condition.iterrows():
+		samples.append(Overall_Condition(id_transformer= transformer, datestamp = datetime.date(data[1], 12, 31), score = data[0]))
+
+	return samples
+	
+def _get_oldest_date(oldest_date, array):
+	
+	datestamp = oldest_date
+	for i in array:
+		if i.datestamp < datestamp:
+			datestamp = i.datestamp
+	
+	return datestamp
+
+
+
+def get_transformer_age(dga, fal, got, load, maint):
+	today = datetime.date.today()
+	
+	datestamp = _get_oldest_date(today, dga)
+	datestamp = _get_oldest_date(datestamp, fal)
+	datestamp = _get_oldest_date(datestamp, got)
+	datestamp = _get_oldest_date(datestamp, load)
+	datestamp = _get_oldest_date(datestamp, maint)
+	
+	age = today.year - datestamp.year - ((today.month, today.day) < (datestamp.month, datestamp.day))
+
+	return age
+
+	
 def populate_database(debug : bool = False):
 	"""
 	Populates the database with all the excel files and deletes the previous data
@@ -183,16 +245,21 @@ def populate_database(debug : bool = False):
 		dga = t.filter_DGA()
 		got = t.filter_GOT()
 		fal = t.filter_FAL()
-		_, _, maintenance = t.filter_Maintenance()
+		_, maintenance_scores, maintenance = t.filter_Maintenance()
+		overall_condition = t.filter_OverallCondition()
 
 		dga_samples = _parse_data_to_object_DGA(ID, dga)
 		fal_samples = _parse_data_to_object_FAL(ID, fal)
 		got_samples = _parse_data_to_object_GOT(ID, got)
 		load_samples = _parse_data_to_object_Load(ID, load, Sb)
 		maint_samples, rated_voltage = _parse_data_to_object_Maintenance(ID, maintenance, event_score_dictionary)
+		maint_scores_samples = _parse_data_to_object_Maintenance_Scores(ID, maintenance_scores)
+		overall_samples = _parse_data_to_object_Overall_Condition(ID, overall_condition)
+
+		age = get_transformer_age(dga_samples, fal_samples, got_samples, load_samples, maint_samples)
 
 		# First, insert the transformer in the database because of the foreign key constraint
-		trans = Transformer(id_transformer= ID, nominal_voltage= rated_voltage)
+		trans = Transformer(id_transformer = ID, age = age,  nominal_voltage = rated_voltage)
 		trans.add(session)
 
 		MixinsTables.add_batch(session, dga_samples)
@@ -200,6 +267,8 @@ def populate_database(debug : bool = False):
 		MixinsTables.add_batch(session, got_samples)
 		MixinsTables.add_batch(session, load_samples)
 		MixinsTables.add_batch(session, maint_samples)
+		MixinsTables.add_batch(session, maint_scores_samples)
+		MixinsTables.add_batch(session, overall_samples)
 	
 	if debug:
 		print(success_msg)
@@ -209,23 +278,3 @@ def populate_database(debug : bool = False):
 if __name__ == "__main__":
 
 	populate_database()
-
-	excel_parent_path = "dados"
-	db_select = "docker"
-	if db_select is "docker":
-		db_url = {'drivername': 'postgres',
-			'username': 'postgres',
-			'password': 'postgres',
-			'host': 'localhost',
-			'port': 5432,
-			'database':'seai'}
-	elif db_select is "feup": 
-		db_url = {'drivername': 'postgres',
-			'username': 'seai',
-			'password': 'HEJt4ZGJc',
-			'host': 'db.fe.up.pt',
-			'port': 5432,
-			'database':'seai'}
-	else:
-		raise DatabaseException("No database selected, database " + db_select + " none existent")
-
