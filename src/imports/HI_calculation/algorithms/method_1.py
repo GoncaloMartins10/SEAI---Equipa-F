@@ -103,6 +103,7 @@ class Method_1(Method):
 		
 		m4 = Method_4()
 		m4.update_method_weights(tr.nominal_voltage)
+		iter_num = 0
 		while oldest_events_queries: 			# Verifica se é uma lista vazia
 			# este primeiro ciclo serve para irmos buscar os proximos dados para calcularmos o indice de saude para este algoritmo
 			for q in oldest_events_queries:
@@ -170,14 +171,21 @@ class Method_1(Method):
 			# skips calculating HI if any of the lists is empty
 			if [] in stuffed_data.values():
 				oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+				iter_num += 1
 				continue
 
 			# normalizing the data between 0 and 1
 			stuffed_normalized = self.norm_data(dict(stuffed_data))
 			result = self.metodo(stuffed_normalized)
 
+			# este segmento é para normalizar entre 0 a 100 o indice de saude
+			result = [0, (result/50)*100, 100][  (result<=0)*0 
+											   + (0<result<50)*1 
+											   + (result>=50)*2]
+
 			results.append(Health_Index(id_transformer=tr.id_transformer, id_algorithm=1, datestamp=datestamp, hi=result))
 			oldest_events_queries, datestamp = get_next_chronological_envents(queries)
+			iter_num += 1
 
 
 		return results

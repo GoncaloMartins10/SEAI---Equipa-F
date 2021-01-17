@@ -1,5 +1,5 @@
 {
-	"Selected_DB": "feup_db",
+	"Selected_DB": "docker_db",
 	"feup_db":{
 		"drivername": "postgres",
 		"username": "seai",
