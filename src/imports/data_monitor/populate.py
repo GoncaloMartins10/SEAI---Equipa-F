@@ -142,6 +142,8 @@ def _parse_data_to_object_Maintenance(transformer: str, maintenance, event_score
 			found_transformer_voltage = re.search(r"\d\d\d ?[kK][vV]", description)
 			if found_transformer_voltage:
 				transformer_voltage = int(found_transformer_voltage.group(0)[:3])
+			else:
+				transformer_voltage = 220
 
 		# Formats to the correct date time
 		if has_descriptive_datetime:
