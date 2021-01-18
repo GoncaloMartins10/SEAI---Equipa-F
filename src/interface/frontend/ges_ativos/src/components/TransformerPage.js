@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import {Tabs, Tab} from '@material-ui/core';
+import React, { Component, useEffect, useState } from 'react';
+import {Tabs, Tab   } from '@material-ui/core';
 import Chart from "./Measurements/Chart";
 import LoadMeasurements from "./Measurements/LoadMeasurements";
 import FurfuralMeasurements from "./Measurements/FurfuralMeasurements"
 import OilQualityMeasurements from "./Measurements/OilQualityMeasurements"
 import DissolvedGasesMeasurements from "./Measurements/DissolvedGasesMeasurements"
 
-export default class TransformerPage extends Component {
+/*export default class TransformerPage extends Component {
     constructor(props) {
         super(props);
         this.transformerId = this.props.match.params.transformerId;
@@ -59,4 +59,38 @@ export default class TransformerPage extends Component {
         }
         return <h1>TransformerPage</h1>;
     }
+}*/
+
+export default function TransformerPage(props) {
+
+    const [measurementsData, setMeasurementsData] = useState({})
+    useEffect(() => {
+        const url = "http://localhost:8000/api/transformers/"
+        fetch(url + props.match.params.transformerId + "/medicoes", {
+            method: "GET" 
+        })
+        .then((response) => response.json())
+        .then((obj) => {
+            setMeasurementsData({
+                load: obj.load,
+                furfural: obj.furfural,
+                dissolved_gases: obj.dissolved_gases,
+                oil_quality: obj.oil_quality
+            })
+        })
+        .catch(() => {
+            console.log("Can't access: " + url);
+        })
+        
+    }, [setMeasurementsData])
+    
+    console.log(measurementsData)
+    return (
+        <div>
+            <h1 className="main-title">Transformer {props.match.params.transformerId}</h1>
+            <LoadMeasurements 
+              data={measurementsData.load}
+            />
+        </div>
+    );
 }

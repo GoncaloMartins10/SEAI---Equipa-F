@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import {Tabs, Tab   } from '@material-ui/core';
+import React, { Component, useState } from 'react';
+import { Tabs, Tab } from '@material-ui/core';
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
 
-export default class LoadMeasurements extends Component {
+/*export default class LoadMeasurements extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -64,4 +64,28 @@ export default class LoadMeasurements extends Component {
             </div>
         );
     }
+}*/
+
+export default function LoadMeasurements({data}) {
+    const [tabSelected, setTabSelected] = useState(0);
+    
+    const handleTabChange = (e) => {
+        console.log("changing tabs");
+        console.log(e);
+    }
+    return (
+        <div>
+            {data ? 
+            <Tabs
+              value={0}
+              onChange={handleTabChange}
+            >
+                <Tab label="power factor"/>
+                <Tab label="power factor"/>
+            </Tabs>
+              : 
+            null
+            }
+        </div>
+    );
 }
