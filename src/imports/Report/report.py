@@ -79,11 +79,18 @@ def generate_report(transformer : Transformer, data : dict):
 		removed_keys = []
 		i = 0
 		count = 0
-		# https://stackoverflow.com/questions/47907268/how-do-i-pass-a-string-as-an-argument-name
+		
 		while len(data_for_chapter_graphs) > 0:
+			diff = []
 			for k, val in data_for_chapter_graphs.items():
+				difference = max(val[1]) - min(val[1])
+				if diff and chapter != "Health Index":
+					if difference < max(diff) * 0.5 or difference > min(diff) * 2:
+						continue
 				data_for_graph[k] = val
 				removed_keys.append(k)
+				
+				diff.append(difference)
 				i+=1
 				if i == 5:
 					break
