@@ -31,13 +31,18 @@ def get_medicoes(request, id_transformer):
                     oil_quality=transformer.oil_quality,
                     dissolved_gases=transformer.dissolved_gases,
                )
-        response = HttpResponse(encode(body, unpicklable=False), content_type='application/json')
-        response['Accept'] = 'application/json'
-        return response
+        return HttpResponse(encode(body, unpicklable=False), content_type='application/json')
     except Exception as e:
         raise e 
     finally:
         session.close()
 
 def HI(request, id_transformer):
-    pass
+    session = Session()
+    try:
+        health_indices = Transformer(id_transformer=id_transformer).get(session).health_index
+        return HttpResponse(encode(health_indices, unpicklable=False), content_type='application/json')
+    except Exception as e:
+        raise e
+    finally:
+        session.close()

@@ -3,12 +3,15 @@ import {makeStyles} from '@material-ui/core';
 
 import Typography from '@material-ui/core/Typography'
 
-import TabsAndGraphs from "./Measurements/TabsAndGraphs"
+import MeasurementGraph from "./Graphs/MeasurementGraph"
+import HIGraph from "./Graphs/HIGraph"
+import HITable from "./HITable"
 
 
 
 const useStyles = makeStyles({
     typography: {
+        marginTop: 50,
         textAlign: 'center'
     },
     charts: {
@@ -27,7 +30,7 @@ export default function TransformerPage(props) {
     const [measurementsData, setMeasurementsData] = useState({})
     useEffect(() => {
         const url = "http://localhost:8000/api/transformers/"
-        fetch(url + props.match.params.transformerId + "/medicoes", {
+        fetch(url + props.match.params.transformerId + "/medicoes/", {
             method: "GET" 
         })
         .then((response) => response.json())
@@ -43,7 +46,20 @@ export default function TransformerPage(props) {
             console.log("Can't access: " + url);
         })
         
-    }, [setMeasurementsData])
+    }, [setMeasurementsData]);;
+
+
+    const [healthIndex, setHealthIndex] = useState([]);
+    useEffect(() => {
+        const url = "http://localhost:8000/api/transformers/" + props.match.params.transformerId + "/HI/"
+        fetch(url, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(listObject => {
+            setHealthIndex(listObject); 
+        })
+    }, [setHealthIndex]);
     
     return (
         <div>
@@ -52,29 +68,40 @@ export default function TransformerPage(props) {
             </Typography>
             <span> </span>
             <div style={{display:'flex', marginTop: 50, width: '100%', height: 300}}>
-                <TabsAndGraphs 
+                <MeasurementGraph
                   data={measurementsData.load} 
                   graphsList={["load_factor", "power_factor"]}
                   title={"Load"}
                 />
-                <TabsAndGraphs
+                <MeasurementGraph
                   data={measurementsData.oil_quality}
                   graphsList={['breakdown_voltage', 'water_content', 'acidity', 'color', 'interfacial_tension']}
                   title={"Oil Quality"}
                 />
             </div>
             <div style={{display:'flex', marginTop: 150, width: '100%', height: 300 }}>
-                <TabsAndGraphs
+                <MeasurementGraph
                   data={measurementsData.furfural}
                   graphsList={["quantity"]}
                   title={"Furfural"}
                 />
-                <TabsAndGraphs
+                <MeasurementGraph
                   data={measurementsData.dissolved_gases}
                   graphsList={['h2', 'ch4', 'c2h6', 'c2h4', 'c2h2', 'co', 'coh2']}
-                  title={"Dissolved Gasses"}
+                  title={"Dissolved Gases"}
                 />
             </div>
+            <div style={{display:'flex', marginTop: 150, width: '100%', height: 300 }}>
+                <HIGraph
+                  data={healthIndex}
+                  graphsList={["Algorithm 1", "Algorithm 2", "Algorithm 3", "Algorithm 4"]}
+                  title={"Health Indices"}
+                />
+                <HITable
+                  data={healthIndex}
+                />
+            </div>
+
         </div>
     );
 }

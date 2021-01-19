@@ -12,18 +12,23 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         maxWidth: 500,
-        backgroundColor: theme.palette.background.paper,
         margin: 'auto',
     },
     typography: {
         textAlign: 'center',
+        marginTop: 50,
     },
     list: {
+        marginTop: 50, 
         border: '1px solid',
-        padding: 0 
+        borderRadius: 4,
+        padding: 0,
+        '&:last-child': {
+            borderBottom: 'none !important',
+        }
     },
     listItem: {
-        borderBottom: '1px solid'
+        borderBottom: '1px solid',
     }
 }));
 

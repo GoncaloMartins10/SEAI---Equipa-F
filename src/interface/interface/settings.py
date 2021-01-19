@@ -25,13 +25,10 @@ SECRET_KEY = 'cmks#a905=s=n%jceud%etkf&g-t1j5em03em!@_q*s&d0!ei)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
 INSTALLED_APPS = [
-    'frontend.apps.FrontendConfig',
     'transformers.apps.TransformersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,7 +123,7 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = False
 
 ALLOWED_ALL = [
-        'http://localhost:3000'
+    'http://localhost:3000'
 ]
 
 CORS_ORIGIN_WHITELIST = [

@@ -1,10 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, {useState} from 'react';
 
 import { makeStyles, Tabs, Tab } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography'
 
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
+
 
 
 const useStyles = makeStyles({
@@ -30,13 +31,40 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TabsAndGraphs({data, graphsList, title}) {
+
+export default function HIGraph({data, graphsList, title}) {
+    if (!data) {
+        return <div/>
+    }
     const classes = useStyles();
 
     const [tabSelected, setTabSelected] = useState(0);
     const handleTabChange = (e, selectedTab) => {
         setTabSelected(selectedTab);
     }
+
+    const algorithms = [
+        {
+            datestamp: [], 
+            hi: []
+        }, 
+        {
+            datestamp: [], 
+            hi: []
+        }, 
+        {
+            datestamp: [], 
+            hi:[]
+        }, 
+        {
+            datestamp: [],
+            hi: []
+        }
+    ];
+    data.forEach(({datestamp, hi, id_algorithm}, index) => {
+        algorithms[id_algorithm-1].hi.push(hi);
+        algorithms[id_algorithm-1].datestamp.push(datestamp);
+    })
 
     return (
         <div className={classes.outerContainer}>
@@ -55,19 +83,21 @@ export default function TabsAndGraphs({data, graphsList, title}) {
                         <Tab key={idx} label={obj} className={classes.tabItems}/> 
                     )}
                 </Tabs>
-                {graphsList.map((obj, idx) => (
-                    <TabPanel key={idx} index={idx} value={tabSelected}>
+                {algorithms.map((obj, index) => {
+                    return (<TabPanel
+                        value={tabSelected} 
+                        index={index}
+                        key={index}
+                    >
                         <Chart
-                            xaxis={data.map(measurement => measurement.datestamp )} 
+                            xaxis={obj.datestamp} 
                             yaxis={{
-                                data: data.map(measurement=> {
-                                    return measurement[obj];
-                                }),
-                                label: obj
-                            }}
-                        />
-                    </TabPanel>
-                ))}
+                                data: obj.hi,
+                                label: `Algorithm ${index}`
+                            }} 
+                        /> 
+                    </TabPanel>)
+                })}
             </div>
               : 
             null
