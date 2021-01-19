@@ -70,7 +70,7 @@ def generate_report(transformer : Transformer, data : dict):
 			if count == 0: graph_name = chapter
 			else: graph_name = chapter + " (" + str(count) + ")"
 			
-			f = Graphic(path_to_images, graph_name, False, None, **data_for_graph )
+			f = Graphic(path_to_images, graph_name, True, None, **data_for_graph)
 			caption_string = ", ".join(data_for_graph.keys()).replace("_", " ")
 			r.add_graph(f, f"Graphic with {caption_string}")
 			
@@ -85,41 +85,52 @@ def generate_report(transformer : Transformer, data : dict):
 	return
 
 
+def _get_data_as_list(query):
+		data_list = []
+		for i in range(query.count()):
+			data_list.append(query[i])
+		return data_list
 
 def generate_all_reports():
 	session = Session()
 
 	transfomer_list = session.query(Transformer)
 
-	classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition]
+	classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition, Health_Index]
 
 	transformer_data = {}
 	data = {}
+	queries = []
 	for tr in transfomer_list:
 		try:
 			queries = fetch_data(tr, classes_to_query)
-			for q in queries:
-				d = q.get_data_as_list()
-				if isinstance(d[0], Dissolved_Gases):
-					data["Dissolved Gases"] = d
-				elif isinstance(d[0], Furfural):
-					data["Furfural"] = d
-				elif isinstance(d[0], Oil_Quality):
-					data["Oil Quality"] = d
-				elif isinstance(d[0], Load): # Load e power factor
-					data["Load and Power Factor"] = d
-				elif isinstance(d[0], Maintenance_Scores):
-					data["Maintenance Scores"] = d
-				elif isinstance(d[0], Overall_Condition):
-					data["Overall Condition"] = d
-			pass
-			
-			transformer_data[tr] = data
+			#for table in classes_to_query: 
+			#	queries.append(session.query(table).filter(table.id_transformer==tr.id_transformer).order_by(table.datestamp))
 		except:
 			session.close()
 			session = Session()
 		finally:
 			queries = fetch_data(tr, classes_to_query)
+
+		for q in queries:
+			d = q.get_data_as_list()
+			if isinstance(d[0], Dissolved_Gases):
+				data["Dissolved Gases"] = d
+			elif isinstance(d[0], Furfural):
+				data["Furfural"] = d
+			elif isinstance(d[0], Oil_Quality):
+				data["Oil Quality"] = d
+			elif isinstance(d[0], Load): # Load e power factor
+				data["Load and Power Factor"] = d
+			elif isinstance(d[0], Maintenance_Scores):
+				data["Maintenance Scores"] = d
+			elif isinstance(d[0], Overall_Condition):
+				data["Overall Condition"] = d
+			elif isinstance(d[0], Health_Index):
+				data["Health Index"] = d
+
+		transformer_data[tr] = data
+		data = {}
 
 	session.close()
 	del transfomer_list, q, d, data, queries, session, classes_to_query, tr
