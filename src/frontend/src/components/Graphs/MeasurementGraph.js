@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 
 import { makeStyles, Tabs, Tab } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
@@ -45,6 +46,7 @@ export default function MeasurementGraph({data, graphsList, title}) {
         <div className={classes.outerContainer}>
             {data ? 
             <Paper className={classes.innerContainer}>
+                <Card>
                 <Typography variant='h5' align='center' style={{paddingTop: 30, height: '10%'}}>
                     {title}
                 </Typography>
@@ -58,6 +60,7 @@ export default function MeasurementGraph({data, graphsList, title}) {
                         <Tab key={idx} label={obj} className={classes.tabItems}/> 
                     )}
                 </Tabs>
+                </Card>
                 {graphsList.map((obj, idx) => (
                     <TabPanel key={idx} index={idx} value={tabSelected}>
                         <Chart

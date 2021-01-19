@@ -23,7 +23,7 @@ export default function Chart({xaxis, yaxis, ...other}) {
 
 
     return (
-        <div style={{height: '90%'}}> {
+        <div style={{height: '90%', width: '90%', margin: 'auto'}}> {
             data ? 
                 <Line
                   data={data.chartData}
@@ -35,6 +35,13 @@ export default function Chart({xaxis, yaxis, ...other}) {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
+                            }
+                        }],
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'year',
+                                unitStepSize: 1.5
                             }
                         }]
                       }

@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import { makeStyles, Tabs, Tab } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
@@ -68,6 +69,7 @@ export default function HIGraph({data, graphsList, title}) {
         <div className={classes.outerContainer}>
             {data ? 
             <Paper className={classes.innerContainer}>
+                <Card>
                 <Typography variant='h5' align='center' style={{height: '10%', paddingTop: 30}}>
                     {title}
                 </Typography>
@@ -81,6 +83,7 @@ export default function HIGraph({data, graphsList, title}) {
                         <Tab key={idx} label={obj} className={classes.tabItems}/> 
                     )}
                 </Tabs>
+                </Card>
                 {algorithms.map((obj, index) => {
                     return (<TabPanel
                         value={tabSelected} 

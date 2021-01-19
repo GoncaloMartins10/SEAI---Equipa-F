@@ -21,7 +21,7 @@ class Transformer(Base, MixinsTables):
     dissolved_gases = relationship("Dissolved_Gases", back_populates="transformer", order_by='Dissolved_Gases.datestamp')
     maintenance = relationship("Maintenance", back_populates="transformer", order_by='Maintenance.datestamp')
     maintenance_scores = relationship("Maintenance_Scores", back_populates = "transformer")
-    overall_condition = relationship("Overall_Condition", back_populates = "transformer")
+    overall_condition = relationship("Overall_Condition", back_populates = "transformer", order_by='Overall_Condition.datestamp')
     health_index = relationship("Health_Index", back_populates="transformer", order_by='Health_Index.datestamp')
 
     def __init__(self, **kwargs):
