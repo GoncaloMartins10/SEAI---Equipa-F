@@ -54,9 +54,11 @@ def generate_report(transformer : Transformer, data : dict):
 		x=[]
 		data_for_chapter_graphs = {}
 		if chapter == "Health Index":
+			limits = (0, 100)
 			for d in attribute:
 				data_for_chapter_graphs[d] = attribute[d]
 		else:
+			limits = None
 			for d in attribute:
 				a = d.__dict__
 				for name, prop in a.items():
@@ -94,7 +96,7 @@ def generate_report(transformer : Transformer, data : dict):
 			if count == 0: graph_name = chapter
 			else: graph_name = chapter + " (" + str(count) + ")"
 			
-			f = Graphic(path_to_images, graph_name, True, None, **data_for_graph)
+			f = Graphic(path_to_images, graph_name, True, limits, **data_for_graph)
 			caption_string = ", ".join(data_for_graph.keys()).replace("_", " ")
 			r.add_graph(f, f"Graphic with {caption_string}")
 			
