@@ -25,7 +25,10 @@ class Queried_data:
 		return self.query.count()
 
 	def get_data(self):
-		return self.query[self._position]
+		if self._position:
+			return self.query[self._position]
+		else:
+			return None
 	
 	def get_query(self):
 		if self._position is None:
@@ -93,21 +96,22 @@ def get_next_chronological_envents(queries):
 	new_date = date.today()
 
         # para que serve este ciclo? nao acaba por ser feito já na função a seguir?
-	for q in queries:
-		# print(q.get_next_date(), q.type)
-		d = q.get_next_date()
-		if d is None:
-			continue
-		elif new_date > d:
-			new_date = d
- 
-  
+	
+	# for q in queries:
+	# 	d = q.get_next_date()
+	# 	if d is None:
+	# 		continue
+	# 	elif new_date > d:
+	# 		new_date = d
 
 	# Check all event with the same date as the oldest event
 	for q in queries:
 		d = q.get_next_date()
 		if d is None:
 			continue
+		elif d < new_date:
+			new_date = d
+			same_date_q = []
 		while d == new_date:
 			same_date_q.append(q)
 			q.add_position()

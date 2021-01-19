@@ -210,7 +210,7 @@ class Method_4(Method):
 					data[0] = d
 				elif isinstance(d, Furfural):
 					data[1] = d
-				elif isinstance(d, Oil_Quality) and tr.nominal_voltage:
+				elif isinstance(d, Oil_Quality):
 					data[2] = d
 
 			result = self.calc_HI(data)
