@@ -25,9 +25,7 @@ function TabPanel({children, value, index, ...other}) {
           style={{
               marginTop: 5,
               width: '100%', 
-              height: '100%',
-              border: '1px solid rgba(99,99,99, 0.3)',
-              borderRadius: 3,
+              height: '80%',
           }}
         >
             {value === index && children}

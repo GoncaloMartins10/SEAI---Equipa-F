@@ -10,16 +10,18 @@ import HITable from "./HITable"
 
 
 const useStyles = makeStyles({
+    root: {
+        width: '100%',
+    },
     typography: {
         marginTop: 50,
         textAlign: 'center'
     },
-    charts: {
-        marginTop: 50,
+    twoGraphContainer: {
+        boxSizing: 'border-box',
+        marginTop:50,
+        height: 500,
         display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        height: 400
     }
 });
 
@@ -62,12 +64,11 @@ export default function TransformerPage(props) {
     }, [setHealthIndex]);
     
     return (
-        <div>
+        <div className={classes.root}>
             <Typography variant="h4" className={classes.typography}>
                 Transformer {props.match.params.transformerId}
             </Typography>
-            <span> </span>
-            <div style={{display:'flex', marginTop: 50, width: '100%', height: 300}}>
+            <div className={classes.twoGraphContainer}>
                 <MeasurementGraph
                   data={measurementsData.load} 
                   graphsList={["load_factor", "power_factor"]}
@@ -79,7 +80,7 @@ export default function TransformerPage(props) {
                   title={"Oil Quality"}
                 />
             </div>
-            <div style={{display:'flex', marginTop: 150, width: '100%', height: 300 }}>
+            <div className={classes.twoGraphContainer}>
                 <MeasurementGraph
                   data={measurementsData.furfural}
                   graphsList={["quantity"]}
@@ -91,7 +92,7 @@ export default function TransformerPage(props) {
                   title={"Dissolved Gases"}
                 />
             </div>
-            <div style={{display:'flex', marginTop: 150, width: '100%', height: 300 }}>
+            <div className={classes.twoGraphContainer}>
                 <HIGraph
                   data={healthIndex}
                   graphsList={["Algorithm 1", "Algorithm 2", "Algorithm 3", "Algorithm 4"]}

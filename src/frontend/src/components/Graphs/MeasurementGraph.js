@@ -2,22 +2,25 @@ import React, {useState} from 'react';
 
 import { makeStyles, Tabs, Tab } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography'
+import Paper from '@material-ui/core/Paper'
 
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
 
-
 const useStyles = makeStyles({
     tabs: {
-        flexBasis: '50%',
         borderRadius: 2,
+        height: '10%',
     },
     tabItems: {
         padding: 2,
-        fontSize: '0.7rem'
+        fontSize: '0.7rem',
+        height: '10%'
     },
     outerContainer: {
+        boxSizing: 'border-box',
         width: '50%',
+        height: '100%',
         '&:first-child': {
             paddingRight: 5,
         },
@@ -41,8 +44,8 @@ export default function MeasurementGraph({data, graphsList, title}) {
     return (
         <div className={classes.outerContainer}>
             {data ? 
-            <div className={classes.innerContainer}>
-                <Typography variant='h5' align='center'>
+            <Paper className={classes.innerContainer}>
+                <Typography variant='h5' align='center' style={{paddingTop: 30, height: '10%'}}>
                     {title}
                 </Typography>
                 <Tabs
@@ -68,7 +71,7 @@ export default function MeasurementGraph({data, graphsList, title}) {
                         />
                     </TabPanel>
                 ))}
-            </div>
+            </Paper>
               : 
             null
             }

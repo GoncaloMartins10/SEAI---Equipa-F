@@ -23,18 +23,26 @@ export default function Chart({xaxis, yaxis, ...other}) {
 
 
     return (
-        <div style={{height: '100%'}}> {
+        <div style={{height: '90%'}}> {
             data ? 
                 <Line
                   data={data.chartData}
+                  responsive={true}
                   options={{
                       padding: 5,
                       maintainAspectRatio: false,
+                      scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }]
+                      }
                   }}
                 />
                 : null
             }
-        </div> 
-    );
+        </div>
+    )
 }
 

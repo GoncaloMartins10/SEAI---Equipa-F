@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 
 import { makeStyles, Tabs, Tab } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 import Chart from "./Chart";
 import TabPanel from "./TabPanel";
@@ -10,7 +11,7 @@ import TabPanel from "./TabPanel";
 
 const useStyles = makeStyles({
     tabs: {
-        flexBasis: '50%',
+        height: '10%',
         borderRadius: 2,
     },
     tabItems: {
@@ -33,9 +34,6 @@ const useStyles = makeStyles({
 
 
 export default function HIGraph({data, graphsList, title}) {
-    if (!data) {
-        return <div/>
-    }
     const classes = useStyles();
 
     const [tabSelected, setTabSelected] = useState(0);
@@ -69,8 +67,8 @@ export default function HIGraph({data, graphsList, title}) {
     return (
         <div className={classes.outerContainer}>
             {data ? 
-            <div className={classes.innerContainer}>
-                <Typography variant='h5' align='center'>
+            <Paper className={classes.innerContainer}>
+                <Typography variant='h5' align='center' style={{height: '10%', paddingTop: 30}}>
                     {title}
                 </Typography>
                 <Tabs
@@ -98,7 +96,7 @@ export default function HIGraph({data, graphsList, title}) {
                         /> 
                     </TabPanel>)
                 })}
-            </div>
+            </Paper>
               : 
             null
             }
