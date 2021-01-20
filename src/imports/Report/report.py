@@ -10,6 +10,8 @@ from ..resources.Mixins import MixinsTables
 from ..resources import Session
 from ..HI_calculation.algorithms.fetch_data import fetch_data
 
+classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition, Health_Index]
+
 def _get_health_index(hi):
 	result = {}
 	for item in hi:
@@ -124,43 +126,46 @@ def _get_data_as_list(query):
 			data_list.append(query[i])
 		return data_list
 
+def get_data_for_report(transformer : Transformer):
+
+	data = {}
+
+	queries = fetch_data(transformer, classes_to_query)	
+	for q in queries:
+		d = q.get_data_as_list()
+
+		if isinstance(d[0], Dissolved_Gases):
+			data["Dissolved Gases"] = d
+		elif isinstance(d[0], Furfural):
+			data["Furfural"] = d
+		elif isinstance(d[0], Oil_Quality):
+			data["Oil Quality"] = d
+		elif isinstance(d[0], Load): # Load e power factor
+			data["Load and Power Factor"] = d
+		elif isinstance(d[0], Maintenance_Scores):
+			data["Maintenance Scores"] = d
+		elif isinstance(d[0], Overall_Condition):
+			data["Overall Condition"] = d
+		elif isinstance(d[0], Health_Index):
+			data["Health Index"] = d
+
+	return data
+
+
 def generate_all_reports():
 	session = Session()
 
 	transfomer_list = session.query(Transformer)
 	session.close()
 
-	classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition, Health_Index]
-
 	transformer_data = {}
-	data = {}
-	queries = []
+	
 	for tr in transfomer_list:
-	
-		queries = fetch_data(tr, classes_to_query)	
-		for q in queries:
-			d = q.get_data_as_list()
-
-			if isinstance(d[0], Dissolved_Gases):
-				data["Dissolved Gases"] = d
-			elif isinstance(d[0], Furfural):
-				data["Furfural"] = d
-			elif isinstance(d[0], Oil_Quality):
-				data["Oil Quality"] = d
-			elif isinstance(d[0], Load): # Load e power factor
-				data["Load and Power Factor"] = d
-			elif isinstance(d[0], Maintenance_Scores):
-				data["Maintenance Scores"] = d
-			elif isinstance(d[0], Overall_Condition):
-				data["Overall Condition"] = d
-			elif isinstance(d[0], Health_Index):
-				data["Health Index"] = d
-
+		data = get_data_for_report(tr)
 		transformer_data[tr] = data
-		data = {}
 
 	
-	del transfomer_list, q, d, data, queries, session, classes_to_query, tr
+	del transfomer_list, data, session
 
 	for tr, data in transformer_data.items():
 		generate_report(tr, data)
