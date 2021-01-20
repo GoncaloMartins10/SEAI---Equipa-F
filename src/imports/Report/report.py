@@ -39,7 +39,7 @@ def generate_report(transformer : Transformer, data : dict):
 	del repo_dir, repo_name
 
 	path_to_images = os.path.join(static_parent_path, "images")
-	path_to_docs = os.path.join(static_parent_path, "doc")
+	path_to_docs = os.path.join(static_parent_path, "docs")
 
 	data["Health Index"] = _get_health_index(data["Health Index"])
 
