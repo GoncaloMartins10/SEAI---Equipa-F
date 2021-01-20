@@ -8,7 +8,15 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import datetime
 import os
+
+# path_r_square = 'src/imports/HI_calculation'
+# import sys
+# sys.path.append(path_r_square)
+# import r_square
+
+import tensorflow_addons as tfa
 
 
 class WindowGenerator():
@@ -18,7 +26,6 @@ class WindowGenerator():
         self.train_df = train_df
         self.val_df = val_df
         self.test_df = test_df
-        self.infer_df = infer_df
 
         # Work out the label column indices.
         self.label_columns = label_columns
@@ -122,10 +129,6 @@ class WindowGenerator():
     @property
     def test(self):
         return self.make_dataset(self.test_df)
-
-    @property
-    def infer(self):
-        return self.make_dataset(self.infer_df)
 
     @property
     def example(self):
@@ -265,10 +268,13 @@ def collect_data(minyear=1990,maxyear=2020):
         aux_df_hi['hi']=aux_df_hi.mean(axis=1)
 
         # Juntar tudo
-        aux_df = aux_df.join(aux_df_hi)
+        aux_df = aux_df.join(aux_df_hi['hi'])
 
         #Eliminar linhas vazias e extrapolar tipo "Sample&Hold", quando faltam valores nas pontas
         aux_df = aux_df.dropna(thresh=7).interpolate(limit_area='outside', limit_direction='both')
+        
+        #Eliminar algumas colunas
+        #aux_df.drop(columns=['quantity','load_factor','breakdown_voltage'],inplace=True)
 
         df[transf] = aux_df.copy()
     
@@ -320,9 +326,9 @@ def training(IN_STEPS = 3, OUT_STEPS = 2, debug=False):
     # Configuring the data windows
     # -------------------------------------------------------
     
-    LABEL = ['color']
+    LABEL = ['hi']
 
-    window = WindowGenerator(input_width   = IN_STEPS,
+    window = WindowGenerator(input_width  = IN_STEPS,
                             label_width   = OUT_STEPS,
                             shift         = OUT_STEPS,
                             train_df      = {trs : df[trs] for trs in train_trs},
@@ -351,14 +357,19 @@ def training(IN_STEPS = 3, OUT_STEPS = 2, debug=False):
     # Defining the model
     # -------------------------------------------------------
 
+    n_neuronios=32
+    paciencia=3
+    velocidade_aprendizazem= 0.001 
+
     model = tf.keras.Sequential([
         # Shape [batch, time, features] => [batch, lstm_units]
         # Adding more `lstm_units` just overfits more quickly.
-        tf.keras.layers.LSTM(32, return_sequences=False),
+        tf.keras.layers.LSTM(n_neuronios, return_sequences=False),
         # Shape => [batch, out_steps*features]
-        tf.keras.layers.Dense(OUT_STEPS*num_features),
+        tf.keras.layers.Dense(4),
+        tf.keras.layers.Dense(OUT_STEPS),
         # Shape => [batch, out_steps, features]
-        tf.keras.layers.Reshape([OUT_STEPS, num_features])
+        tf.keras.layers.Reshape([OUT_STEPS, 1])
     ])
 
     # -------------------------------------------------------
@@ -366,16 +377,25 @@ def training(IN_STEPS = 3, OUT_STEPS = 2, debug=False):
     # -------------------------------------------------------
 
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss',
-                                                    patience=10,
+                                                    patience=paciencia,
                                                     mode='min')
 
     model.compile(loss=tf.losses.MeanSquaredError(),
                 optimizer=tf.optimizers.Adam(),
-                metrics=[tf.metrics.MeanAbsoluteError()])
+                metrics=[tf.metrics.MeanAbsoluteError(),
+                        tf.keras.metrics.RootMeanSquaredError(name='RMS_error', dtype=None),
+                        tfa.metrics.r_square.RSquare(y_shape=(OUT_STEPS ,1))])
 
-    history = model.fit(window.train, epochs=300,
+    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
+    history = model.fit(window.train, epochs=100,
                         validation_data=window.val,
-                        callbacks=[early_stopping])
+                        callbacks=[early_stopping, tensorboard_callback])
+
+    if debug:
+        print(model.summary())
+
 
     # -------------------------------------------------------
     # Final evaluation metrics
@@ -384,8 +404,11 @@ def training(IN_STEPS = 3, OUT_STEPS = 2, debug=False):
     performance = model.evaluate(window.val, verbose=0)
     perf = pd.DataFrame(performance, index=model.metrics_names, columns =['Value'])
 
-    #save_path = os.path.join(os.getcwd(), "ML_model")
-    #tf.saved_model.save(model,save_path)
+    model.compile(loss=tf.losses.MeanSquaredError(),
+                optimizer=tf.optimizers.Adam(),
+                metrics=[tf.metrics.MeanAbsoluteError(),
+                        tf.keras.metrics.RootMeanSquaredError(name='RMS_error', dtype=None)])
+
     model.save('saved_model')
 
     return perf
@@ -400,8 +423,6 @@ def inference(debug=False):
     
     transfs, df = collect_data()
 
-    #save_path = os.path.join(os.getcwd(), "ML_model")
-    #model = tf.saved_model.load(save_path)
     model = tf.keras.models.load_model('saved_model')
 
 
@@ -490,7 +511,7 @@ def inference(debug=False):
         pred[trs]={}
         for i in range(OUT_STEPS):
             yr = year[trs].tail(1).values[0] + 1 + i
-            pred[trs][str(yr)]=pred_np[i,:] 
+            pred[trs][str(yr)]=pred_np[i] 
 
     return pred
 
