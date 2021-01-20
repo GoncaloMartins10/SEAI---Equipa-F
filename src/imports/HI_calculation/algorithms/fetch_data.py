@@ -1,10 +1,8 @@
 from datetime import date
 from ...resources.db_classes import *
 
-# TODO Should not be here, should be passed to function arguments (or instantiated in __init__.py??, não sei como esse funciona)
 from ...resources import Session 
 session = Session()
-####
 
 class Queried_data:
 	def __init__(self, query):
@@ -95,15 +93,6 @@ def get_next_chronological_envents(queries):
 	same_date_q = []
 	new_date = date.today()
 
-        # para que serve este ciclo? nao acaba por ser feito já na função a seguir?
-	
-	# for q in queries:
-	# 	d = q.get_next_date()
-	# 	if d is None:
-	# 		continue
-	# 	elif new_date > d:
-	# 		new_date = d
-
 	# Check all event with the same date as the oldest event
 	for q in queries:
 		d = q.get_next_date()
@@ -120,19 +109,11 @@ def get_next_chronological_envents(queries):
 
 	return same_date_q, new_date
 
-# Usar o isinstance() para averiguar de que tipo é o objeto
-# isinstance(queries[0].get_next_query(), Dissolved_Gases)
-
 def fetch_data(transformer, classes_to_query_list: list):
 	""" Returns list of the 5 types of data for HI calculation """
 	queries = []
 
 	for c in classes_to_query_list:
 		queries.append( Queried_data( query_table(c, session, transformer.id_transformer)))
-	# queries.append( Queried_data( query_table(Dissolved_Gases, session, transformer.id_transformer)))
-	# queries.append( Queried_data( query_table(Furfural, session, transformer.id_transformer)))
-	# queries.append( Queried_data( query_table(Oil_Quality, session, transformer.id_transformer)))
-	# queries.append( Queried_data( query_table(Load, session, transformer.id_transformer)))
-	# queries.append( Queried_data( query_table(Maintenance_scores, session, transformer.id_transformer)))
 
 	return queries
