@@ -7,6 +7,6 @@ urlpatterns = [
     path('', views.main, name='transformer_main'),
     path('<slug:id_transformer>/medicoes/', views.get_medicoes, name='transformer_measurements'),
     path('<slug:id_transformer>/HI/', views.HI, name='transformer_HI'),
-    path('<slug:id_transformer>/report', views.report, name='transformer_report')
+    path('<slug:id_transformer>/report/', views.report, name='transformer_report')
 ]
 

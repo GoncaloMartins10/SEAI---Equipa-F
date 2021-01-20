@@ -62,7 +62,11 @@ def report(request, id_transformer):
             'Overall Condition': transformer.overall_condition,
             'Health Index': transformer.health_index
         }
-        generate_report(transformer, data)
+        report = open(generate_report(transformer, data), 'rb')
+        response = HttpResponse(content=report)
+        response['Content-Type'] = 'application/pdf'
+        response['Content-Disposition'] = f'attachment; filename=Transformer_{transformer.id_transformer}.pdf'
+        return response
     except Exception as e:
         raise e
     finally: 

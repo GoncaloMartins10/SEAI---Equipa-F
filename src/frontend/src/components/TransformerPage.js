@@ -1,11 +1,12 @@
 import React, {useEffect, useState } from 'react';
 import {makeStyles} from '@material-ui/core';
 
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
-import MeasurementGraph from "./Graphs/MeasurementGraph"
-import HIGraph from "./Graphs/HIGraph"
-import HITable from "./HITable"
+import MeasurementGraph from "./Graphs/MeasurementGraph";
+import HIGraph from "./Graphs/HIGraph";
+import HITable from "./HITable";
 
 
 
@@ -22,6 +23,11 @@ const useStyles = makeStyles({
         marginTop:50,
         height: 500,
         display: 'flex',
+    },
+    button: {
+        marginTop: 30,
+        justifyContent: 'center',
+        fontWeight: 'bold', 
     }
 });
 
@@ -62,6 +68,11 @@ export default function TransformerPage(props) {
             setHealthIndex(listObject); 
         })
     }, [setHealthIndex]);
+
+    function handleClick(e) {
+        let url = "http://localhost:8000/api/transformers/" + props.match.params.transformerId + "/report/";
+        window.open(url); 
+    }
     
     return (
         <div className={classes.root}>
@@ -102,7 +113,9 @@ export default function TransformerPage(props) {
                   data={healthIndex}
                 />
             </div>
-
+            <Button variant='contained' className={classes.button} onClick={handleClick}>
+                Generate Report for {props.match.params.transformerId}
+            </Button>
         </div>
     );
 }
