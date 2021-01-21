@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         height: 100,
         textAlign: 'center',
+        fontWeight: 'bold',
         marginTop: 20,
     },
     typography: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     listCard: {
         marginTop: 5,
         margin: 'auto',
-        width: '50%'
+        width: '80%'
     },
     list: {
         marginTop: 50, 
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     listItem: {
-    }
+    },
 }));
 
 export default function HomePage() {
@@ -67,11 +68,14 @@ export default function HomePage() {
 
     return (
         <>
-            <Typography variant='h2' className={classes.header}>
+            <Typography variant='h3' className={classes.header}>
                 Gestão Digital de Ativos
             </Typography>
-            <Grid container>
-                <Grid item xs={6}>
+            <Grid container
+              spacing={0}
+              justify='center' 
+            >
+                <Grid item xs={4}>
                     <Typography variant="h4" className={classes.typography}>
                         Transformers
                     </Typography>
@@ -96,8 +100,10 @@ export default function HomePage() {
                         })}
                     </List>
                 </Grid>
-                <Grid item xs={6}>
-                    <MLModelForm />
+                <Grid item xs={7}>
+                    <div style={{display: 'flex', direction: 'column', justifyContent: 'center'}}>
+                        <MLModelForm />
+                    </div>
                 </Grid>
             </Grid>
         </>

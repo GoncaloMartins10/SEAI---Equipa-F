@@ -7,6 +7,7 @@ from resources.db_classes import Transformer
 from resources import Session
 
 from .Report.report import generate_report, generate_all_reports
+from .ML.method_5 import training, inference
 
 
 
@@ -72,4 +73,14 @@ def report(request, id_transformer):
     finally: 
         session.close()
 
-    pass
+
+def infer(request):
+    res = inference()
+    print(res)
+    return HttpResponse(encode(res, unpicklable=False), content_type='application/json')
+
+def train_model(request):
+    [IN_STEPS, OUT_STEPS] = [int(request.GET.get(*args)) for args in [('stepsBackward', 3), ('stepsForward', 2)] ]
+    res = training(IN_STEPS=IN_STEPS, OUT_STEPS=OUT_STEPS).get('Value')
+    res = {key: float(value) for key, value in res.items()}
+    return HttpResponse(encode(res, unpicklable=False), content_type='application/json')
