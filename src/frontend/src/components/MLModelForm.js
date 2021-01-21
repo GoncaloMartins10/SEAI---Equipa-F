@@ -125,8 +125,8 @@ export default function MLModelForm() {
                             severity='success'
                             className={classes.alert}
                             >
-                                <AlertTitle>Info</AlertTitle>
-                                Model has been successfully trained
+                                <AlertTitle>Success</AlertTitle>
+                                Model has been trained
                             </Alert>
                         }
                         {errorOccurred && 
@@ -134,7 +134,7 @@ export default function MLModelForm() {
                             severity='error'
                             className={classes.alert}
                             >
-                                <AlertTitle>Info</AlertTitle>
+                                <AlertTitle>Error</AlertTitle>
                                 Server Error Occurred try again later
                             </Alert>
                         }

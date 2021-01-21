@@ -511,7 +511,7 @@ def inference(debug=False):
         pred[trs]={}
         for i in range(OUT_STEPS):
             yr = year[trs].tail(1).values[0] + 1 + i
-            pred[trs][str(yr)]=float(pred_np[i])
+            pred[trs][str(yr)]=float(pred_np[i]*train_std['hi']+train_mean['hi'])
 
     return pred
 

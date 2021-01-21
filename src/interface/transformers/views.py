@@ -76,7 +76,6 @@ def report(request, id_transformer):
 
 def infer(request):
     res = inference()
-    print(res)
     return HttpResponse(encode(res, unpicklable=False), content_type='application/json')
 
 def train_model(request):

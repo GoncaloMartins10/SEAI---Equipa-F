@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         boxSizing: 'border-box',
         marginTop: 30,
         paddingLeft: 10, 
-        width: '50%',
+        width: '100%',
     },
     tableContainer: {
         marginTop: 53

@@ -20,8 +20,9 @@ const useStyles = makeStyles({
     },
     outerContainer: {
         boxSizing: 'border-box',
-        width: '50%',
-        height: '100%',
+        marginTop: 8,
+        width: '100%',
+        height: 500,
         '&:first-child': {
             paddingRight: 5,
         },
