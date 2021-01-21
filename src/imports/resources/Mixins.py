@@ -33,6 +33,8 @@ class MixinsTables:
             else:
                 raise AttributeException()
 
+    def __getstate__(self):
+        return {col.name: getattr(self, col.name) for col in self.__table__.columns}
 
     def get(self, session):
         """ 

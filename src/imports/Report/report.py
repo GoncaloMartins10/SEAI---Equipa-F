@@ -10,8 +10,11 @@ from ..resources.Mixins import MixinsTables
 from ..resources import Session
 from ..HI_calculation.algorithms.fetch_data import fetch_data
 
+<<<<<<< HEAD
 classes_to_query = [Dissolved_Gases, Furfural, Oil_Quality, Load, Maintenance_Scores, Overall_Condition, Health_Index]
 
+=======
+>>>>>>> origin/landau
 def _get_health_index(hi):
 	result = {}
 	for item in hi:
@@ -39,6 +42,7 @@ def generate_report(transformer : Transformer, data : dict):
 	del repo_dir, repo_name
 
 	path_to_images = os.path.join(static_parent_path, "images")
+
 	path_to_docs = os.path.join(static_parent_path, "docs")
 
 	data["Health Index"] = _get_health_index(data["Health Index"])
