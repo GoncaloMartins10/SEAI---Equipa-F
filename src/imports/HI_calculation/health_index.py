@@ -13,7 +13,16 @@ method_switcher = { 1: Method_1, \
 def populate_health_index(session, batch):
 	MixinsTables.add_batch(session, batch)
 
-def calculate_all_transformers(session, method_id):
+def calculate_for_transformer(session, transformer, method_id, populate = True):
+	m = method_switcher[method_id]()
+
+	result = m.calculate_for_transformer(transformer)
+
+	return result
+
+
+
+def calculate_all_transformers(session, method_id, populate = True):
 	"""
 	Returns a list of tupples with the following structure:
 		[(transformer_id, [(datestamp, result), (datestamp, result), ...]),
@@ -30,6 +39,6 @@ def calculate_all_transformers(session, method_id):
 		if result:
 			results.append((tr.id_transformer, result))
 
-		populate_health_index(session, result)
+		if populate: populate_health_index(session, result)
 
 	return results

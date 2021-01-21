@@ -6,10 +6,6 @@ import numpy as np
 import re
 
 from .excel_extract import Excel_extract
-# from db_populate import DataBase, DatabaseException, Dissolved_gas_measurements, Oil_quality_measurements
-
-# import sys
-# sys.path.insert(0, sys.path[0] + '/../server/')
 
 from ..resources.db_classes import Transformer, Furfural, Oil_Quality, Load, Dissolved_Gases, Maintenance, Maintenance_Scores, Overall_Condition
 from ..resources import Session
@@ -25,7 +21,7 @@ success_msg = """ ____                   _       _             _       _        
 
 def _convert_to_data_type(value):
 	if type(value) is str:
-		filtered = value.split("x") # Não consigo filtrar o ^ por algum motivo...
+		filtered = value.split("x")
 		i = float(filtered[0].replace(',','.'))
 		if len(filtered) == 1:
 			return i
@@ -37,7 +33,6 @@ def _convert_to_data_type(value):
 	elif type(value) is datetime.datetime:
 		return value.date()
 	else:
-		# Não levanta excessão, apenas devolve o valor (meio trolha eu sei)
 		return value
 
 def _extract_transformer_ID(transformer: str):
@@ -48,9 +43,7 @@ def _extract_transformer_ID(transformer: str):
 	else:
 		return substation.group(0)
 
-# https://stackoverflow.com/questions/42950/how-to-get-the-last-day-of-the-month
 def _last_day_of_month(any_day):
-	# this will never fail
 	# get close to the end of the month for any day, and add 4 days 'over'
 	next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
 	# subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
