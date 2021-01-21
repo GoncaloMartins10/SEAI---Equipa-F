@@ -425,7 +425,6 @@ def inference(debug=False):
 
     model = tf.keras.models.load_model('saved_model')
 
-
     IN_STEPS = model.input_shape[1]
     OUT_STEPS = model.output_shape[1]
 
@@ -471,37 +470,6 @@ def inference(debug=False):
         df[trs]=df[trs].tail(IN_STEPS)
         year[trs]=year[trs].tail(IN_STEPS)
 
-    # # -------------------------------------------------------
-    # # Configuring the data windows
-    # # -------------------------------------------------------
-    
-    # LABEL = ['color']               #Alterar depois!!!!
-
-    # window = WindowGenerator(input_width  = IN_STEPS,
-    #                         label_width   = OUT_STEPS,
-    #                         shift         = OUT_STEPS,
-    #                         train_df      = df,
-    #                         #val_df        = {trs : df[trs] for trs in val_trs},
-    #                         #test_df       = df,
-    #                         infer_df      = df,
-    #                         label_columns = LABEL)
-
-
-    # # -------------------------------------------------------
-    # # Checking the shape of input and output for each training batch
-    # # Each batch contains the information of one transformer
-    # # -------------------------------------------------------
-    # if debug:
-    #     print('TRAINING BATCHES')
-    #     print('Shape meaning: (windows,steps,features)\n')
-    #     i=0
-    #     for batch in window.train:
-    #         inputs, targets = batch
-    #         print('Batch', i+1, '- Transformer', train_trs[i], '-', len(df[train_trs[i]]), 'years') 
-    #         print('Input  shape:',inputs.shape)
-    #         print('Target shape:',targets.shape)
-    #         print()
-    #         i+=1
 
     pred={}
     for trs in transfs:
@@ -511,10 +479,111 @@ def inference(debug=False):
         pred[trs]={}
         for i in range(OUT_STEPS):
             yr = year[trs].tail(1).values[0] + 1 + i
-            pred[trs][str(yr)]=pred_np[i] 
+            pred[trs][str(yr)]=float(pred_np[i]*train_std['hi']+train_mean['hi'])
 
     return pred
 
 
+def plot_inference(chosen_trs='SE7',debug=False):
+    
+    transfs, df = collect_data()
+
+    model = tf.keras.models.load_model('saved_model')
+
+    IN_STEPS = model.input_shape[1]
+    OUT_STEPS = model.output_shape[1]
+
+    # -------------------------------------------------------
+    # Separating year from data
+    # -------------------------------------------------------
+
+    year={}
+    for trs in transfs:
+        year[trs] = df[trs].pop('year')
+
+
+    # -------------------------------------------------------
+    # Train, Validation, Test split (0.8 / 0.2)
+    # Split is done by transformers
+    # -------------------------------------------------------
+
+    column_indices = {name: i for i, name in enumerate(df[transfs[0]].columns)}
+    num_features = df[transfs[0]].shape[1]
+
+
+    # -------------------------------------------------------
+    # Getting mean and std of training data and normalizing all data
+    # -------------------------------------------------------
+
+    total_df = pd.DataFrame()
+
+    for trs in transfs:
+        total_df = total_df.append(df[trs])
+
+    train_mean = total_df.mean()
+    train_std = total_df.std()
+
+    for trs in transfs:
+        df[trs] = (df[trs]- train_mean) / train_std
+
+    
+    # -------------------------------------------------------
+    # Keeping only the last IN_STEPS rows
+    # -------------------------------------------------------
+
+    # for trs in transfs:
+    #     df[trs]=df[trs].tail(IN_STEPS)
+    #     year[trs]=year[trs].tail(IN_STEPS)
+
+
+    pred={}
+    for trs in transfs:
+        pred[trs]={}
+        for yr in year[trs].values:
+            
+            if yr < year[trs].values[0]+IN_STEPS: continue
+            
+            index = year[trs][year[trs] == yr-1].index.to_list()[0]
+            input_np = np.expand_dims(df[trs].truncate(after=index).tail(IN_STEPS).to_numpy(), axis=0)
+            pred_np  = np.squeeze    (model.predict(input_np))
+            
+            pred[trs][str(yr)]=pred_np[0]*train_std['hi']+train_mean['hi']
+
+    print(pred)
+    
+    plt.figure(figsize=(12, 4))
+    #plot_col_index = self.column_indices[plot_col]
+    #max_n = min(max_subplots, len(inputs))
+
+    #for n in range(max_n):
+    #plt.subplot(3, 1, n+1)
+    plt.ylabel('Health Index')
+    plt.plot(year[chosen_trs].values, df[chosen_trs]['hi'].values*train_std['hi']+train_mean['hi'], marker='.', zorder=-10, label='real')
+    x=[int(key) for key in pred[chosen_trs].keys()]
+    y=pred[chosen_trs].values()
+    plt.scatter(x,y , edgecolors='k', c='#ff7f0e', s=64, label='predicted')
+    plt.legend()
+    plt.show()
+
+    # if self.label_columns:
+    #     label_col_index = self.label_columns_indices.get(plot_col, None)
+    # else:
+    #     label_col_index = plot_col_index
+
+    # if label_col_index is None:
+    #     continue
+
+    # plt.scatter(self.label_indices, labels[n, :, label_col_index], edgecolors='k', label='Labels', c='#2ca02c', s=64)
+    
+    # if model is not None:
+    #     predictions = model(inputs)
+    #     plt.scatter(self.label_indices, predictions[n, :, label_col_index], marker='X', edgecolors='k', label='Predictions', c='#ff7f0e', s=64)
+
+    # if n == 0:
+    #     plt.legend()
+
+    # plt.xlabel('Time [h]')
+
+    
 
 
