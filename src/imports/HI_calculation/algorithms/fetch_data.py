@@ -23,7 +23,7 @@ class Queried_data:
 		return self.query.count()
 
 	def get_data(self):
-		if self._position:
+		if self._position is not None:
 			return self.query[self._position]
 		else:
 			return None
